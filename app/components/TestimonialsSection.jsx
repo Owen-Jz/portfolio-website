@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { InfiniteMovingCards } from "./InfiniteMovingCards";
+import { InfiniteMovingCards } from "./ui/InfiniteMovingCards";
 
 export function TestimonialsSection() {
   return (

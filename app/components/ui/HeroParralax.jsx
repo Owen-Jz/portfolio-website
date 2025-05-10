@@ -3,37 +3,39 @@
 import React, { useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Link from "next/link";
-import { cn } from "../libs/utils";
+import { cn } from "../../libs/utils";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
-import { useInView } from "react-intersection-observer";
-import { useRef } from "react";
-import "../globals.css";
+import "../../globals.css";
+import { Button } from "./MovingBorder";
 
 export const HeroParallax = ({ products }) => {
   // Responsive handling
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     // Initial check
     checkMobile();
-    
+
     // Set up listener for window resizing
-    window.addEventListener('resize', checkMobile);
-    
+    window.addEventListener("resize", checkMobile);
+
     // Clean up
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Split products for different rows - handle fewer products gracefully
   const firstRow = products.slice(0, Math.min(5, products.length));
-  const secondRow = products.length > 5 ? products.slice(5, Math.min(10, products.length)) : [];
-  const thirdRow = products.length > 10 ? products.slice(10, Math.min(15, products.length)) : [];
-  
+  const secondRow =
+    products.length > 5 ? products.slice(5, Math.min(10, products.length)) : [];
+  const thirdRow =
+    products.length > 10
+      ? products.slice(10, Math.min(15, products.length))
+      : [];
+
   const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -44,7 +46,7 @@ export const HeroParallax = ({ products }) => {
 
   // Adjust translation values for mobile
   const translateXValue = isMobile ? 300 : 1000;
-  
+
   const translateX = useSpring(
     useTransform(scrollYProgress, [0, 1], [0, translateXValue]),
     springConfig
@@ -79,7 +81,7 @@ export const HeroParallax = ({ products }) => {
     useTransform(scrollYProgress, [0, 0.1], [0, 20]),
     { stiffness: 100, damping: 30 }
   );
-  
+
   const scrollIndicatorOpacity = useSpring(
     useTransform(scrollYProgress, [0, 0.1], [1, 0]),
     { stiffness: 100, damping: 30 }
@@ -89,7 +91,7 @@ export const HeroParallax = ({ products }) => {
     const targetPosition = window.innerHeight * 0.6;
     window.scrollTo({
       top: targetPosition,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
@@ -115,15 +117,15 @@ export const HeroParallax = ({ products }) => {
       </div>
 
       {/* Header section - centered with flex */}
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center z-[10]">
         <Header />
-        
+
         {/* Scroll indicator */}
-        <motion.div 
+        <motion.div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
-          style={{ 
+          style={{
             y: scrollIndicatorY,
-            opacity: scrollIndicatorOpacity
+            opacity: scrollIndicatorOpacity,
           }}
           onClick={scrollToContent}
         >
@@ -206,7 +208,7 @@ export const HeroParallax = ({ products }) => {
 export const Header = () => {
   return (
     <div className="max-w-7xl mx-auto py-10 md:py-0 px-4 w-full">
-      <div className="backdrop-blur-sm rounded-3xl p-4 md:p-8  bg-opacity-50">
+      <div className=" rounded-3xl p-4 md:p-8 border-amber-50">
         <div className="flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-6">
           <img
             src="/profile.jpg"
@@ -215,7 +217,8 @@ export const Header = () => {
           />
           <div>
             <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white font-['Manrope']">
-              Hey, I'm Owen <br className="hidden sm:block" /> Designer & Developer
+              Hey, I'm Owen <br className="hidden sm:block" /> Designer &
+              Developer
             </h1>
             <p className="max-w-2xl text-sm md:text-lg mt-2 md:mt-4 text-gray-200 font-['Manrope'] font-normal">
               I'm passionate about creating beautiful designs and bringing them
@@ -224,22 +227,20 @@ export const Header = () => {
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 md:mt-6">
               <Link href="mailto:your.email@example.com">
-                <motion.a
-                  className="px-4 py-2 border border-gray-600 text-gray-100 text-sm rounded-full font-['Manrope'] font-medium hover:bg-gradient-to-r hover:from-[#b02222] hover:to-[#d38787] hover:text-white transition-all duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button
+                  borderRadius="1.75rem"
+                  className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
                 >
                   Get in Touch
-                </motion.a>
+                </Button>
               </Link>
               <Link href="/cv.pdf">
-                <motion.a
-                  className="px-4 py-2 border border-gray-600 text-gray-100 text-sm rounded-full font-['Manrope'] font-medium hover:bg-gradient-to-r hover:from-[#b02222] hover:to-[#d38787] hover:text-white transition-all duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button
+                  borderRadius="1.75rem"
+                  className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
                 >
-                  Download CV
-                </motion.a>
+                  Get in Touch
+                </Button>
               </Link>
             </div>
           </div>
@@ -279,4 +280,3 @@ export const ProductCard = ({ product, translate, isMobile }) => {
     </motion.div>
   );
 };
-

@@ -157,7 +157,7 @@ const FooterSection = () => {
           className="text-center text-gray-400 text-sm mt-8 font-['Manrope']"
           variants={itemVariants}
         >
-          © 2025 [Your Name]. All rights reserved.
+          © 2025 Owen. All rights reserved.
         </motion.p>
       </motion.div>
     </footer>

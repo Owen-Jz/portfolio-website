@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { HeroParallax } from "./HeroParralax";
+import { HeroParallax } from "./ui/HeroParralax";
 
-export function HeroParallaxDemo() {
+export function HeroSection() {
   return <HeroParallax products={products} />;
 }
 export const products = [
@@ -32,5 +32,4 @@ export const products = [
     link: "https://editrix.ai",
     thumbnail: "/product5.png",
   },
-  
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { cn } from "../libs/utils";
+import { cn } from "../../libs/utils";
 export const ThreeDMarquee = ({ images, className }) => {
   // Split the images array into 4 equal parts
   const chunkSize = Math.ceil(images.length / 4);

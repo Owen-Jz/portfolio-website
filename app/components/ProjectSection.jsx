@@ -298,7 +298,7 @@ const ProjectsSection = () => {
             My Projects
           </p>
           <h2 className="text-white text-3xl md:text-5xl font-normal font-['Manrope'] leading-tight">
-            Featured Work
+            My Best Work
           </h2>
         </motion.div>
 
