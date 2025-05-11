@@ -100,22 +100,6 @@ export const HeroParallax = ({ products }) => {
       ref={ref}
       className="h-[200vh] overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
     >
-      {/* Background effects - Shooting stars */}
-      <div className="absolute inset-0 z-[-1] pointer-events-none">
-        <div
-          className="absolute w-1 h-1 bg-[#b02222] rounded-full animate-shootingStar1"
-          style={{
-            boxShadow: "0 0 10px 2px #b02222, 0 0 20px 4px #d38787",
-          }}
-        />
-        <div
-          className="absolute w-1 h-1 bg-[#b02222] rounded-full animate-shootingStar2"
-          style={{
-            boxShadow: "0 0 10px 2px #b02222, 0 0 20px 4px #d38787",
-          }}
-        />
-      </div>
-
       {/* Header section - centered with flex */}
       <div className="min-h-screen flex items-center justify-center z-[10]">
         <Header />

@@ -333,7 +333,7 @@ const ProjectsSection = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            className="flex flex-row gap-3 justify-center"
+            className="flex flex-col lg:flex-row gap-3 justify-center"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
