@@ -10,6 +10,7 @@ import ContactSection from "./components/ContactSection";
 import FooterSection from "./components/FooterSection";
 import { NavbarDemo } from "./components/ui/ResizableNavbar";
 import AnimatedSection from "./components/AnimatedSection";
+import SocialSidebar from "./components/SocialSidebar";
 
 const HomePage = () => {
   const sections = [
@@ -37,6 +38,7 @@ const HomePage = () => {
         ))}
       </main>
       <FooterSection />
+      <SocialSidebar />
     </div>
   );
 };
