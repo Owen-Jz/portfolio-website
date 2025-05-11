@@ -135,7 +135,7 @@ const ProjectCard = ({ project, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-16px)]"
+      className="w-full md:w-[calc(33.333%-16px)]"
       custom={index}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
@@ -169,7 +169,7 @@ const ProjectCard = ({ project, index }) => {
             {project.title}
           </h3>
           <p className="text-gray-300">{project.description}</p>
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex flex-row gap-2 pt-2">
             {project.tags.map((tag, i) => (
               <span
                 key={i}
@@ -333,7 +333,7 @@ const ProjectsSection = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            className="flex flex-wrap gap-8 justify-center"
+            className="flex flex-row gap-3 justify-center"
             variants={containerVariants}
             initial="hidden"
             animate="visible"

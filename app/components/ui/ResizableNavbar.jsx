@@ -222,15 +222,15 @@ export function NavbarDemo() {
   const navItems = [
     {
       name: "Home",
-      link: "#home",
+      link: "/",
     },
     {
       name: "About",
-      link: "#about",
+      link: "/about",
     },
     {
       name: "Projects",
-      link: "#contact",
+      link: "/projects",
     },
   ];
 
@@ -244,8 +244,12 @@ export function NavbarDemo() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-4">
-            <NavbarButton variant="primary">Blog</NavbarButton>
-            <NavbarButton variant="primary">Hire Me</NavbarButton>
+            <NavbarButton variant="primary" href="/blog">
+              Blog
+            </NavbarButton>
+            <NavbarButton variant="primary" href="/contact">
+              Hire Me
+            </NavbarButton>
           </div>
         </NavBody>
 

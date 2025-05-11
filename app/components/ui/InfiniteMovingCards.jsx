@@ -58,7 +58,7 @@ export const InfiniteMovingCards = ({
     <div
       ref={containerRef}
       className={cn(
-        "scroller relative z-20 max-w-7xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]",
+        "scroller relative z-20 w-full max-w-[100vw] overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_20%,white_80%,transparent)] md:[mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]",
         className
       )}
     >
@@ -88,36 +88,35 @@ export const InfiniteMovingCards = ({
         {items.map((item, idx) => (
           <li
             className={cn(
-              "relative w-[350px] max-w-full shrink-0 rounded-2xl border px-6 py-10 md:w-[450px]",
-              "border-zinc-200 bg-[linear-gradient(180deg,#fafafa,#f5f5f5)]",
-              "dark:border-zinc-700 dark:bg-[linear-gradient(180deg,#27272a,#18181b)] backdrop-blur-sm"
+              "relative w-[80vw] max-w-[350px] shrink-0 rounded-2xl border px-4 py-6 md:w-[450px] md:max-w-[450px] md:px-6 md:py-10",
+              "border-dark-600"
             )}
             key={`${item.name}-${idx}`}
           >
             <blockquote>
-              <span className="relative z-20 text-sm leading-[1.6] font-normal text-neutral-800 dark:text-gray-100">
+              <span className="relative z-20 text-[0.85rem] leading-[1.5] font-normal text-dark-text-primary md:text-sm md:leading-[1.6]">
                 {item.quote}
               </span>
               <div className="relative z-20 mt-4 flex flex-row items-center gap-3">
                 <img
                   src={item.picture}
                   alt={item.name}
-                  className="w-12 h-12 rounded-full object-cover border border-gray-600"
+                  className="w-10 h-10 rounded-full object-cover border border-dark-600 md:w-12 md:h-12"
                   loading="lazy"
                 />
                 <span className="flex flex-col gap-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm leading-[1.6] font-semibold text-neutral-800 dark:text-white">
+                    <span className="text-[0.85rem] leading-[1.5] font-semibold text-dark-text-primary md:text-sm md:leading-[1.6]">
                       {item.name}
                     </span>
                     <img
                       src={item.nationality}
                       alt={`${item.name}'s nationality flag`}
-                      className="w-6 h-4 object-cover"
+                      className="w-5 h-3 object-cover md:w-6 md:h-4"
                       loading="lazy"
                     />
                   </div>
-                  <span className="text-sm leading-[1.6] font-normal text-neutral-500 dark:text-gray-400">
+                  <span className="text-[0.75rem] leading-[1.5] font-normal text-dark-text-secondary md:text-sm md:leading-[1.6]">
                     {item.role}
                   </span>
                 </span>

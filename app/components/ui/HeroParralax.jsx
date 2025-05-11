@@ -98,7 +98,7 @@ export const HeroParallax = ({ products }) => {
   return (
     <div
       ref={ref}
-      className="h-[200vh] py-10 md:py-20 overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
+      className="h-[200vh] overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
     >
       {/* Background effects - Shooting stars */}
       <div className="absolute inset-0 z-[-1] pointer-events-none">
@@ -207,7 +207,7 @@ export const HeroParallax = ({ products }) => {
 
 export const Header = () => {
   return (
-    <div className="max-w-7xl mx-auto py-10 md:py-0 px-4 w-full">
+    <div className="max-w-7xl mx-auto px-4 w-full">
       <div className=" rounded-3xl p-4 md:p-8 border-amber-50">
         <div className="flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-6">
           <img
@@ -239,7 +239,7 @@ export const Header = () => {
                   borderRadius="1.75rem"
                   className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
                 >
-                  Get in Touch
+                  Download CV
                 </Button>
               </Link>
             </div>
