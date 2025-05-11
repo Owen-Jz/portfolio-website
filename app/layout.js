@@ -8,8 +8,8 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Your Portfolio",
-  description: "Portfolio website showcasing projects and skills",
+  title: "Owen Digitals",
+  description: "My Portfolio website showcasing projects and skills",
 };
 
 export default function RootLayout({ children }) {

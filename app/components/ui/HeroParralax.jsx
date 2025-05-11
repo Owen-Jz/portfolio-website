@@ -218,14 +218,14 @@ export const Header = () => {
                   Get in Touch
                 </Button>
               </Link>
-              <Link href="/cv.pdf">
+              {/* <Link href="/cv.pdf">
                 <Button
                   borderRadius="1.75rem"
                   className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
                 >
                   Download CV
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

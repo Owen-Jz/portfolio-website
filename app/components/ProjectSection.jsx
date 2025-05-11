@@ -2,97 +2,99 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { projectsData } from "./projectinfo";
 
 // Project data - replace with your actual projects
-const projectsData = {
-  brandDesign: [
-    {
-      id: 1,
-      title: "Premium Fashion Brand Identity",
-      category: "Brand Design",
-      image: "product1.png",
-      color: "#b02222",
-      description: "Complete visual identity for luxury fashion brand.",
-      tags: ["Branding", "Visual Identity", "Logo Design"],
-    },
-    {
-      id: 2,
-      title: "Organic Food Company Rebrand",
-      category: "Brand Design",
-      image: "product2.png",
-      color: "#22b0b0",
-      description: "Fresh, eco-conscious rebrand for organic food provider.",
-      tags: ["Rebrand", "Packaging", "Strategy"],
-    },
-    {
-      id: 3,
-      title: "Tech Startup Brand Package",
-      category: "Brand Design",
-      image: "product3.png",
-      color: "#b022b0",
-      description: "Modern, scalable brand system for emerging tech company.",
-      tags: ["Tech Branding", "Visual System", "Brand Guidelines"],
-    },
-  ],
-  productDesign: [
-    {
-      id: 4,
-      title: "Mobile Banking App Design",
-      category: "Product Design",
-      image: "product4.png",
-      color: "#22b022",
-      description: "User-friendly interface for next-gen banking application.",
-      tags: ["UI/UX", "Mobile Design", "Fintech"],
-    },
-    {
-      id: 5,
-      title: "Smart Home Control System",
-      category: "Product Design",
-      image: "product5.png",
-      color: "#b07022",
-      description: "Intuitive dashboard for managing connected home devices.",
-      tags: ["Dashboard", "IoT", "User Interface"],
-    },
-    {
-      id: 6,
-      title: "Fitness Tracking Wearable UX",
-      category: "Product Design",
-      image: "product6.png",
-      color: "#2270b0",
-      description: "Seamless experience for health and fitness monitoring.",
-      tags: ["Wearable Tech", "UX Design", "Health Tech"],
-    },
-  ],
-  webDevelopment: [
-    {
-      id: 7,
-      title: "E-commerce Platform Redesign",
-      category: "Web Development",
-      image: "product1.png",
-      color: "#b0b022",
-      description: "Full-stack development for modern shopping experience.",
-      tags: ["Next.js", "E-commerce", "Full Stack"],
-    },
-    {
-      id: 8,
-      title: "Educational Platform",
-      category: "Web Development",
-      image: "product2.png",
-      color: "#5022b0",
-      description: "Interactive learning environment with advanced features.",
-      tags: ["React", "EdTech", "Interactive"],
-    },
-    {
-      id: 9,
-      title: "Real Estate Listing Portal",
-      category: "Web Development",
-      image: "product3.png",
-      color: "#b05022",
-      description: "Property search and management system with 3D tours.",
-      tags: ["Three.js", "Tailwind", "Property Tech"],
-    },
-  ],
-};
+// const projectsData = {
+//   brandDesign: [
+//     {
+//       id: 1,
+//       title: "Organ Station Brand Identity",
+//       category: "Brand Design",
+//       image: "projects/organstation.png",
+//       color: "#F8804F",
+//       description:
+//         "A Branding project for a new startup in the health industry",
+//       tags: ["Branding", "Visual Identity", "Logo Design"],
+//     },
+//     {
+//       id: 2,
+//       title: "Organic Food Company Rebrand",
+//       category: "Brand Design",
+//       image: "product2.png",
+//       color: "#22b0b0",
+//       description: "Fresh, eco-conscious rebrand for organic food provider.",
+//       tags: ["Rebrand", "Packaging", "Strategy"],
+//     },
+//     {
+//       id: 3,
+//       title: "Tech Startup Brand Package",
+//       category: "Brand Design",
+//       image: "product3.png",
+//       color: "#b022b0",
+//       description: "Modern, scalable brand system for emerging tech company.",
+//       tags: ["Tech Branding", "Visual System", "Brand Guidelines"],
+//     },
+//   ],
+//   productDesign: [
+//     {
+//       id: 4,
+//       title: "Mobile Banking App Design",
+//       category: "Product Design",
+//       image: "product4.png",
+//       color: "#22b022",
+//       description: "User-friendly interface for next-gen banking application.",
+//       tags: ["UI/UX", "Mobile Design", "Fintech"],
+//     },
+//     {
+//       id: 5,
+//       title: "Smart Home Control System",
+//       category: "Product Design",
+//       image: "product5.png",
+//       color: "#b07022",
+//       description: "Intuitive dashboard for managing connected home devices.",
+//       tags: ["Dashboard", "IoT", "User Interface"],
+//     },
+//     {
+//       id: 6,
+//       title: "Fitness Tracking Wearable UX",
+//       category: "Product Design",
+//       image: "product6.png",
+//       color: "#2270b0",
+//       description: "Seamless experience for health and fitness monitoring.",
+//       tags: ["Wearable Tech", "UX Design", "Health Tech"],
+//     },
+//   ],
+//   webDevelopment: [
+//     {
+//       id: 7,
+//       title: "E-commerce Platform Redesign",
+//       category: "Web Development",
+//       image: "product1.png",
+//       color: "#b0b022",
+//       description: "Full-stack development for modern shopping experience.",
+//       tags: ["Next.js", "E-commerce", "Full Stack"],
+//     },
+//     {
+//       id: 8,
+//       title: "Educational Platform",
+//       category: "Web Development",
+//       image: "product2.png",
+//       color: "#5022b0",
+//       description: "Interactive learning environment with advanced features.",
+//       tags: ["React", "EdTech", "Interactive"],
+//     },
+//     {
+//       id: 9,
+//       title: "Real Estate Listing Portal",
+//       category: "Web Development",
+//       image: "product3.png",
+//       color: "#b05022",
+//       description: "Property search and management system with 3D tours.",
+//       tags: ["Three.js", "Tailwind", "Property Tech"],
+//     },
+//   ],
+// };
 
 // Individual Project Card component
 const ProjectCard = ({ project, index }) => {

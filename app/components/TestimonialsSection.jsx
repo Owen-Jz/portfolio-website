@@ -29,8 +29,8 @@ const testimonials = [
     quote:
       "Owen is a very diverse creative who brings innovation to whatever he does. His personality and approach to problem solving is impeccable. I recommend him for his brilliant and innovative approach.",
     name: "IB Douglas",
-    role: "CEO, Probitech",
-    picture: "/avatars/john-doe.png",
+    role: "CEO, Probitek",
+    picture: "/profiles/ib.png",
     nationality: "/flags/Nigeria.png",
   },
   {
@@ -38,16 +38,16 @@ const testimonials = [
       "Fantastic job on Carb’s brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
     name: "Victor Aghaji",
     role: "CEO, Carb",
-    picture: "/avatars/jane-smith.png",
+    picture: "/profiles/victor.png",
     nationality: "/flags/Nigeria.png",
   },
   {
     quote:
-      "Seamless LMS design for Nigerian schools, with a user-centric approach and flawless implementation.",
-    name: "Alex Brown",
-    role: "Lead Developer, Silicon Delta",
-    picture: "/avatars/alex-brown.png",
-    nationality: "/flags/ng.png",
+      "Working with Owen was a breath of fresh air. He communicated well, was upfront, and most importantly, delivered on time. What I perhaps liked most about working with Owen was how he took us through the entire design process. From conception to completion, we had a say in every step — and in the end, this greatly contributed to the perfect product he delivered. I highly recommend him.",
+    name: "Mr Moithuti",
+    role: "CEO, Moithuti",
+    picture: "/profiles/moithuti.png",
+    nationality: "/flags/botswana.png",
   },
   {
     quote:

@@ -1,13 +1,13 @@
 "use client";
-import React from "react";
+
+import React, { useRef } from "react";
 import {
   motion,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
   useTransform,
-} from "motion/react";
-import { useRef } from "react";
+} from "framer-motion";
 import { cn } from "../../libs/utils";
 
 export function Button({
@@ -16,14 +16,14 @@ export function Button({
   as: Component = "button",
   containerClassName,
   borderClassName,
-  duration,
+  duration = 3000,
   className,
   ...otherProps
 }) {
   return (
     <Component
       className={cn(
-        "relative h-[50px] w-40 overflow-hidden bg-transparent p-[1px] text-xl",
+        "relative w-36 h-12 md:w-40 md:h-[50px] overflow-hidden p-[1px] text-lg md:text-xl",
         containerClassName
       )}
       style={{
@@ -38,7 +38,7 @@ export function Button({
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
-              "h-20 w-20 bg-[radial-gradient(#B02222_60%,transparent_60%)] opacity-[0.8]",
+              "h-20 w-20 bg-[radial-gradient(#B02222_60%,transparent_60%)] opacity-[0.7]",
               borderClassName
             )}
           />
@@ -46,7 +46,7 @@ export function Button({
       </div>
       <div
         className={cn(
-          "relative flex h-full w-full items-center justify-center border border-slate-800 bg-slate-900/[0.8] text-sm text-white antialiased backdrop-blur-xl",
+          "relative flex h-full w-full items-center justify-center border border-dark-600 backdrop-blur-md text-dark-text-primary font-['Manrope'] font-semibold transition-colors duration-200 hover:text-brandRed",
           className
         )}
         style={{
@@ -66,7 +66,7 @@ export const MovingBorder = ({
   ry,
   ...otherProps
 }) => {
-  const pathRef = useRef();
+  const pathRef = useRef(null);
   const progress = useMotionValue(0);
 
   useAnimationFrame((time) => {
