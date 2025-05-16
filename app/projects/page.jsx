@@ -57,7 +57,7 @@ const ProjectCard = ({ project, index }) => {
       whileHover="hover"
       whileTap="tap"
     >
-      <Link href={`/projects/${project.id}`} className="block h-full">
+      <Link href={project.link} className="block h-full">
         <div className="border border-gray-600 rounded-2xl overflow-hidden h-full min-h-[400px] bg-dark-800/80 backdrop-blur-sm transition-colors hover:border-gray-500">
           <div className="relative h-48 sm:h-56 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent z-10" />
@@ -225,31 +225,8 @@ const ProjectsPage = () => {
               ))}
             </div>
           </motion.div>
-
-          {/* CTA */}
-          <motion.div
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            variants={sectionVariants}
-            className="text-center"
-          >
-            <h3 className="text-xl sm:text-2xl font-semibold text-white mb-4 font-['Manrope']">
-              Ready to Collaborate?
-            </h3>
-            <p className="text-base sm:text-lg text-gray-300 max-w-xl mx-auto mb-6 font-['Manrope']">
-              Let's bring your ideas to life with innovative design and
-              development.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-brandRed to-[#d38787] text-white font-medium rounded-full hover:bg-gradient-to-l transition-all duration-300"
-            >
-              Get in Touch
-            </Link>
-          </motion.div>
         </div>
       </section>
-      <FooterSection />
     </div>
   );
 };
