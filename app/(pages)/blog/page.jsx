@@ -3,9 +3,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { NavbarDemo } from "../components/ui/ResizableNavbar";
-import FooterSection from "../components/FooterSection";
-import { cn } from "../libs/utils";
+import { NavbarDemo } from "../../components/ui/ResizableNavbar";
+import FooterSection from "../../components/FooterSection";
+import { cn } from "../../libs/utils";
 
 const BlogComingSoon = () => {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });

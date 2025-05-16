@@ -4,10 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "../libs/utils"; // Assuming this path is correct
-import { NavbarDemo } from "../components/ui/ResizableNavbar"; // Assuming this path is correct
-import FooterSection from "../components/FooterSection";
-import ContactSection from "../components/ContactSection";
+import { cn } from "../../libs/utils"; // Assuming this path is correct
+import { NavbarDemo } from "../../components/ui/ResizableNavbar"; // Assuming this path is correct
+import FooterSection from "../../components/FooterSection";
+import ContactSection from "../../components/ContactSection";
 export default function AboutSectionRefined() {
   const skills = [
     "UI/UX Design",

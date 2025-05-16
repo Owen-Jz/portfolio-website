@@ -73,12 +73,7 @@ const ContactSection = () => {
           whileHover={{ scale: 1.02, rotate: 1 }}
           transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
-          {/* Spotlight Effect */}
-          <motion.div
-            className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none"
-            animate={{ opacity: inView ? 0.6 : 0 }}
-            transition={{ duration: 0.5 }}
-          />
+
 
           {/* Card */}
           <div className="relative bg-gray-800/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-600 hover:border-[#b02222] transition-colors duration-300">

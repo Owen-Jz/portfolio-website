@@ -85,7 +85,7 @@ const FinddrBrandPage = () => {
             src="/projects/finddr/F3.png"
             alt="Jedidah Logo Sketch"
             width={1200}
-            height={200}                
+            height={200}
             className="rounded-2xl mt-10"
           />
         </section>
@@ -121,8 +121,13 @@ const FinddrBrandPage = () => {
           height={200}
           className="rounded-2xl mt-10"
         />
-
-
+        <Image
+          src="/projects/finddr/F8.png"
+          alt="Jedidah Branding Asset"
+          width={1200}
+          height={200}
+          className="rounded-2xl mt-10"
+        />
       </div>
     </div>
   );

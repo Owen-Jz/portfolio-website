@@ -18,13 +18,6 @@ const ExperienceCard = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Spotlight Effect */}
-      <motion.div
-        className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none"
-        animate={{ opacity: isExpanded ? 0.8 : 0.4 }}
-        transition={{ duration: 0.3 }}
-      />
-
       {/* Card Content */}
       <div className="relative z-10">
         <div className="flex items-center space-x-3 mb-4">
