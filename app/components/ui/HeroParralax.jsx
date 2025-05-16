@@ -5,29 +5,20 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Link from "next/link";
 import { cn } from "../../libs/utils";
 import { ChevronDown } from "lucide-react";
-import "../../globals.css";
 import { Button } from "./MovingBorder";
 
 export const HeroParallax = ({ products }) => {
-  // Responsive handling
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-
-    // Initial check
     checkMobile();
-
-    // Set up listener for window resizing
     window.addEventListener("resize", checkMobile);
-
-    // Clean up
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Split products for different rows - handle fewer products gracefully
   const firstRow = products.slice(0, Math.min(5, products.length));
   const secondRow =
     products.length > 5 ? products.slice(5, Math.min(10, products.length)) : [];
@@ -43,8 +34,6 @@ export const HeroParallax = ({ products }) => {
   });
 
   const springConfig = { stiffness: 300, damping: 30, bounce: 100 };
-
-  // Adjust translation values for mobile
   const translateXValue = isMobile ? 300 : 1000;
 
   const translateX = useSpring(
@@ -76,12 +65,10 @@ export const HeroParallax = ({ products }) => {
     springConfig
   );
 
-  // Scroll indicator animation
   const scrollIndicatorY = useSpring(
     useTransform(scrollYProgress, [0, 0.1], [0, 20]),
     { stiffness: 100, damping: 30 }
   );
-
   const scrollIndicatorOpacity = useSpring(
     useTransform(scrollYProgress, [0, 0.1], [1, 0]),
     { stiffness: 100, damping: 30 }
@@ -89,10 +76,7 @@ export const HeroParallax = ({ products }) => {
 
   const scrollToContent = () => {
     const targetPosition = window.innerHeight * 0.6;
-    window.scrollTo({
-      top: targetPosition,
-      behavior: "smooth",
-    });
+    window.scrollTo({ top: targetPosition, behavior: "smooth" });
   };
 
   return (
@@ -100,17 +84,11 @@ export const HeroParallax = ({ products }) => {
       ref={ref}
       className="h-[200vh] overflow-hidden antialiased relative flex flex-col [perspective:1000px] [transform-style:preserve-3d]"
     >
-      {/* Header section - centered with flex */}
       <div className="min-h-screen flex items-center justify-center z-[10]">
         <Header />
-
-        {/* Scroll indicator */}
         <motion.div
           className="absolute bottom-10 left-1/2 transform -translate-x-1/2 cursor-pointer"
-          style={{
-            y: scrollIndicatorY,
-            opacity: scrollIndicatorOpacity,
-          }}
+          style={{ y: scrollIndicatorY, opacity: scrollIndicatorOpacity }}
           onClick={scrollToContent}
         >
           <motion.div
@@ -123,20 +101,13 @@ export const HeroParallax = ({ products }) => {
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Projects section with parallax effect */}
       <motion.div
-        style={{
-          rotateX,
-          rotateZ,
-          translateY,
-          opacity,
-        }}
+        style={{ rotateX, rotateZ, translateY, opacity }}
         className="px-4"
       >
         <motion.div
           style={{ opacity: headingOpacity }}
-          className="max-w-7xl mx-auto px-4 mb-10"
+          className="max-w-7xl mx-auto px-4 mb-6"
         >
           <div className="flex flex-col gap-4">
             <h2 className="text-3xl md:text-5xl font-bold text-white font-['Manrope']">
@@ -149,10 +120,8 @@ export const HeroParallax = ({ products }) => {
             </p>
           </div>
         </motion.div>
-
-        {/* First row of projects */}
         {firstRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible pb-4 md:pb-0 md:flex-row-reverse md:space-x-reverse md:space-x-20 mb-10 md:mb-20">
+          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row-reverse md:space-x-reverse md:space-x-20 mb-4 md:mb-8">
             {firstRow.map((product) => (
               <ProductCard
                 product={product}
@@ -163,10 +132,8 @@ export const HeroParallax = ({ products }) => {
             ))}
           </motion.div>
         )}
-
-        {/* Second row of projects */}
         {secondRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible pb-4 md:pb-0 md:flex-row md:space-x-20 mb-10 md:mb-20">
+          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row md:space-x-20 mb-4 md:mb-8">
             {secondRow.map((product) => (
               <ProductCard
                 product={product}
@@ -177,10 +144,8 @@ export const HeroParallax = ({ products }) => {
             ))}
           </motion.div>
         )}
-
-        {/* Third row of projects */}
         {thirdRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible pb-4 md:pb-0 md:flex-row-reverse md:space-x-reverse md:space-x-20">
+          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row-reverse md:space-x-reverse md:space-x-20 mb-4 md:mb-8">
             {thirdRow.map((product) => (
               <ProductCard
                 product={product}
@@ -199,7 +164,7 @@ export const HeroParallax = ({ products }) => {
 export const Header = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 w-full">
-      <div className=" rounded-3xl p-4 md:p-8 border-amber-50">
+      <div className="rounded-3xl p-4 md:p-8 border-amber-50">
         <div className="flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-6">
           <img
             src="/profile.jpg"
@@ -217,7 +182,7 @@ export const Header = () => {
               digital experiences together.
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 md:mt-6">
-              <Link href="/contact" className="hover:cursor-pointer">
+              <Link href="/contact">
                 <Button
                   borderRadius="1.75rem"
                   className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
@@ -226,10 +191,7 @@ export const Header = () => {
                 </Button>
               </Link>
               <Link href="/cv.pdf">
-                <div
-                  borderRadius="1.75rem"
-                  className="h-16 w-40 bg-transparent p-[1px] rounded-full flex items-center justify-center text-white antialiased backdrop-blur-xl hover:bg-red-950 transition-all"
-                >
+                <div className="h-16 w-40 bg-transparent p-[1px] rounded-full flex items-center justify-center text-white antialiased backdrop-blur-xl hover:bg-red-950 transition-all">
                   Download CV
                 </div>
               </Link>
@@ -242,16 +204,12 @@ export const Header = () => {
 };
 
 export const ProductCard = ({ product, translate, isMobile }) => {
-  // Don't apply transform effect on mobile
   const transformStyle = isMobile ? {} : { x: translate };
 
   return (
     <motion.div
       style={transformStyle}
-      whileHover={{
-        y: -10,
-        scale: 1.03,
-      }}
+      whileHover={{ y: -10, scale: 1.03 }}
       key={product.title}
       className="group/product h-60 w-60 sm:h-72 sm:w-72 md:h-96 md:w-[30rem] relative shrink-0 mx-2 md:mx-0"
     >

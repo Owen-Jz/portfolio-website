@@ -7,11 +7,6 @@ export function HeroSection() {
 }
 export const products = [
   {
-    title: "Finddr",
-    link: "/projects/finddr",
-    thumbnail: "/projects/finddr.png",
-  },
-  {
     title: "Web Kitchen",
     link: "/projects/web-kitchen",
     thumbnail: "/projects/WK1.png",
@@ -26,6 +21,11 @@ export const products = [
     title: "True North",
     link: "/projects/true-north",
     thumbnail: "/projects/true-north.png",
+  },
+  {
+    title: "Finddr",
+    link: "/projects/finddr",
+    thumbnail: "/projects/finddr.png",
   },
   {
     title: "Ecommerce Dashboard",

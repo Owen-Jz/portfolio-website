@@ -2,6 +2,7 @@
 
 import { cn } from "../../libs/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
+import Link from "next/link";
 import {
   motion,
   AnimatePresence,
@@ -278,20 +279,24 @@ export function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full"
-              >
-                Book a call
-              </NavbarButton>
+              <Link href="/blog">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Blog
+                </NavbarButton>
+              </Link>
+              <Link href="/contact">
+                <NavbarButton
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  variant="primary"
+                  className="w-full"
+                >
+                  Hire Me
+                </NavbarButton>
+              </Link>
             </div>
           </MobileNavMenu>
         </MobileNav>
