@@ -225,14 +225,14 @@ export const Header = () => {
                   Get in Touch
                 </Button>
               </Link>
-              {/* <Link href="/cv.pdf">
-                <Button
+              <Link href="/cv.pdf">
+                <div
                   borderRadius="1.75rem"
-                  className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                  className="h-16 w-40 bg-transparent p-[1px] rounded-full flex items-center justify-center text-white antialiased backdrop-blur-xl hover:bg-red-950 transition-all"
                 >
                   Download CV
-                </Button>
-              </Link> */}
+                </div>
+              </Link>
             </div>
           </div>
         </div>

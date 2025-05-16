@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useRef, useEffect } from "react";
 
 const ToolLogo = ({ src, alt = "Tool Logo" }) => {
@@ -29,7 +29,7 @@ const AboutMe = () => {
           <div className="flex flex-col space-y-[11.5px] rounded-3xl items-center py-4 w-full max-w-[375px] mx-auto lg:mx-0 min-h-[380px] relative overflow-hidden border border-gray-600">
             <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
             <div className="flex flex-row items-center space-x-3 z-10">
-              <img src="/Icon.svg" alt="Logo" className="w-[35px] h-[34px]" />
+              <img src="/star.svg" alt="Logo" className="w-[35px] h-[34px]" />
               <h3 className="text-white text-[22px] font-semibold">
                 My Workspace
               </h3>
@@ -51,7 +51,7 @@ const AboutMe = () => {
           <div className="flex flex-col space-y-[11.5px] rounded-3xl items-center py-4 w-full max-w-[375px] mx-auto lg:mx-0 min-h-[402px] justify-center relative overflow-hidden border border-gray-600">
             <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
             <div className="flex flex-row items-center space-x-3 z-10">
-              <img src="/Icon.svg" alt="Logo" className="w-[35px] h-[34px]" />
+              <img src="/star.svg" alt="Logo" className="w-[35px] h-[34px]" />
               <h3 className="text-white text-[22px] font-semibold leading-[33px]">
                 My Stack
               </h3>
@@ -107,7 +107,7 @@ const AboutMe = () => {
               <div className="absolute left-7 top-8 flex flex-col gap-[11.15px] z-10">
                 <div className="flex gap-[11.15px]">
                   <img
-                    src="/Icon.svg"
+                    src="/star.svg"
                     alt="Logo"
                     className="w-[35px] h-[34px]"
                   />
@@ -116,7 +116,7 @@ const AboutMe = () => {
                   </div>
                 </div>
                 <p className="w-full max-w-[319.3px] text-white/50 text-base sm:text-lg font-normal leading-[25.10px]">
-                  Basically, things I enjoy doing!
+                  Basically, things I enjoy  doing!
                 </p>
               </div>
               {[
