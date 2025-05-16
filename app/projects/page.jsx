@@ -9,9 +9,6 @@ import { NavbarDemo } from "../components/ui/ResizableNavbar";
 import FooterSection from "../components/FooterSection";
 import { projectsData } from "../components/projectinfo";
 
-// Project data from ProjectsSection
-
-// Reused ProjectCard component
 const ProjectCard = ({ project, index }) => {
   const [ref, inView] = useInView({
     triggerOnce: false,
@@ -52,7 +49,7 @@ const ProjectCard = ({ project, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-16px)]"
+      className="w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-12px)]"
       custom={index}
       initial="hidden"
       animate={inView ? "visible" : "hidden"}
@@ -60,63 +57,69 @@ const ProjectCard = ({ project, index }) => {
       whileHover="hover"
       whileTap="tap"
     >
-      <div className="border border-gray-600 rounded-3xl overflow-hidden h-full min-h-[450px]  backdrop-blur-sm">
-        <div className="relative h-64 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-tr from-black/50 to-transparent z-10" />
-          <motion.div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${project.image})` }}
-            whileHover={{
-              scale: 1.05,
-              transition: { duration: 0.5 },
-            }}
-          />
-          <div className="absolute top-6 left-6 z-20">
+      <Link href={`/projects/${project.id}`} className="block h-full">
+        <div className="border border-gray-600 rounded-2xl overflow-hidden h-full min-h-[400px] bg-dark-800/80 backdrop-blur-sm transition-colors hover:border-gray-500">
+          <div className="relative h-48 sm:h-56 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/60 to-transparent z-10" />
             <motion.div
-              className="px-4 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r from-brandRed to-[#d38787]"
-              whileHover={{ scale: 1.05 }}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${project.image})` }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.5 },
+              }}
+            />
+            <div className="absolute top-4 left-4 z-20">
+              <motion.div
+                className="px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r from-brandRed to-[#d38787]"
+                whileHover={{ scale: 1.05 }}
+              >
+                {project.category}
+              </motion.div>
+            </div>
+          </div>
+          <div className="p-4 sm:p-6 space-y-3">
+            <h3 className="text-lg sm:text-xl font-bold text-white transition-colors">
+              {project.title}
+            </h3>
+            <p className="text-gray-300 text-sm sm:text-base line-clamp-3">
+              {project.description}
+            </p>
+            <div className="flex flex-wrap gap-2 pt-2">
+              {project.tags.map((tag, i) => (
+                <span
+                  key={i}
+                  className="px-2.5 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <motion.div
+              className="pt-3 flex items-center space-x-2 text-white cursor-pointer"
+              whileHover={{ x: 5 }}
             >
-              {project.category}
+              <span className="font-medium text-sm sm:text-base">
+                View Details
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 sm:h-5 sm:w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
             </motion.div>
           </div>
         </div>
-        <div className="p-6 space-y-4">
-          <h3 className="text-xl font-bold text-white group-hover:text-white/90 transition-colors">
-            {project.title}
-          </h3>
-          <p className="text-gray-300">{project.description}</p>
-          <div className="flex flex-wrap gap-2 pt-2">
-            {project.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          <motion.div
-            className="pt-4 flex items-center space-x-2 text-white group cursor-pointer"
-            whileHover={{ x: 5 }}
-          >
-            <span className="font-medium">View Details</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </motion.div>
-        </div>
-      </div>
+      </Link>
     </motion.div>
   );
 };
@@ -152,10 +155,10 @@ const ProjectsPage = () => {
   };
 
   return (
-    <div>
-      <section ref={ref} className=" py-20 min-h-screen">
-        <NavbarDemo />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+    <div className="bg-dark-900 min-h-screen">
+      <NavbarDemo />
+      <section ref={ref} className="py-12 sm:py-16 lg:py-20">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 space-y-12 sm:space-y-16">
           {/* Heading */}
           <motion.div
             className="text-center"
@@ -163,10 +166,10 @@ const ProjectsPage = () => {
             animate={inView ? "visible" : "hidden"}
             variants={headingVariants}
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 font-['Manrope']">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 font-['Manrope']">
               All Projects
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-['Manrope']">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto font-['Manrope']">
               Explore my full portfolio of work in brand design, product design,
               and web development.
             </p>
@@ -177,12 +180,12 @@ const ProjectsPage = () => {
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={sectionVariants}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <h2 className="text-2xl md:text-3xl font-semibold text-white font-['Manrope']">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white font-['Manrope']">
               Brand Design
             </h2>
-            <div className="flex flex-row gap-8 justify-center">
+            <div className="flex flex-wrap gap-3 sm:gap-5 justify-center">
               {projectsData.brandDesign.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} />
               ))}
@@ -194,12 +197,12 @@ const ProjectsPage = () => {
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={sectionVariants}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <h2 className="text-2xl md:text-3xl font-semibold text-white font-['Manrope']">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white font-['Manrope']">
               Product Design
             </h2>
-            <div className="flex flex-row gap-8 justify-center">
+            <div className="flex flex-wrap gap-3 sm:gap-5 justify-center">
               {projectsData.productDesign.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} />
               ))}
@@ -211,12 +214,12 @@ const ProjectsPage = () => {
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
             variants={sectionVariants}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <h2 className="text-2xl md:text-3xl font-semibold text-white font-['Manrope']">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white font-['Manrope']">
               Web Development
             </h2>
-            <div className="flex flex-row gap-8 justify-center">
+            <div className="flex flex-wrap gap-3 sm:gap-5 justify-center">
               {projectsData.webDevelopment.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} />
               ))}
@@ -229,9 +232,24 @@ const ProjectsPage = () => {
             animate={inView ? "visible" : "hidden"}
             variants={sectionVariants}
             className="text-center"
-          ></motion.div>
+          >
+            <h3 className="text-xl sm:text-2xl font-semibold text-white mb-4 font-['Manrope']">
+              Ready to Collaborate?
+            </h3>
+            <p className="text-base sm:text-lg text-gray-300 max-w-xl mx-auto mb-6 font-['Manrope']">
+              Let's bring your ideas to life with innovative design and
+              development.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-brandRed to-[#d38787] text-white font-medium rounded-full hover:bg-gradient-to-l transition-all duration-300"
+            >
+              Get in Touch
+            </Link>
+          </motion.div>
         </div>
       </section>
+      <FooterSection />
     </div>
   );
 };
