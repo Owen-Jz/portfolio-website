@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { projectsData } from "./projectinfo";
+import Link from "next/link";
 
 // Project data - replace with your actual projects
 // const projectsData = {
@@ -185,21 +186,23 @@ const ProjectCard = ({ project, index }) => {
             className="pt-4 flex items-center space-x-2 text-white group cursor-pointer"
             whileHover={{ x: 5 }}
           >
-            <span className="font-medium">View Project</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
+            <Link href={project.link} className="flex items-center gap-2">
+              <span className="font-medium">View Project</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
           </motion.div>
         </div>
       </div>
@@ -348,38 +351,40 @@ const ProjectsSection = () => {
         </AnimatePresence>
 
         {/* View All Projects Button */}
-        <motion.div
-          className="flex justify-center mt-16"
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          <motion.button
-            className="px-8 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-white font-medium flex items-center space-x-2 hover:shadow-lg"
-            whileHover={{
-              scale: 1.05,
-              boxShadow:
-                "0 20px 25px -5px rgba(176, 34, 34, 0.3), 0 8px 10px -6px rgba(176, 34, 34, 0.2)",
-            }}
-            whileTap={{ scale: 0.98 }}
+        <Link href="/projects">
+          <motion.div
+            className="flex justify-center mt-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
           >
-            <span>View All Projects</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <motion.button
+              className="px-8 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-white font-medium flex items-center space-x-2 hover:shadow-lg"
+              whileHover={{
+                scale: 1.05,
+                boxShadow:
+                  "0 20px 25px -5px rgba(176, 34, 34, 0.3), 0 8px 10px -6px rgba(176, 34, 34, 0.2)",
+              }}
+              whileTap={{ scale: 0.98 }}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </motion.button>
-        </motion.div>
+              <span>View All Projects</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </motion.button>
+          </motion.div>
+        </Link>
       </div>
     </section>
   );

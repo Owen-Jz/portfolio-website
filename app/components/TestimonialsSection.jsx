@@ -27,18 +27,18 @@ export function TestimonialsSection() {
 const testimonials = [
   {
     quote:
+      "The e-commerce platform redesign was a game-changer, delivering a modern and seamless shopping experience.",
+    name: "Torti Ama-Njoku",
+    role: "Founder, ShopTrend",
+    picture: "/profiles/torti.png",
+    nationality: "/flags/Canada.png",
+  },
+  {
+    quote:
       "Owen is a very diverse creative who brings innovation to whatever he does. His personality and approach to problem solving is impeccable. I recommend him for his brilliant and innovative approach.",
     name: "IB Douglas",
     role: "CEO, Probitek",
     picture: "/profiles/ib.png",
-    nationality: "/flags/Nigeria.png",
-  },
-  {
-    quote:
-      "Fantastic job on Carb’s brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
-    name: "Victor Aghaji",
-    role: "CEO, Carb",
-    picture: "/profiles/victor.png",
     nationality: "/flags/Nigeria.png",
   },
   {
@@ -51,18 +51,18 @@ const testimonials = [
   },
   {
     quote:
-      "The rebranding for our organic food company was fresh and eco-conscious, elevating our market presence.",
-    name: "Emma Wilson",
-    role: "Marketing Director, GreenFoods",
-    picture: "/avatars/emma-wilson.png",
-    nationality: "/flags/ca.png",
+      "Working with Owen was an amazing experience! He was a true team player throughout our brand project bringing creativity, collaboration, and a strong work ethic. His positive attitude and commitment made a real impact. I’d gladly work with him again!",
+    name: "Nnene Bright-Victor",
+    role: "CEO, NenysTouchs",
+    picture: "/profiles/nnene.png",
+    nationality: "/flags/Nigeria.png",
   },
   {
     quote:
-      "The e-commerce platform redesign was a game-changer, delivering a modern and seamless shopping experience.",
-    name: "Michael Chen",
-    role: "Founder, ShopTrend",
-    picture: "/avatars/michael-chen.png",
-    nationality: "/flags/cn.png",
+      "Fantastic job on Carb’s brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
+    name: "Victor Aghaji",
+    role: "CEO, Carb",
+    picture: "/profiles/carb.png",
+    nationality: "/flags/Nigeria.png",
   },
 ];

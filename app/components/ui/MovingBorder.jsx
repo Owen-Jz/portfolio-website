@@ -1,13 +1,13 @@
 "use client";
-
-import React, { useRef } from "react";
+import React from "react";
 import {
   motion,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
   useTransform,
-} from "framer-motion";
+} from "motion/react";
+import { useRef } from "react";
 import { cn } from "../../libs/utils";
 
 export function Button({
@@ -16,14 +16,14 @@ export function Button({
   as: Component = "button",
   containerClassName,
   borderClassName,
-  duration = 3000,
+  duration,
   className,
   ...otherProps
 }) {
   return (
     <Component
       className={cn(
-        "relative w-36 h-12 md:w-40 md:h-[50px] overflow-hidden p-[1px] text-lg md:text-xl",
+        "relative h-16 w-40 overflow-hidden bg-transparent p-[1px] text-xl",
         containerClassName
       )}
       style={{
@@ -31,22 +31,27 @@ export function Button({
       }}
       {...otherProps}
     >
-      <div
+      <motion.div
         className="absolute inset-0"
         style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
+        whileHover={{
+          scale: 1.05,
+          boxShadow: "0 0 20px rgba(239, 68, 68, 0.7)",
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <MovingBorder duration={duration} rx="30%" ry="30%">
           <div
             className={cn(
-              "h-20 w-20 bg-[radial-gradient(#B02222_60%,transparent_60%)] opacity-[0.7]",
+              "h-20 w-20 bg-[radial-gradient(#ef4444_40%,transparent_60%)] opacity-[0.8]",
               borderClassName
             )}
           />
         </MovingBorder>
-      </div>
+      </motion.div>
       <div
         className={cn(
-          "relative flex h-full w-full items-center justify-center border border-dark-600 backdrop-blur-md text-dark-text-primary font-['Manrope'] font-semibold transition-colors duration-200 hover:text-brandRed",
+          "relative flex h-full w-full items-center justify-center bg-slate-900/[0.8] text-sm text-white antialiased backdrop-blur-xl hover:bg-red-950 transition-all",
           className
         )}
         style={{
@@ -66,7 +71,7 @@ export const MovingBorder = ({
   ry,
   ...otherProps
 }) => {
-  const pathRef = useRef(null);
+  const pathRef = useRef();
   const progress = useMotionValue(0);
 
   useAnimationFrame((time) => {

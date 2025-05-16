@@ -138,9 +138,16 @@ export const HeroParallax = ({ products }) => {
           style={{ opacity: headingOpacity }}
           className="max-w-7xl mx-auto px-4 mb-10"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white font-['Manrope']">
-            Featured Projects
-          </h2>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-white font-['Manrope']">
+              Featured Projects
+            </h2>
+            <p className="text-gray-200 font-['Manrope'] font-normal">
+              <span className="font-bold">Welcome to my portfolio! </span>
+              here are some of the projects that helped my clients grow their
+              business
+            </p>
+          </div>
         </motion.div>
 
         {/* First row of projects */}
