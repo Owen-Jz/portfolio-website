@@ -29,7 +29,7 @@ export const products = [
   },
   {
     title: "Ecommerce Dashboard",
-    link: "/projects/ecommerce",
+    link: "https://numero-theta-dusky.vercel.app/",
     thumbnail: "/projects/ecommerce.png",
   },
 ];

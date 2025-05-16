@@ -3,90 +3,62 @@
 import nodemailer from "nodemailer";
 
 export async function sendEmail(formData) {
+  const { name, email, message } = formData;
+
+  // Validate required fields
+  if (!name || !email || !message) {
+    return {
+      success: false,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  // Create a transporter using SMTP
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: true,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  });
+
   try {
-    const name = formData.name;
-    const email = formData.email;
-    const message = formData.message;
-
-    // Check if all fields are filled
-    if (!name || !email || !message) {
-      return { success: false, message: "Please fill out all fields" };
-    }
-
-    // Set up the email sender
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Email details
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
+    // Send email
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: process.env.CONTACT_EMAIL,
       subject: `New Contact Form Submission from ${name}`,
       text: `
-        Name: ${name}
-        Email: ${email}
-        Message: ${message}
+Name: ${name}
+Email: ${email}
+Message: ${message}
       `,
       html: `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Contact Form Submission</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e0e0e0; margin: 20px auto;">
-            <tr>
-              <td style="background-color: #b02222; padding: 20px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New Contact Form Submission</h1>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 20px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Name:</strong> ${name}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Email:</strong> ${email}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Message:</strong>
-                      <p style="margin: 5px 0; color: #555555; line-height: 1.5;">${message}</p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888888;">
-                <p style="margin: 0;">Sent from Owen Digitals Contact Form</p>
-                <p style="margin: 5px 0;">&copy; ${new Date().getFullYear()} Owen Digitals. All rights reserved.</p>
-              </td>
-            </tr>
-          </table>
-        </body>
-        </html>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background-color: #b02222; padding: 20px; border-radius: 8px 8px 0 0;">
+            <h1 style="color: white; margin: 0; font-size: 24px;">New Contact Form Submission</h1>
+          </div>
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0;">
+            <p style="margin: 0 0 15px 0;"><strong>Name:</strong> ${name}</p>
+            <p style="margin: 0 0 15px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="margin: 0 0 15px 0;"><strong>Message:</strong></p>
+            <p style="margin: 0; white-space: pre-wrap;">${message}</p>
+          </div>
+        </div>
       `,
+    });
+
+    return {
+      success: true,
+      message: "Thank you for your message! I'll get back to you soon.",
     };
-
-    // Send the email
-    await transporter.sendMail(mailOptions);
-
-    return { success: true, message: "Email sent successfully" };
   } catch (error) {
-    console.error("Error sending email:", error);
-    return { success: false, message: "Failed to send email" };
+    console.error("Email sending error:", error);
+    return {
+      success: false,
+      message: "Failed to send message. Please try again later.",
+    };
   }
 }

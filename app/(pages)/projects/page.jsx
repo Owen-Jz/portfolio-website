@@ -4,10 +4,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
-import { cn } from "../libs/utils";
-import { NavbarDemo } from "../components/ui/ResizableNavbar";
-import FooterSection from "../components/FooterSection";
-import { projectsData } from "../components/projectinfo";
+import { cn } from "../../libs/utils";
+import { NavbarDemo } from "../../components/ui/ResizableNavbar";
+import FooterSection from "../../components/FooterSection";
+import { projectsData } from "../../components/projectinfo";
 
 const ProjectCard = ({ project, index }) => {
   const [ref, inView] = useInView({

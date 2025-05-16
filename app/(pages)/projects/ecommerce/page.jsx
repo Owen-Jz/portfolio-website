@@ -23,7 +23,7 @@ const FinddrBrandPage = () => {
             tasked with designing a dashboard for their eccomerce platform.
           </p>
           <Image
-            src="/projects/ecommerce/e1.png"
+            src="/projects/ecommerce/E1.png"
             alt="Jedidah Logo"
             width={1200}
             height={200}
@@ -55,7 +55,7 @@ const FinddrBrandPage = () => {
         {/* Logo Breakdown section */}
         <section className="mb-12 space-y-4">
           <Image
-            src="/projects/ecommerce/e2.png"
+            src="/projects/ecommerce/E2.png"
             alt="Jedidah Logo Sketch"
             width={1200}
             height={200}

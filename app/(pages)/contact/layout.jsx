@@ -11,11 +11,11 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Projects - Owen Digitals",
-  description: "Explore my portfolio of design and development projects",
+  title: "Contact - Owen Digitals",
+  description: "Get in touch with Owen Digitals for your next project",
 };
 
-export default function ProjectsLayout({ children }) {
+export default function ContactLayout({ children }) {
   return (
     <html lang="en" className={manrope.variable}>
       <body className="font-manrope">
