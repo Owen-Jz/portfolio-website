@@ -7,87 +7,9 @@ import Link from "next/link";
 import { cn } from "../libs/utils";
 import { NavbarDemo } from "../components/ui/ResizableNavbar";
 import FooterSection from "../components/FooterSection";
+import { projectsData } from "../components/projectinfo";
+
 // Project data from ProjectsSection
-const projectsData = {
-  brandDesign: [
-    {
-      id: 1,
-      title: "Premium Fashion Brand Identity",
-      category: "Brand Design",
-      image: "/placeholders/product1.png",
-      description: "Complete visual identity for luxury fashion brand.",
-      tags: ["Branding", "Visual Identity", "Logo Design"],
-    },
-    {
-      id: 2,
-      title: "Organic Food Company Rebrand",
-      category: "Brand Design",
-      image: "/placeholders/product2.png",
-      description: "Fresh, eco-conscious rebrand for organic food provider.",
-      tags: ["Rebrand", "Packaging", "Strategy"],
-    },
-    {
-      id: 3,
-      title: "Tech Startup Brand Package",
-      category: "Brand Design",
-      image: "/placeholders/product3.png",
-      description: "Modern, scalable brand system for emerging tech company.",
-      tags: ["Tech Branding", "Visual System", "Brand Guidelines"],
-    },
-  ],
-  productDesign: [
-    {
-      id: 4,
-      title: "Mobile Banking App Design",
-      category: "Product Design",
-      image: "/placeholders/product4.png",
-      description: "User-friendly interface for next-gen banking application.",
-      tags: ["UI/UX", "Mobile Design", "Fintech"],
-    },
-    {
-      id: 5,
-      title: "Smart Home Control System",
-      category: "Product Design",
-      image: "/placeholders/product5.png",
-      description: "Intuitive dashboard for managing connected home devices.",
-      tags: ["Dashboard", "IoT", "User Interface"],
-    },
-    {
-      id: 6,
-      title: "Fitness Tracking Wearable UX",
-      category: "Product Design",
-      image: "/placeholders/product6.png",
-      description: "Seamless experience for health and fitness monitoring.",
-      tags: ["Wearable Tech", "UX Design", "Health Tech"],
-    },
-  ],
-  webDevelopment: [
-    {
-      id: 7,
-      title: "E-commerce Platform Redesign",
-      category: "Web Development",
-      image: "/placeholders/product1.png",
-      description: "Full-stack development for modern shopping experience.",
-      tags: ["Next.js", "E-commerce", "Full Stack"],
-    },
-    {
-      id: 8,
-      title: "Educational Platform",
-      category: "Web Development",
-      image: "/placeholders/product2.png",
-      description: "Interactive learning environment with advanced features.",
-      tags: ["React", "EdTech", "Interactive"],
-    },
-    {
-      id: 9,
-      title: "Real Estate Listing Portal",
-      category: "Web Development",
-      image: "/placeholders/product3.png",
-      description: "Property search and management system with 3D tours.",
-      tags: ["Three.js", "Tailwind", "Property Tech"],
-    },
-  ],
-};
 
 // Reused ProjectCard component
 const ProjectCard = ({ project, index }) => {
@@ -310,7 +232,6 @@ const ProjectsPage = () => {
           ></motion.div>
         </div>
       </section>
-      <FooterSection />
     </div>
   );
 };

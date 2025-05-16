@@ -69,7 +69,7 @@ export const projectsData = {
       id: 7,
       title: "Financial Tracking App",
       category: "Web Development",
-      image: "product1.png",
+      image: "projects/numero.png",
       color: "#b0b022",
       description: "A financial tracking app for tracking personal finances.",
       tags: ["Next.js", "E-commerce", "Full Stack"],

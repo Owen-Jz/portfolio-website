@@ -83,7 +83,7 @@ const ContactSection = () => {
           {/* Card */}
           <div className="relative bg-gray-800/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-600 hover:border-[#b02222] transition-colors duration-300">
             <motion.a
-              href="mailto:your.email@example.com"
+              href="/contact"
               className="block w-full px-6 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] text-white rounded-full font-semibold text-center font-['Manrope'] relative overflow-hidden"
               whileHover={{
                 scale: 1.05,

@@ -1,136 +1,43 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { projectsData } from "./projectinfo";
-import Link from "next/link";
+'use client';
 
-// Project data - replace with your actual projects
-// const projectsData = {
-//   brandDesign: [
-//     {
-//       id: 1,
-//       title: "Organ Station Brand Identity",
-//       category: "Brand Design",
-//       image: "projects/organstation.png",
-//       color: "#F8804F",
-//       description:
-//         "A Branding project for a new startup in the health industry",
-//       tags: ["Branding", "Visual Identity", "Logo Design"],
-//     },
-//     {
-//       id: 2,
-//       title: "Organic Food Company Rebrand",
-//       category: "Brand Design",
-//       image: "product2.png",
-//       color: "#22b0b0",
-//       description: "Fresh, eco-conscious rebrand for organic food provider.",
-//       tags: ["Rebrand", "Packaging", "Strategy"],
-//     },
-//     {
-//       id: 3,
-//       title: "Tech Startup Brand Package",
-//       category: "Brand Design",
-//       image: "product3.png",
-//       color: "#b022b0",
-//       description: "Modern, scalable brand system for emerging tech company.",
-//       tags: ["Tech Branding", "Visual System", "Brand Guidelines"],
-//     },
-//   ],
-//   productDesign: [
-//     {
-//       id: 4,
-//       title: "Mobile Banking App Design",
-//       category: "Product Design",
-//       image: "product4.png",
-//       color: "#22b022",
-//       description: "User-friendly interface for next-gen banking application.",
-//       tags: ["UI/UX", "Mobile Design", "Fintech"],
-//     },
-//     {
-//       id: 5,
-//       title: "Smart Home Control System",
-//       category: "Product Design",
-//       image: "product5.png",
-//       color: "#b07022",
-//       description: "Intuitive dashboard for managing connected home devices.",
-//       tags: ["Dashboard", "IoT", "User Interface"],
-//     },
-//     {
-//       id: 6,
-//       title: "Fitness Tracking Wearable UX",
-//       category: "Product Design",
-//       image: "product6.png",
-//       color: "#2270b0",
-//       description: "Seamless experience for health and fitness monitoring.",
-//       tags: ["Wearable Tech", "UX Design", "Health Tech"],
-//     },
-//   ],
-//   webDevelopment: [
-//     {
-//       id: 7,
-//       title: "E-commerce Platform Redesign",
-//       category: "Web Development",
-//       image: "product1.png",
-//       color: "#b0b022",
-//       description: "Full-stack development for modern shopping experience.",
-//       tags: ["Next.js", "E-commerce", "Full Stack"],
-//     },
-//     {
-//       id: 8,
-//       title: "Educational Platform",
-//       category: "Web Development",
-//       image: "product2.png",
-//       color: "#5022b0",
-//       description: "Interactive learning environment with advanced features.",
-//       tags: ["React", "EdTech", "Interactive"],
-//     },
-//     {
-//       id: 9,
-//       title: "Real Estate Listing Portal",
-//       category: "Web Development",
-//       image: "product3.png",
-//       color: "#b05022",
-//       description: "Property search and management system with 3D tours.",
-//       tags: ["Three.js", "Tailwind", "Property Tech"],
-//     },
-//   ],
-// };
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { projectsData } from './projectinfo';
+import Link from 'next/link';
 
 // Individual Project Card component
 const ProjectCard = ({ project, index }) => {
   const [ref, inView] = useInView({
-    triggerOnce: false,
+    triggerOnce: true,
     threshold: 0.2,
   });
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 30 },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       transition: {
         delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
+        duration: 0.4,
+        ease: 'easeOut',
       },
     }),
     hover: {
-      y: -10,
-      boxShadow:
-        "0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+      y: -5,
       transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
+        type: 'spring',
+        stiffness: 400,
+        damping: 25,
       },
     },
     tap: {
-      scale: 0.98,
+      scale: 0.99,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 500,
-        damping: 10,
+        damping: 15,
       },
     },
   };
@@ -138,28 +45,28 @@ const ProjectCard = ({ project, index }) => {
   return (
     <motion.div
       ref={ref}
-      className="w-full md:w-[calc(33.333%-16px)]"
+      className="w-full h-full" // Full width/height within grid cell
       custom={index}
       initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      animate={inView ? 'visible' : 'hidden'}
       variants={cardVariants}
       whileHover="hover"
       whileTap="tap"
     >
-      <div className="border border-gray-600 rounded-3xl overflow-hidden h-full min-h-[450px] bg-gray-800/30 backdrop-blur-sm">
-        <div className="relative h-64 overflow-hidden">
+      <div className="flex flex-col h-full border border-gray-600 rounded-3xl overflow-hidden min-h-[400px] bg-gray-800/30 backdrop-blur-sm">
+        <div className="relative aspect-[4/3] w-full">
           <div className="absolute inset-0 bg-gradient-to-tr from-black/50 to-transparent z-10" />
           <motion.div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${project.image})` }}
             whileHover={{
-              scale: 1.05,
-              transition: { duration: 0.5 },
+              scale: 1.03,
+              transition: { duration: 0.4 },
             }}
           />
-          <div className="absolute top-6 left-6 z-20">
+          <div className="absolute top-4 left-4 z-20">
             <motion.div
-              className="px-4 py-1 rounded-full text-sm font-medium text-white"
+              className="px-3 py-1 rounded-full text-xs font-medium text-white"
               style={{ backgroundColor: project.color }}
               whileHover={{ scale: 1.05 }}
             >
@@ -167,30 +74,32 @@ const ProjectCard = ({ project, index }) => {
             </motion.div>
           </div>
         </div>
-        <div className="p-6 space-y-4">
-          <h3 className="text-xl font-bold text-white group-hover:text-white/90 transition-colors">
+        <div className="p-5 flex flex-col flex-grow space-y-3">
+          <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-white/90 transition-colors">
             {project.title}
           </h3>
-          <p className="text-gray-300">{project.description}</p>
-          <div className="flex flex-row gap-2 pt-2">
+          <p className="text-gray-300 text-sm sm:text-base line-clamp-2 flex-grow">
+            {project.description}
+          </p>
+          <div className="flex flex-row flex-wrap gap-2 pt-2">
             {project.tags.map((tag, i) => (
               <span
                 key={i}
-                className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                className="px-2 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
               >
                 {tag}
               </span>
             ))}
           </div>
           <motion.div
-            className="pt-4 flex items-center space-x-2 text-white group cursor-pointer"
+            className="pt-3 flex items-center space-x-2 text-white cursor-pointer"
             whileHover={{ x: 5 }}
           >
             <Link href={project.link} className="flex items-center gap-2">
-              <span className="font-medium">View Project</span>
+              <span className="font-medium text-sm sm:text-base">View Project</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-4 w-4 sm:h-5 sm:w-5"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -214,8 +123,8 @@ const ProjectCard = ({ project, index }) => {
 const Tab = ({ active, setActive, category, label }) => {
   return (
     <motion.button
-      className={`relative px-4 py-2 text-xl focus:outline-none ${
-        active === category ? "text-white" : "text-gray-400"
+      className={`relative px-3 py-2 text-base sm:text-lg focus:outline-none ${
+        active === category ? 'text-white' : 'text-gray-400'
       }`}
       onClick={() => setActive(category)}
       whileHover={{ scale: 1.05 }}
@@ -226,9 +135,7 @@ const Tab = ({ active, setActive, category, label }) => {
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#b02222] to-[#d38787]"
           layoutId="underline"
-          initial={{ width: 0 }}
-          animate={{ width: "100%" }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         />
       )}
     </motion.button>
@@ -237,37 +144,26 @@ const Tab = ({ active, setActive, category, label }) => {
 
 // Main Projects Section component
 const ProjectsSection = () => {
-  const [activeTab, setActiveTab] = useState("brandDesign");
+  const [activeTab, setActiveTab] = useState('brandDesign');
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  // For "Shuffle" animation effect when changing tabs
-  const [currentProjects, setCurrentProjects] = useState(
-    projectsData[activeTab]
-  );
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [currentProjects, setCurrentProjects] = useState(projectsData[activeTab]);
 
   useEffect(() => {
-    if (isAnimating) return;
-
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentProjects(projectsData[activeTab]);
-      setIsAnimating(false);
-    }, 500);
+    setCurrentProjects(projectsData[activeTab]);
   }, [activeTab]);
 
   const headingVariants = {
-    hidden: { opacity: 0, y: -50 },
+    hidden: { opacity: 0, y: -30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        delay: 0.2,
-        duration: 0.6,
-        ease: "easeOut",
+        duration: 0.5,
+        ease: 'easeOut',
       },
     },
   };
@@ -277,42 +173,42 @@ const ProjectsSection = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.3,
+        staggerChildren: 0.08,
+        delayChildren: 0.2,
       },
     },
     exit: {
       opacity: 0,
       transition: {
-        duration: 0.3,
+        duration: 0.2,
       },
     },
   };
 
   return (
-    <section ref={ref} className="py-16">
+    <section ref={ref} className="py-12">
       <div className="mx-auto px-4 sm:px-6 max-w-[1400px]">
         {/* Heading Section */}
         <motion.div
-          className="flex flex-col space-y-6 mb-12 text-center"
+          className="flex flex-col space-y-6 mb-10 text-center"
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          animate={inView ? 'visible' : 'hidden'}
           variants={headingVariants}
         >
-          <p className="text-[#b02222] text-xl md:text-2xl font-bold font-['Manrope'] uppercase leading-7">
+          <p className="text-[#b02222] text-lg md:text-xl font-bold font-['Manrope'] uppercase leading-6">
             My Projects
           </p>
-          <h2 className="text-white text-3xl md:text-5xl font-normal font-['Manrope'] leading-tight">
+          <h2 className="text-white text-2xl md:text-4xl font-normal font-['Manrope'] leading-tight">
             My Best Work
           </h2>
         </motion.div>
 
         {/* Tabs Navigation */}
         <motion.div
-          className="flex justify-center mb-12 border-b border-gray-600"
+          className="flex justify-center mb-10 border-b border-gray-600"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={{ duration: 0.4 }}
         >
           <Tab
             active={activeTab}
@@ -338,7 +234,7 @@ const ProjectsSection = () => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
-            className="flex flex-col lg:flex-row gap-3 justify-center"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:mx-auto sm:max-w-[640px] lg:max-w-full sm:justify-items-center h-full"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
@@ -353,18 +249,14 @@ const ProjectsSection = () => {
         {/* View All Projects Button */}
         <Link href="/projects">
           <motion.div
-            className="flex justify-center mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
+            className="flex justify-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.4 }}
           >
             <motion.button
-              className="px-8 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-white font-medium flex items-center space-x-2 hover:shadow-lg"
-              whileHover={{
-                scale: 1.05,
-                boxShadow:
-                  "0 20px 25px -5px rgba(176, 34, 34, 0.3), 0 8px 10px -6px rgba(176, 34, 34, 0.2)",
-              }}
+              className="px-6 py-2 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-white font-medium flex items-center space-x-2 hover:shadow-md"
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >
               <span>View All Projects</span>

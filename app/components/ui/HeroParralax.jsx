@@ -217,7 +217,7 @@ export const Header = () => {
               digital experiences together.
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4 md:mt-6">
-              <Link href="mailto:your.email@example.com">
+              <Link href="/contact" className="hover:cursor-pointer">
                 <Button
                   borderRadius="1.75rem"
                   className="bg-white dark:bg-black/70 text-black dark:text-white border-neutral-200 dark:border-slate-800"

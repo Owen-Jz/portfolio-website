@@ -7,29 +7,29 @@ export function HeroSection() {
 }
 export const products = [
   {
-    title: "Moonbeam",
-    link: "https://gomoonbeam.com",
-    thumbnail: "/product1.png",
+    title: "Finddr",
+    link: "/projects/finddr",
+    thumbnail: "/projects/finddr.png",
   },
   {
-    title: "Cursor",
-    link: "https://cursor.so",
-    thumbnail: "/product2.png",
+    title: "Web Kitchen",
+    link: "/projects/web-kitchen",
+    thumbnail: "/projects/WK1.png",
   },
   {
-    title: "Rogue",
-    link: "https://userogue.com",
-    thumbnail: "/product3.png",
+    title: "Numero",
+    link: "/projects/numero",
+    thumbnail: "/projects/numero.png",
   },
 
   {
-    title: "Editorially",
-    link: "https://editorially.org",
-    thumbnail: "/product4.png",
+    title: "True North",
+    link: "/projects/true-north",
+    thumbnail: "/projects/true-north.png",
   },
   {
-    title: "Editrix AI",
-    link: "https://editrix.ai",
-    thumbnail: "/product5.png",
+    title: "Ecommerce Dashboard",
+    link: "/projects/ecommerce",
+    thumbnail: "/projects/ecommerce.png",
   },
 ];
