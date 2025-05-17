@@ -1,6 +1,6 @@
 import { Manrope } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
-import "./globals.css";
+import "../../globals.css";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -9,22 +9,19 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Owen Digitals | Portfolio",
+  title: "Owen Digitals - About",
   description:
     "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
-  icons: {
-    icon: "/icon.svg",
-  },
   robots: "index, follow",
-  metadataBase: new URL("https://www.owendigitals.work"),
+  metadataBase: new URL("https://www.owendigitals.work/about"),
   alternates: {
-    canonical: "/",
+    canonical: "/about",
   },
   openGraph: {
-    title: "Owen Digitals | Portfolio",
+    title: "Owen Digitals - About",
     description:
       "UI/UX design and development by Owen. Explore projects that I've worked on.",
-    url: "https://www.owendigitals.work",
+    url: "https://www.owendigitals.work/about",
     siteName: "Owen Digitals",
     type: "website",
   },

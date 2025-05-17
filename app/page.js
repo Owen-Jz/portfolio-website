@@ -22,6 +22,7 @@ const HomePage = () => {
     { id: "contact", Component: ContactSection },
   ];
 
+
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
       <NavbarDemo />

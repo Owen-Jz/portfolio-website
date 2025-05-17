@@ -11,10 +11,23 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Contact - Owen Digitals",
-  description: "Get in touch with Owen Digitals for your next project",
+  title: "Owen Digitals - Contact",
+  description:
+    "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
+  robots: "index, follow",
+  metadataBase: new URL("https://www.owendigitals.work/contact"),
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Owen Digitals - Contact",
+    description:
+      "UI/UX design and development by Owen. Explore projects that I've worked on.",
+    url: "https://www.owendigitals.work/contact",
+    siteName: "Owen Digitals",
+    type: "website",
+  },
 };
-
 export default function ContactLayout({ children }) {
   return (
     <html lang="en" className={manrope.variable}>
