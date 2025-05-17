@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { projectsData } from "./projectinfo";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { projectsData } from './projectinfo';
+import Link from 'next/link';
 
 // Individual Project Card component
 const ProjectCard = ({ project, index }) => {
@@ -21,13 +21,13 @@ const ProjectCard = ({ project, index }) => {
       transition: {
         delay: i * 0.1,
         duration: 0.4,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     }),
     hover: {
       y: -5,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 400,
         damping: 25,
       },
@@ -35,7 +35,7 @@ const ProjectCard = ({ project, index }) => {
     tap: {
       scale: 0.99,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 500,
         damping: 15,
       },
@@ -48,7 +48,7 @@ const ProjectCard = ({ project, index }) => {
       className="w-full h-full" // Full width/height within grid cell
       custom={index}
       initial="hidden"
-      animate={inView ? "visible" : "hidden"}
+      animate={inView ? 'visible' : 'hidden'}
       variants={cardVariants}
       whileHover="hover"
       whileTap="tap"
@@ -96,9 +96,7 @@ const ProjectCard = ({ project, index }) => {
             whileHover={{ x: 5 }}
           >
             <Link href={project.link} className="flex items-center gap-2">
-              <span className="font-medium text-sm sm:text-base">
-                View Project
-              </span>
+              <span className="font-medium text-sm sm:text-base">View Project</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-4 w-4 sm:h-5 sm:w-5"
@@ -126,7 +124,7 @@ const Tab = ({ active, setActive, category, label }) => {
   return (
     <motion.button
       className={`relative px-3 py-2 text-base sm:text-lg focus:outline-none ${
-        active === category ? "text-white" : "text-gray-400"
+        active === category ? 'text-white' : 'text-gray-400'
       }`}
       onClick={() => setActive(category)}
       whileHover={{ scale: 1.05 }}
@@ -137,7 +135,7 @@ const Tab = ({ active, setActive, category, label }) => {
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#b02222] to-[#d38787]"
           layoutId="underline"
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         />
       )}
     </motion.button>
@@ -146,15 +144,13 @@ const Tab = ({ active, setActive, category, label }) => {
 
 // Main Projects Section component
 const ProjectsSection = () => {
-  const [activeTab, setActiveTab] = useState("brandDesign");
+  const [activeTab, setActiveTab] = useState('brandDesign');
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
 
-  const [currentProjects, setCurrentProjects] = useState(
-    projectsData[activeTab]
-  );
+  const [currentProjects, setCurrentProjects] = useState(projectsData[activeTab]);
 
   useEffect(() => {
     setCurrentProjects(projectsData[activeTab]);
@@ -167,7 +163,7 @@ const ProjectsSection = () => {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
   };
@@ -196,9 +192,10 @@ const ProjectsSection = () => {
         <motion.div
           className="flex flex-col space-y-6 mb-10 text-center"
           initial="hidden"
-          animate={inView ? "visible" : "hidden"}
+          animate={inView ? 'visible' : 'hidden'}
           variants={headingVariants}
         >
+
           <h2 className="text-white text-2xl md:text-4xl font-normal font-['Manrope'] leading-tight">
             My Work
           </h2>

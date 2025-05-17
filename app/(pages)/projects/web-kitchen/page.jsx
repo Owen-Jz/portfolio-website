@@ -1,7 +1,7 @@
 import { NavbarDemo } from "@/app/components/ui/ResizableNavbar";
 import React from "react";
 import Image from "next/image";
-
+import ContactSection from "@/app/components/ContactSection";
 
 const WebKitchenBrandPage = () => {
   return (
@@ -93,14 +93,6 @@ const WebKitchenBrandPage = () => {
         />
 
         <Image
-          src="/projects/web-kitchen/WK5.png"
-          alt="Web Kitchen Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
           src="/projects/web-kitchen/WK6.png"
           alt="Web Kitchen Logo"
           width={1200}
@@ -117,14 +109,6 @@ const WebKitchenBrandPage = () => {
         />
 
         <Image
-          src="/projects/web-kitchen/WK8.png"
-          alt="Web Kitchen Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
           src="/projects/web-kitchen/WK9.png"
           alt="Web Kitchen Logo"
           width={1200}
@@ -132,6 +116,7 @@ const WebKitchenBrandPage = () => {
           className="rounded-2xl mt-10"
         />
       </div>
+      <ContactSection />
     </div>
   );
 };

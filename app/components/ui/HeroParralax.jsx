@@ -114,8 +114,8 @@ export const HeroParallax = ({ products }) => {
               Featured Projects
             </h2>
             <p className="text-gray-200 font-['Manrope'] font-normal">
-              <span className="font-bold">Welcome to my portfolio! </span>
-              here are some of the projects that helped my clients grow their
+              <span className="font-bold">Welcome to my portfolio! </span><br/>
+              Here are some of the projects that helped my clients grow their
               business
             </p>
           </div>

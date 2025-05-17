@@ -57,8 +57,7 @@ const AboutMe = () => {
               </h3>
             </div>
             <p className="w-full max-w-[319.30px] text-[#afafaf] text-base sm:text-lg leading-[25.10px] text-center z-10 px-4">
-              Tools that I use to carry out my design process for efficient
-              workflow
+              Key tools that keep my work fast, organized, and high-quality.
             </p>
             <div className="space-y-[15px] z-10">
               <div className="flex flex-row space-x-[15px] justify-center">
@@ -116,7 +115,7 @@ const AboutMe = () => {
                   </div>
                 </div>
                 <p className="w-full max-w-[319.3px] text-white/50 text-base sm:text-lg font-normal leading-[25.10px]">
-                  Basically, things I enjoy  doing!
+                  Basically, things I enjoy doing!
                 </p>
               </div>
               {[

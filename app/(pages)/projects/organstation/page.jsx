@@ -1,7 +1,7 @@
 import { NavbarDemo } from "@/app/components/ui/ResizableNavbar";
 import React from "react";
 import Image from "next/image";
-import FooterSection from "@/app/components/FooterSection";
+
 import SocialSidebar from "@/app/components/SocialSidebar";
 import ContactSection from "@/app/components/ContactSection";
 // Add more items as needed
@@ -219,7 +219,6 @@ const WebKitchenBrandPage = () => {
         />
       </div>
       <ContactSection />
-      <FooterSection />
       <SocialSidebar />
     </div>
   );

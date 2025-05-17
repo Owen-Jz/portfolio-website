@@ -85,7 +85,7 @@ const ContactPage = () => {
           className="relative"
         >
           {/* Spotlight Effects */}
-          <motion.div
+          {/* <motion.div
             className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none opacity-60"
             animate={{ opacity: inView ? 0.6 : 0 }}
             transition={{ duration: 0.5 }}
@@ -94,7 +94,7 @@ const ContactPage = () => {
             className="absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none opacity-40"
             animate={{ opacity: inView ? 0.4 : 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-          />
+          /> */}
 
           <motion.div
             className="relative bg-gray-800/30 backdrop-blur-sm rounded-3xl p-6 sm:p-8 md:p-12 border border-gray-600 hover:border-[#b02222] transition-colors duration-300 mx-4 sm:mx-6 lg:mx-8"
