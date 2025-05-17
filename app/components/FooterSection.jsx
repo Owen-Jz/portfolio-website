@@ -131,25 +131,6 @@ const FooterSection = () => {
               </Link>
             ))}
           </motion.nav>
-
-          {/* Social Links */}
-          <motion.div
-            className="flex gap-4"
-            variants={itemVariants}
-          >
-            {socialLinks.map((link) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                className="text-gray-400 hover:text-[#b02222]"
-                whileHover={{ scale: 1.2, rotate: 5 }}
-                whileTap={{ scale: 0.9 }}
-                title={link.name}
-              >
-                {link.icon}
-              </motion.a>
-            ))}
-          </motion.div>
         </div>
 
         {/* Copyright */}
@@ -157,7 +138,7 @@ const FooterSection = () => {
           className="text-center text-gray-400 text-sm mt-8 font-['Manrope']"
           variants={itemVariants}
         >
-          © 2025 Owen. All rights reserved.
+          © 2025 Owen Digitals. All rights reserved.
         </motion.p>
       </motion.div>
     </footer>

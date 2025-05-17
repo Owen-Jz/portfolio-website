@@ -1,123 +1,125 @@
 "use client";
 
-import { useState } from "react";
-import { sendEmail } from "./actions";
+import Image from "next/image";
 
-export default function ContactForm() {
-  const [status, setStatus] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const testimonials = [
+  {
+    quote:
+      "The e-commerce platform redesign was a game-changer, delivering a modern and seamless shopping experience.",
+    name: "Torti Ama-Njoku",
+    role: "Founder, ShopTrend",
+    picture: "/profiles/torti.png",
+    nationality: "/flags/Canada.png",
+    rating: 5,
+  },
+  {
+    quote:
+      "Owen is a very diverse creative who brings innovation to whatever he does. His personality and approach to problem solving is impeccable. I recommend him for his brilliant and innovative approach.",
+    name: "IB Douglas",
+    role: "CEO, Probitek",
+    picture: "/profiles/ib.png",
+    nationality: "/flags/Nigeria.png",
+    rating: 5,
+  },
+  {
+    quote:
+      "Working with Owen was a breath of fresh air. He communicated well, was upfront, and most importantly, delivered on time. What I perhaps liked most about working with Owen was how he took us through the entire design process. From conception to completion, we had a say in every step — and in the end, this greatly contributed to the perfect product he delivered. I highly recommend him.",
+    name: "Mr Moithuti",
+    role: "CEO, Moithuti",
+    picture: "/profiles/moithuti.png",
+    nationality: "/flags/Botswana.png",
+    rating: 5,
+  },
+  {
+    quote:
+      "Working with Owen was an amazing experience! He was a true team player throughout our brand project bringing creativity, collaboration, and a strong work ethic. His positive attitude and commitment made a real impact. I’d gladly work with him again!",
+    name: "Nnene Bright-Victor",
+    role: "CEO, NenysTouchs",
+    picture: "/profiles/nnene.png",
+    nationality: "/flags/Nigeria.png",
+    rating: 5,
+  },
+  {
+    quote:
+      "Fantastic job on Carb’s brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
+    name: "Victor Aghaji",
+    role: "CEO, Carb",
+    picture: "/profiles/carb.png",
+    nationality: "/flags/Nigeria.png",
+    rating: 5,
+  },
+];
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setStatus("");
-
-    const formData = new FormData(e.target);
-
-    try {
-      const result = await sendEmail(formData);
-      if (result.success) {
-        setStatus("Email sent successfully!");
-        e.target.reset();
-      } else {
-        setStatus(`Error: ${result.message}`);
-      }
-    } catch (error) {
-      setStatus("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+const TestimonialSection = () => {
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          className={i < rating ? "text-yellow-400" : "text-gray-500"}
+        >
+          ★
+        </span>
+      );
     }
+    return stars;
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
-      <h2
-        style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "16px" }}
-      >
-        Contact Us
-      </h2>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-      >
-        <div>
-          <label
-            htmlFor="name"
-            style={{ display: "block", fontSize: "14px", fontWeight: "medium" }}
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          />
+    <section className="py-16 bg-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-3xl md:text-4xl font-bold text-center text-white mb-12">
+          What Our Clients Say
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="bg-gray-800 rounded-lg shadow-md flex flex-col justify-between h-full relative"
+              style={{ position: "relative", padding: "0" }}
+            >
+              <div className="p-6">
+                <div className="flex items-center mb-4">
+                  <div className="flex">{renderStars(testimonial.rating)}</div>
+                </div>
+                <p className="text-gray-300 text-sm mb-6">
+                  {testimonial.quote}
+                </p>
+                <div className="flex items-center">
+                  <Image
+                    src={testimonial.picture}
+                    alt={testimonial.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-center">
+                      <span className="text-white font-semibold text-sm">
+                        {testimonial.name}
+                      </span>
+                      <Image
+                        src={testimonial.nationality}
+                        alt="Nationality flag"
+                        width={20}
+                        height={12}
+                        className="ml-2"
+                      />
+                    </div>
+                    <p className="text-gray-400 text-xs">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+              <span className="text-gray-500 text-[250px] font-bold absolute right-0 top-0 leading-none z-0">
+                “
+              </span>
+            </div>
+          ))}
         </div>
-        <div>
-          <label
-            htmlFor="subject"
-            style={{ display: "block", fontSize: "14px", fontWeight: "medium" }}
-          >
-            Subject
-          </label>
-          <input
-            type="text"
-            id="subject"
-            name="subject"
-            required
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="information"
-            style={{ display: "block", fontSize: "14px", fontWeight: "medium" }}
-          >
-            Message
-          </label>
-          <textarea
-            id="information"
-            name="information"
-            required
-            rows="4"
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
-          ></textarea>
-        </div>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          style={{
-            width: "100%",
-            padding: "8px",
-            backgroundColor: isSubmitting ? "#b0b0b0" : "#3b82f6",
-            color: "white",
-            borderRadius: "4px",
-            cursor: isSubmitting ? "not-allowed" : "pointer",
-          }}
-        >
-          {isSubmitting ? "Sending..." : "Send Message"}
-        </button>
-      </form>
-      {status && (
-        <p style={{ marginTop: "16px", textAlign: "center" }}>{status}</p>
-      )}
-    </div>
+      </div>
+    </section>
   );
-}
+};
+
+export default TestimonialSection;

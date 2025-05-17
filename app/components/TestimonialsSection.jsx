@@ -47,7 +47,7 @@ const testimonials = [
     name: "Mr Moithuti",
     role: "CEO, Moithuti",
     picture: "/profiles/moithuti.png",
-    nationality: "/flags/botswana.png",
+    nationality: "/flags/Botswana.png",
   },
   {
     quote:

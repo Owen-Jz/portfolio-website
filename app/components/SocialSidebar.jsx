@@ -27,6 +27,11 @@ const SocialSidebar = () => {
       url: "https://behance.net/owendigitals",
       icon: "https://cdn.simpleicons.org/behance/fff",
     },
+    {
+      name: "Whatsapp",
+      url: "https://wa.me/2349164713975",
+      icon: "https://cdn.simpleicons.org/whatsapp/fff",
+    },
   ];
 
   return (
