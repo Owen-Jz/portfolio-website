@@ -13,22 +13,32 @@ export async function sendEmail(formData) {
     };
   }
 
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      success: false,
+      message: "Please provide a valid email address.",
+    };
+  }
+
   // Create a transporter using SMTP
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    host: "smtp.gmail.com",
+    port: 465,
     secure: true,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
   try {
     // Send email
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: process.env.CONTACT_EMAIL,
+      from: process.env.EMAIL_USER,
+      to: process.env.RECEIVER_EMAIL,
+      replyTo: email,
       subject: `New Contact Form Submission from ${name}`,
       text: `
 Name: ${name}

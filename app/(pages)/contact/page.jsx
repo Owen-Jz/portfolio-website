@@ -22,6 +22,14 @@ const ContactPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setStatus({
+        type: "error",
+        message: "Please enter a valid email address.",
+      });
+      return;
+    }
     setIsSubmitting(true);
     setStatus(null);
 
@@ -76,7 +84,6 @@ const ContactPage = () => {
   return (
     <main className="flex-grow pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Contact Form Section */}
         <motion.section
           ref={ref}
           variants={sectionVariants}
@@ -84,18 +91,6 @@ const ContactPage = () => {
           animate={inView ? "visible" : "hidden"}
           className="relative"
         >
-          {/* Spotlight Effects */}
-          {/* <motion.div
-            className="absolute -top-20 -left-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none opacity-60"
-            animate={{ opacity: inView ? 0.6 : 0 }}
-            transition={{ duration: 0.5 }}
-          />
-          <motion.div
-            className="absolute -bottom-20 -right-20 w-40 h-40 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-3xl pointer-events-none opacity-40"
-            animate={{ opacity: inView ? 0.4 : 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          /> */}
-
           <motion.div
             className="relative bg-gray-800/30 backdrop-blur-sm rounded-3xl p-6 sm:p-8 md:p-12 border border-gray-600 hover:border-[#b02222] transition-colors duration-300 mx-4 sm:mx-6 lg:mx-8"
             variants={containerVariants}
@@ -145,7 +140,7 @@ const ContactPage = () => {
                   onChange={handleChange}
                   placeholder="Your Name"
                   className={cn(
-                    "w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-xl text-gray-300",
+                    "w-full px-4 py-3 bg-gray-900/50 border border-gray- ekstrakt600 rounded-xl text-gray-300",
                     "placeholder-gray-500",
                     "focus:outline-none focus:border-[#b02222] focus:ring-1 focus:ring-[#b02222]",
                     "transition-all duration-300 hover:border-[#b02222]",
@@ -225,7 +220,33 @@ const ContactPage = () => {
                   whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <svg
+                        className="animate-spin mr-2 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8h8a8 8 0 01-16 0z"
+                        />
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    "Send Message"
+                  )}
                   <motion.span
                     className="absolute inset-0 bg-white/30"
                     initial={{ scale: 0, opacity: 0 }}
@@ -248,6 +269,8 @@ const ContactPage = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
+                    role="alert"
+                    aria-live="polite"
                   >
                     {status.message}
                   </motion.p>
