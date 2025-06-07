@@ -32,5 +32,4 @@ const Loading = ({ className = "" }) => {
     </div>
   );
 };
-
 export default Loading;
