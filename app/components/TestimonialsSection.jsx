@@ -5,7 +5,7 @@ import { InfiniteMovingCards } from "./ui/InfiniteMovingCards";
 
 export function TestimonialsSection() {
   return (
-    <div className="py-16 bg-transparent flex flex-col items-center justify-center w-full">
+    <div className="bg-transparent flex flex-col items-center justify-center w-full">
       <div className="text-center mb-8 w-full max-w-7xl mx-auto px-4 sm:px-6">
         <p className="text-[#b02222] text-xl md:text-2xl font-bold font-['Manrope'] uppercase leading-7">
           Testimonials

@@ -11,7 +11,7 @@ const ToolLogo = ({ src, alt = "Tool Logo" }) => {
 
 const AboutMe = () => {
   return (
-    <div className="py-8">
+    <div>
       <div className="mx-4 sm:mx-6 lg:mx-auto max-w-[1400px] lg:flex flex-row items-start justify-center space-y-6 lg:space-y-0 lg:space-x-[33px]">
         {/* First Column */}
         <div className="space-y-8 md:space-y-[57px] flex flex-col">

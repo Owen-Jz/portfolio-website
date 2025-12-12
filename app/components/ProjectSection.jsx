@@ -186,7 +186,7 @@ const ProjectsSection = () => {
   };
 
   return (
-    <section ref={ref} className="py-12">
+    <section ref={ref}>
       <div className="mx-auto px-4 sm:px-6 max-w-[1400px]">
         {/* Heading Section */}
         <motion.div

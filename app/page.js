@@ -48,21 +48,21 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
-      <NavbarDemo />
-      <main className="flex-grow w-full max-w-full">
-        {sections.map(({ id, Component }) => (
-          <AnimatedSection
-            key={id}
-            id={id}
-            className="py-10 md:py-20 lg:py-24 w-full max-w-full px-0"
-            threshold={0.15}
-          >
-            <Component />
-          </AnimatedSection>
-        ))}
-      </main>
-      <FooterSection />
-      <SocialSidebar />
+          <NavbarDemo />
+          <main className="flex-grow w-full max-w-full">
+            {sections.map(({ id, Component }) => (
+              <AnimatedSection
+                key={id}
+                id={id}
+                className="py-8 md:py-12 lg:py-16 w-full max-w-full px-0"
+                threshold={0.15}
+              >
+                <Component />
+              </AnimatedSection>
+            ))}
+          </main>
+          <FooterSection />
+          <SocialSidebar />
     </div>
   );
 };

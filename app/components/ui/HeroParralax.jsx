@@ -355,7 +355,7 @@ const ScrollableRow = ({
     : "md:flex-row";
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" style={{ pointerEvents: "auto" }}>
       <div
         ref={containerRef}
         className={cn(baseRow, desktopDirection, "no-scrollbar", "w-full")}
@@ -374,61 +374,134 @@ const ScrollableRow = ({
         ))}
       </div>
 
-      {/* Desktop subtle arrows */}
-      <button
-        type="button"
-        aria-label="Scroll left"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          scrollBy(-400);
-        }}
-        onMouseDown={(e) => e.stopPropagation()}
-        className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-50 cursor-pointer"
-        style={{ pointerEvents: "auto" }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="h-5 w-5 pointer-events-none"
-        >
-          <path
-            d="M15 6l-6 6 6 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
-      <button
-        type="button"
-        aria-label="Scroll right"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          scrollBy(400);
-        }}
-        onMouseDown={(e) => e.stopPropagation()}
-        className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-50 cursor-pointer"
-        style={{ pointerEvents: "auto" }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          className="h-5 w-5 pointer-events-none"
-        >
-          <path
-            d="M9 6l6 6-6 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+      {/* Desktop subtle arrows - swap positions when reverseOnDesktop is true */}
+      {reverseOnDesktop ? (
+        <>
+          <button
+            type="button"
+            aria-label="Scroll right"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              scrollBy(400);
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-[100] cursor-pointer"
+            style={{ pointerEvents: "auto" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-5 w-5 pointer-events-none"
+            >
+              <path
+                d="M9 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll left"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              scrollBy(-400);
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-[100] cursor-pointer"
+            style={{ pointerEvents: "auto" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-5 w-5 pointer-events-none"
+            >
+              <path
+                d="M15 6l-6 6 6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            aria-label="Scroll left"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              scrollBy(-400);
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-[100] cursor-pointer"
+            style={{ pointerEvents: "auto" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-5 w-5 pointer-events-none"
+            >
+              <path
+                d="M15 6l-6 6 6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Scroll right"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              scrollBy(400);
+            }}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+            className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-[100] cursor-pointer"
+            style={{ pointerEvents: "auto" }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-5 w-5 pointer-events-none"
+            >
+              <path
+                d="M9 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+        </>
+      )}
     </div>
   );
 };

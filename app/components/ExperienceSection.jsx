@@ -119,7 +119,7 @@ const ExperienceSection = () => {
   };
 
   return (
-    <div className="py-12 ">
+    <div>
       <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-[1400px]">
         <motion.h2
           className="text-white text-3xl md:text-5xl font-normal font-['Manrope'] text-center mb-12"

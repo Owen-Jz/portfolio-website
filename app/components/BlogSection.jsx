@@ -261,7 +261,7 @@ const BlogSection = () => {
   };
 
   return (
-    <section ref={ref} className="py-12 md:py-16 relative overflow-hidden">
+    <section ref={ref} className="relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />

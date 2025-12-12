@@ -42,7 +42,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section ref={ref} className="py-16 bg-transparent">
+    <section ref={ref} className="bg-transparent">
       <motion.div
         className="mx-auto px-4 sm:px-6 max-w-7xl"
         variants={containerVariants}
