@@ -253,7 +253,7 @@ const ProjectsSection = () => {
             transition={{ duration: 0.4 }}
           >
             <motion.button
-              className="px-6 py-2 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-white font-medium flex items-center space-x-2 hover:shadow-md"
+              className="btn-primary font-medium flex items-center space-x-2"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
             >

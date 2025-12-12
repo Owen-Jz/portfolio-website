@@ -1,38 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { NavbarDemo } from "../../components/ui/ResizableNavbar";
-import FooterSection from "../../components/FooterSection";
 import Link from "next/link";
-import { blogPosts } from "./blogData";
+import { blogPosts } from "../(pages)/blog/blogData";
 
 // Featured hero post (first post)
 const featuredPost = blogPosts[0];
 
-// Filter Tab Component
-const FilterTab = ({ active, setActive, category, label }) => {
-  return (
-    <motion.button
-      className={`relative px-4 py-3 text-sm md:text-base font-medium focus:outline-none transition-colors duration-200 ${
-        active === category ? "text-white" : "text-gray-400 hover:text-gray-300"
-      }`}
-      onClick={() => setActive(category)}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      {label}
-      {active === category && (
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#b02222] to-[#d38787]"
-          layoutId="underline"
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        />
-      )}
-    </motion.button>
-  );
-};
+// Other blog posts for the grid (showing first 2 after featured)
+const blogPostsForSection = blogPosts.slice(1, 3);
 
 // Featured Hero Post Component
 const FeaturedPostHero = ({ post }) => {
@@ -47,10 +25,10 @@ const FeaturedPostHero = ({ post }) => {
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="relative w-full"
+      className="relative w-full mb-12 md:mb-16"
     >
       <Link href={`/blog/${post.slug}`}>
-        <div className="relative group cursor-pointer overflow-hidden border-b border-gray-600 bg-gray-800/30 backdrop-blur-sm hover:border-gray-500 transition-all duration-500">
+        <div className="relative group cursor-pointer overflow-hidden rounded-3xl border border-gray-600 bg-gray-800/30 backdrop-blur-sm hover:border-gray-500 transition-all duration-500">
           {/* Background Image with Overlay */}
           <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
             {/* Gradient Overlays */}
@@ -68,7 +46,7 @@ const FeaturedPostHero = ({ post }) => {
             />
             
             {/* Content */}
-            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
+            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16">
               {/* Category Badge */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
@@ -264,21 +242,11 @@ const BlogCard = ({ post, index }) => {
   );
 };
 
-const BlogPage = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
-  const [activeFilter, setActiveFilter] = useState("All");
-  
-  // Other blog posts (excluding the featured one)
-  const otherPosts = blogPosts.slice(1);
-  const [filteredPosts, setFilteredPosts] = useState(otherPosts);
-
-  useEffect(() => {
-    if (activeFilter === "All") {
-      setFilteredPosts(otherPosts);
-    } else {
-      setFilteredPosts(otherPosts.filter((post) => post.category === activeFilter));
-    }
-  }, [activeFilter, otherPosts]);
+const BlogSection = () => {
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
 
   const headingVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -292,123 +260,73 @@ const BlogPage = () => {
     },
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
-      },
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0a0a] relative overflow-hidden">
+    <section ref={ref} className="py-12 md:py-16 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
       
-      <NavbarDemo />
-      <main className="flex-grow relative z-10 pt-0">
-        {/* Featured Hero Post - Full Width */}
-        <div className="w-full">
-          <FeaturedPostHero post={featuredPost} />
+      <div className="mx-auto px-4 sm:px-6 max-w-[1400px] relative z-10">
+        {/* Heading Section */}
+        <motion.div
+          className="flex flex-col gap-2 mb-8 md:mb-12 text-center"
+          initial="hidden"
+          animate={inView ? "visible" : "hidden"}
+          variants={headingVariants}
+        >
+          <p className="text-[#b02222] text-sm md:text-base font-bold font-['Manrope'] uppercase tracking-wider">
+            Insights & Updates
+          </p>
+          <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight">
+            Latest Blog Posts
+          </h2>
+        </motion.div>
+
+        {/* Featured Hero Post */}
+        <FeaturedPostHero post={featuredPost} />
+
+        {/* Blog Posts Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
+          {blogPostsForSection.map((post, index) => (
+            <BlogCard key={post.id} post={post} index={index} />
+          ))}
         </div>
 
-        {/* Content Section */}
-        <div className="py-12 md:py-16">
-          <div className="mx-auto px-4 sm:px-6 max-w-[1400px]">
-            {/* Heading Section - Below Hero */}
-            <motion.div
-              ref={ref}
-              className="flex flex-col gap-2 mb-8 md:mb-12 text-center"
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              variants={headingVariants}
+        {/* View All Blog Posts Button */}
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.4, delay: 0.6 }}
+        >
+          <Link href="/blog">
+            <motion.button
+              className="btn-primary font-semibold flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight">
-                Latest Articles
-              </h1>
-              <p className="text-gray-300 text-base md:text-lg mt-4 max-w-2xl mx-auto">
-                Insights on UI/UX design, web development, and creative inspiration.
-              </p>
-            </motion.div>
-
-            {/* Filter Tabs */}
-            <motion.div
-              className="flex justify-center mb-10 md:mb-12 border-b border-gray-600/50"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="All"
-                label="All"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Personal Life"
-                label="Personal Life"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Business"
-                label="Business"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Design"
-                label="Design"
-              />
-            </motion.div>
-
-            {/* Blog Posts Grid */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeFilter}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
+              <span>View All Posts</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                {filteredPosts.map((post, index) => (
-                  <BlogCard key={post.id} post={post} index={index} />
-                ))}
-              </motion.div>
-            </AnimatePresence>
-
-            {/* No Posts Message */}
-            {filteredPosts.length === 0 && (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <p className="text-gray-400 text-lg">
-                  No posts found in this category.
-                </p>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </main>
-      <FooterSection />
-    </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </motion.button>
+          </Link>
+        </motion.div>
+      </div>
+    </section>
   );
 };
 
-export default BlogPage;
+export default BlogSection;
+

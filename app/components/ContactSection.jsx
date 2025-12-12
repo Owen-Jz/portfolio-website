@@ -79,7 +79,7 @@ const ContactSection = () => {
           <div className="relative bg-gray-800/30 backdrop-blur-sm rounded-3xl p-8 border border-gray-600 hover:border-[#b02222] transition-colors duration-300">
             <motion.a
               href="/contact"
-              className="block w-full px-6 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] text-white rounded-full font-semibold text-center font-['Manrope'] relative overflow-hidden"
+              className="block w-full btn-primary text-center font-['Manrope'] relative overflow-hidden"
               whileHover={{
                 scale: 1.05,
                 boxShadow: "0 0 10px rgba(176, 34, 34, 0.5)",

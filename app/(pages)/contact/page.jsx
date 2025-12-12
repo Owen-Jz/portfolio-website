@@ -140,7 +140,7 @@ const ContactPage = () => {
                   onChange={handleChange}
                   placeholder="Your Name"
                   className={cn(
-                    "w-full px-4 py-3 bg-gray-900/50 border border-gray- ekstrakt600 rounded-xl text-gray-300",
+                    "w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-xl text-gray-300",
                     "placeholder-gray-500",
                     "focus:outline-none focus:border-[#b02222] focus:ring-1 focus:ring-[#b02222]",
                     "transition-all duration-300 hover:border-[#b02222]",
@@ -210,13 +210,7 @@ const ContactPage = () => {
                 <motion.button
                   type="submit"
                   disabled={isSubmitting}
-                  className={cn(
-                    "w-full px-6 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] text-white rounded-xl font-semibold",
-                    "relative overflow-hidden transition-all duration-300",
-                    "hover:shadow-[0_0_20px_rgba(176,34,34,0.3)]",
-                    "text-base sm:text-lg",
-                    isSubmitting && "opacity-50 cursor-not-allowed"
-                  )}
+                  className={cn("w-full btn-primary rounded-xl relative overflow-hidden text-base sm:text-lg", isSubmitting && "opacity-50 cursor-not-allowed")}
                   whileHover={!isSubmitting ? { scale: 1.02 } : {}}
                   whileTap={!isSubmitting ? { scale: 0.98 } : {}}
                 >

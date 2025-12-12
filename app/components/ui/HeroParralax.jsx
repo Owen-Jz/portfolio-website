@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Link from "next/link";
 import { cn } from "../../libs/utils";
@@ -107,54 +107,48 @@ export const HeroParallax = ({ products }) => {
       >
         <motion.div
           style={{ opacity: headingOpacity }}
-          className="max-w-7xl mx-auto px-4 mb-6"
+          className="max-w-7xl mx-auto px-4 mb-8 md:mb-10"
         >
-          <div className="flex flex-col gap-4">
-            <h2 className="text-3xl md:text-5xl font-bold text-white font-['Manrope']">
+          <div className="flex flex-col gap-2 md:gap-3">
+            {/* Subtitle/Lead Text */}
+            <p className="text-[#b02222] text-sm md:text-base font-bold font-['Manrope'] uppercase tracking-wider">
+              Welcome to my portfolio!
+            </p>
+            
+            {/* Main Heading */}
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white font-['Manrope'] leading-tight">
               Featured Projects
             </h2>
-            <p className="text-gray-200 font-['Manrope'] font-normal">
-              <span className="font-bold">Welcome to my portfolio! </span><br/>
+            
+            {/* Description */}
+            <p className="text-gray-300 md:text-gray-200 text-base md:text-lg font-['Manrope'] font-normal leading-relaxed max-w-3xl">
               Here are some of the projects that helped my clients grow their
               business
             </p>
           </div>
         </motion.div>
         {firstRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row-reverse md:space-x-reverse md:space-x-20 mb-4 md:mb-8">
-            {firstRow.map((product) => (
-              <ProductCard
-                product={product}
-                translate={translateX}
-                key={product.title}
-                isMobile={isMobile}
-              />
-            ))}
-          </motion.div>
+          <ScrollableRow
+            items={firstRow}
+            translate={translateX}
+            isMobile={isMobile}
+            reverseOnDesktop
+          />
         )}
         {secondRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row md:space-x-20 mb-4 md:mb-8">
-            {secondRow.map((product) => (
-              <ProductCard
-                product={product}
-                translate={translateXReverse}
-                key={product.title}
-                isMobile={isMobile}
-              />
-            ))}
-          </motion.div>
+          <ScrollableRow
+            items={secondRow}
+            translate={translateXReverse}
+            isMobile={isMobile}
+          />
         )}
         {thirdRow.length > 0 && (
-          <motion.div className="flex overflow-x-auto md:overflow-visible md:flex-row-reverse md:space-x-reverse md:space-x-20 mb-4 md:mb-8">
-            {thirdRow.map((product) => (
-              <ProductCard
-                product={product}
-                translate={translateX}
-                key={product.title}
-                isMobile={isMobile}
-              />
-            ))}
-          </motion.div>
+          <ScrollableRow
+            items={thirdRow}
+            translate={translateX}
+            isMobile={isMobile}
+            reverseOnDesktop
+          />
         )}
       </motion.div>
     </div>
@@ -211,7 +205,7 @@ export const ProductCard = ({ product, translate, isMobile }) => {
       style={transformStyle}
       whileHover={{ y: -10, scale: 1.03 }}
       key={product.title}
-      className="group/product h-60 w-60 sm:h-72 sm:w-72 md:h-96 md:w-[30rem] relative shrink-0 mx-2 md:mx-0"
+      className="group/product h-60 w-60 sm:h-72 sm:w-72 md:h-96 md:w-[30rem] relative shrink-0 mx-2 md:mx-0 snap-center"
     >
       <a href={product.link} className="block group-hover/product:shadow-2xl">
         <img
@@ -227,5 +221,214 @@ export const ProductCard = ({ product, translate, isMobile }) => {
         {product.title}
       </h2>
     </motion.div>
+  );
+};
+
+// Horizontal scroll row with swipe on mobile and subtle arrows on desktop
+const ScrollableRow = ({
+  items,
+  translate,
+  isMobile,
+  reverseOnDesktop = false,
+}) => {
+  const containerRef = useRef(null);
+  const isScrollingRef = useRef(false);
+  const singleSetWidthRef = useRef(0);
+  const scrollTimeoutRef = useRef(null);
+
+  // Create infinite loop by duplicating items
+  const duplicatedItems = [...items, ...items, ...items];
+
+  // Calculate single set width for seamless looping
+  useEffect(() => {
+    if (!containerRef.current || items.length === 0) return;
+
+    const container = containerRef.current;
+    
+    // Wait for next frame to ensure items are rendered
+    const calculateAndSet = () => {
+      requestAnimationFrame(() => {
+        if (!container.children.length) return;
+
+        // Calculate width of one complete set
+        const gap = isMobile ? 16 : 80; // gap-4 = 16px, gap-20 = 80px
+        let totalWidth = 0;
+        
+        for (let i = 0; i < items.length; i++) {
+          const child = container.children[i];
+          if (child) {
+            totalWidth += child.offsetWidth + (i < items.length - 1 ? gap : 0);
+          }
+        }
+
+        singleSetWidthRef.current = totalWidth;
+
+        // Set initial scroll position to the middle set (second set)
+        if (container.scrollLeft === 0 && totalWidth > 0) {
+          container.scrollLeft = totalWidth;
+        }
+      });
+    };
+
+    calculateAndSet();
+
+    const handleScroll = () => {
+      // Skip handler if manually scrolling or width not calculated
+      if (isScrollingRef.current || !singleSetWidthRef.current) return;
+
+      const scrollLeft = container.scrollLeft;
+      const clientWidth = container.clientWidth;
+      const singleSetWidth = singleSetWidthRef.current;
+
+      // If scrolled past the end of second set (into third set), jump back to second set
+      if (scrollLeft >= singleSetWidth * 2 - clientWidth / 2) {
+        isScrollingRef.current = true;
+        const offset = scrollLeft - singleSetWidth * 2;
+        container.scrollLeft = singleSetWidth + offset;
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 100);
+      }
+      // If scrolled before the start of second set (into first set), jump to second set
+      else if (scrollLeft <= singleSetWidth / 2) {
+        isScrollingRef.current = true;
+        const offset = scrollLeft;
+        container.scrollLeft = singleSetWidth + offset;
+        setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 100);
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    
+    // Recalculate on resize
+    const handleResize = () => {
+      calculateAndSet();
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      container.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
+    };
+  }, [items.length, isMobile]);
+
+  const scrollBy = (delta) => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    // Check if container is scrollable
+    if (container.scrollWidth <= container.clientWidth) {
+      console.warn("Container is not scrollable");
+      return;
+    }
+    
+    // Clear any existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    
+    // Set flag to prevent infinite scroll handler from interfering
+    isScrollingRef.current = true;
+    
+    const currentScroll = container.scrollLeft;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    const newScroll = Math.max(0, Math.min(maxScroll, currentScroll + delta));
+    
+    // Use scrollTo for more reliable scrolling
+    container.scrollTo({ left: newScroll, behavior: "smooth" });
+    
+    // Re-enable scroll handler after scrolling completes
+    scrollTimeoutRef.current = setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 500);
+  };
+
+  const baseRow =
+    "flex gap-4 md:gap-20 overflow-x-auto md:overflow-x-auto snap-x snap-mandatory mb-4 md:mb-8";
+  const desktopDirection = reverseOnDesktop
+    ? "md:flex-row-reverse md:space-x-reverse"
+    : "md:flex-row";
+
+  return (
+    <div className="relative w-full">
+      <div
+        ref={containerRef}
+        className={cn(baseRow, desktopDirection, "no-scrollbar", "w-full")}
+        style={{ 
+          WebkitOverflowScrolling: "touch",
+          scrollBehavior: "smooth"
+        }}
+      >
+        {duplicatedItems.map((product, index) => (
+          <ProductCard
+            product={product}
+            translate={translate}
+            key={`${product.title}-${index}`}
+            isMobile={isMobile}
+          />
+        ))}
+      </div>
+
+      {/* Desktop subtle arrows */}
+      <button
+        type="button"
+        aria-label="Scroll left"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollBy(-400);
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-50 cursor-pointer"
+        style={{ pointerEvents: "auto" }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="h-5 w-5 pointer-events-none"
+        >
+          <path
+            d="M15 6l-6 6 6 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+      <button
+        type="button"
+        aria-label="Scroll right"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollBy(400);
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all duration-200 z-50 cursor-pointer"
+        style={{ pointerEvents: "auto" }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          className="h-5 w-5 pointer-events-none"
+        >
+          <path
+            d="M9 6l6 6-6 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
   );
 };

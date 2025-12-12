@@ -16,6 +16,7 @@ export const metadata = {
     icon: "/icon.svg",
   },
   robots: "index, follow",
+  themeColor: "#0a0a0a",
   metadataBase: new URL("https://www.owendigitals.work"),
   alternates: {
     canonical: "/",
@@ -36,7 +37,7 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body>
+      <body className={manrope.className}>
         {children}
         <Analytics />
       </body>

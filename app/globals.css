@@ -21,3 +21,20 @@ body {
 .font-manrope {
   font-family: "Manrope", sans-serif;
 }
+
+/* Shared button styles */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-[#b02222] to-[#d38787] transition-colors duration-300;
+}
+.btn-primary:hover {
+  @apply shadow-[0_0_20px_rgba(176,34,34,0.3)];
+}
+
+/* Hide scrollbars while preserving scroll behavior */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
