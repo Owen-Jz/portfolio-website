@@ -1,5 +1,6 @@
 import { Manrope } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { Providers } from "./providers";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -38,7 +39,9 @@ export default function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className={manrope.className}>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
         <Analytics />
       </body>
     </html>

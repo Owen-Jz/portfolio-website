@@ -1,29 +1,68 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { NavbarDemo } from "../../../components/ui/ResizableNavbar";
 import FooterSection from "../../../components/FooterSection";
 import Link from "next/link";
-import { getPostBySlug } from "../blogData";
+import Button from "../../../components/ui/Button";
 
 const BlogPostPage = () => {
   const params = useParams();
   const router = useRouter();
-  const post = getPostBySlug(params.slug);
+  const [post, setPost] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
-    if (!post) {
-      router.push("/blog");
-    }
-  }, [post, router]);
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/blog/${params.slug}`);
+        const result = await response.json();
 
-  if (!post) {
-    return null;
+        if (result.success && result.data) {
+          setPost(result.data);
+        } else {
+          setError("Post not found");
+          setTimeout(() => {
+            router.push("/blog");
+          }, 2000);
+        }
+      } catch (err) {
+        console.error("Error fetching blog post:", err);
+        setError("Failed to load post");
+        setTimeout(() => {
+          router.push("/blog");
+        }, 2000);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (params.slug) {
+      fetchPost();
+    }
+  }, [params.slug, router]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+        <div className="text-gray-400 text-lg">Loading post...</div>
+      </div>
+    );
+  }
+
+  if (error || !post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+        <div className="text-red-400 text-lg">{error || "Post not found"}</div>
+      </div>
+    );
   }
 
   const headingVariants = {
@@ -108,15 +147,7 @@ const BlogPostPage = () => {
               initial="hidden"
               animate={inView ? "visible" : "hidden"}
               variants={headingVariants}
-              className="prose prose-invert prose-lg max-w-none
-                prose-headings:text-white prose-headings:font-bold
-                prose-p:text-gray-300 prose-p:leading-relaxed
-                prose-a:text-[#b02222] prose-a:no-underline hover:prose-a:underline
-                prose-strong:text-white prose-strong:font-semibold
-                prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-8 prose-h2:mb-4
-                prose-h3:text-xl prose-h3:md:text-2xl prose-h3:mt-6 prose-h3:mb-3
-                prose-ul:text-gray-300 prose-ol:text-gray-300
-                prose-li:text-gray-300"
+              className="blog-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
@@ -127,29 +158,28 @@ const BlogPostPage = () => {
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <Link href="/blog">
-                <motion.button
-                  className="btn-primary font-semibold flex items-center gap-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
+              <Button
+                href="/blog"
+                variant="primary"
+                className="font-semibold flex items-center gap-2"
+                withMotion={true}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  <span>Back to Blog</span>
-                </motion.button>
-              </Link>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                <span>Back to Blog</span>
+              </Button>
             </motion.div>
           </div>
         </article>

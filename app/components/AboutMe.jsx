@@ -1,16 +1,47 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React from "react";
+import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
 
-const ToolLogo = ({ src, alt = "Tool Logo" }) => {
+const GlassCard = ({ children, className = "", hoverEffect = true }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
   return (
-    <div className="border-[1.394px] border-solid border-[rgba(255,255,255,0.20)] h-[84px] w-[84px] rounded-2xl flex items-center justify-center">
-      <img src={src} alt={alt} className="w-[40px] h-[40px]" />
+    <div
+      onMouseMove={handleMouseMove}
+      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 group/card ${
+        hoverEffect
+          ? "hover:border-white/20 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
+          : ""
+      } ${className}`}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-[24px] opacity-0 transition duration-300 group-hover/card:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(176, 34, 34, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/20 rounded-full blur-[80px] pointer-events-none" />
+      <div className="relative z-10 h-full">{children}</div>
     </div>
   );
 };
 
-const AboutMe = () => {
+const ToolLogo = ({ src, alt, delay }) => {
   return (
+<<<<<<< HEAD
     <div>
       <div className="mx-4 sm:mx-6 lg:mx-auto max-w-[1400px] lg:flex flex-row items-start justify-center space-y-6 lg:space-y-0 lg:space-x-[33px]">
         {/* First Column */}
@@ -24,140 +55,278 @@ const AboutMe = () => {
               Let’s know more about me
             </h2>
           </div>
+=======
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ delay: delay, type: "spring", stiffness: 260, damping: 20 }}
+      whileHover={{ 
+         scale: 1.05, 
+         boxShadow: "0 0 20px rgba(176,34,34,0.3)",
+         borderColor: "rgba(255,255,255,0.3)"
+      }}
+      className="group relative flex flex-col items-center justify-center h-[100px] w-full rounded-2xl bg-white/5 border border-white/10 transition-colors cursor-pointer overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-[#b02222]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg" />
+      
+      <motion.img 
+        src={src} 
+        alt={alt} 
+        className="w-10 h-10 object-contain relative z-10 opacity-60 group-hover:opacity-100 transition-all duration-500 grayscale group-hover:grayscale-0"
+        whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
+        transition={{ duration: 0.5 }}
+      />
+      
+      <span className="absolute bottom-2 text-[10px] font-mono text-white/80 uppercase tracking-wider opacity-0 transform translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+        {alt}
+      </span>
+    </motion.div>
+  );
+};
+>>>>>>> df230af (feat: Implement a comprehensive portfolio website with blog, admin panel, project pages, and various UI components.)
 
-          {/* Workspace */}
-          <div className="flex flex-col space-y-[11.5px] rounded-3xl items-center py-4 w-full max-w-[375px] mx-auto lg:mx-0 min-h-[380px] relative overflow-hidden border border-gray-600">
-            <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
-            <div className="flex flex-row items-center space-x-3 z-10">
-              <img src="/star.svg" alt="Logo" className="w-[35px] h-[34px]" />
-              <h3 className="text-white text-[22px] font-semibold">
-                My Workspace
-              </h3>
-            </div>
-            <p className="w-full max-w-[319.30px] text-[#afafaf] text-base sm:text-lg leading-[25.10px] text-center z-10 px-4">
-              Most of my remote work is done here.
-            </p>
-            <img
-              className="w-[257px] h-[254px] rounded-[20px] z-10"
-              src="/Workspace.png"
-              alt="Workspace"
-            />
-          </div>
-        </div>
+const StatusBadge = () => {
+    const texts = ["Constantly Evolving", "Always Learning", "Building Future"];
+    const [index, setIndex] = React.useState(0);
+    
+    React.useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % texts.length);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
 
-        {/* Second Column */}
-        <div className="space-y-6 md:space-y-[33px] flex flex-col">
-          {/* My Stack */}
-          <div className="flex flex-col space-y-[11.5px] rounded-3xl items-center py-4 w-full max-w-[375px] mx-auto lg:mx-0 min-h-[402px] justify-center relative overflow-hidden border border-gray-600">
-            <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
-            <div className="flex flex-row items-center space-x-3 z-10">
-              <img src="/star.svg" alt="Logo" className="w-[35px] h-[34px]" />
-              <h3 className="text-white text-[22px] font-semibold leading-[33px]">
-                My Stack
-              </h3>
-            </div>
-            <p className="w-full max-w-[319.30px] text-[#afafaf] text-base sm:text-lg leading-[25.10px] text-center z-10 px-4">
-              Key tools that keep my work fast, organized, and high-quality.
-            </p>
-            <div className="space-y-[15px] z-10">
-              <div className="flex flex-row space-x-[15px] justify-center">
-                <ToolLogo src="/ToolLogo1.svg" alt="Illustrator" />
-                <ToolLogo src="/Nextjs.svg" alt="Next.js" />
-                <ToolLogo src="/Webflow.svg" alt="Webflow" />
-              </div>
-              <div className="flex flex-row space-x-[15px] justify-center">
-                <ToolLogo src="/Photoshop.svg" alt="Photoshop" />
-                <ToolLogo src="/Figma.svg" alt="Figma" />
-                <ToolLogo src="/Python.svg" alt="Python" />
-              </div>
-            </div>
-          </div>
-
-          {/* Best Quote */}
-          <div className="hidden md:flex lg:flex flex-col space-y-[11.5px] rounded-3xl px-10 py-4 w-full max-w-[375px] mx-auto lg:mx-0 h-[154px] relative overflow-hidden border border-gray-600">
-            <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
-            <div className="text-white text-lg font-extrabold font-['Manrope'] leading-[33.46px] z-10">
-              Best Quote
-            </div>
-            <div className="text-white text-sm font-semibold font-['Manrope'] leading-[33.46px] z-10">
-              "Good design is as little design as possible."
-            </div>
-            <div className="text-white text-sm font-normal font-serif leading-[33.46px] z-10">
-              — Dieter Rams
-            </div>
-          </div>
-        </div>
-
-        {/* Third Column */}
-        <div className="space-y-6 md:space-y-[33px] flex flex-col">
-          {/* My Location */}
-          <div className="w-full max-w-[375px] mx-auto lg:mx-0">
-            <img
-              src="/MyLocation.png"
-              alt="My Location"
-              className="hidden md:block lg:h-[218px] w-full border border-gray-600 rounded-3xl"
-            />
-          </div>
-
-          {/* My Persona */}
-          <div className="w-full max-w-[375px] mx-auto lg:mx-0">
-            <div className="relative h-[337.36px] w-full bg-black/10 rounded-[19.46px] overflow-hidden border border-gray-600">
-              <div className="absolute -left-14 -top-36 w-[133.63px] h-[225.88px] bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full blur-[153.59px]" />
-              <div className="absolute left-7 top-8 flex flex-col gap-[11.15px] z-10">
-                <div className="flex gap-[11.15px]">
-                  <img
-                    src="/star.svg"
-                    alt="Logo"
-                    className="w-[35px] h-[34px]"
-                  />
-                  <div className="text-white text-[21.98px] font-semibold leading-[33.46px]">
-                    My Persona
-                  </div>
-                </div>
-                <p className="w-full max-w-[319.3px] text-white/50 text-base sm:text-lg font-normal leading-[25.10px]">
-                  Basically, things I enjoy doing!
-                </p>
-              </div>
-              {[
-                {
-                  text: "Introvert💻",
-                  rotate: "-15.85deg",
-                  left: "clamp(100px, 50%, 182.81px)",
-                  top: "165.59px",
-                },
-                {
-                  text: "Dancer🕺",
-                  rotate: "-9.67deg",
-                  left: "clamp(40px, 20%, 61.35px)",
-                  top: "249.57px",
-                },
-                {
-                  text: "Artist🎨",
-                  rotate: "4.73deg",
-                  left: "clamp(120px, 60%, 214.73px)",
-                  top: "224.49px",
-                },
-                {
-                  text: "Gamer🎮",
-                  rotate: "-23.79deg",
-                  left: "clamp(0px, 0%, 1.88px)",
-                  top: "208.82px",
-                },
-              ].map(({ text, rotate, left, top }, index) => (
-                <div
-                  key={index}
-                  className="absolute px-[30.68px] py-2 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-[46.01px] text-[#151515] text-[15px] font-semibold font-['Manrope'] leading-[33.46px] z-10"
-                  style={{ transform: `rotate(${rotate})`, left, top }}
+    return (
+        <div className="min-w-[200px] h-[30px] flex items-center justify-center relative">
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute text-xs text-white/30 font-mono uppercase tracking-widest bg-[#151515] px-3 py-1 rounded-full border border-white/5"
                 >
-                  {text}
-                </div>
-              ))}
-            </div>
-          </div>
+                    {texts[index]}
+                </motion.span>
+            </AnimatePresence>
         </div>
+    )
+}
+
+const Badge = ({ text, rotate, left, top, delay, constraintsRef }) => (
+  <motion.div
+    className="absolute z-10 cursor-grab active:cursor-grabbing"
+    initial={{ opacity: 0, scale: 0, rotate: parseFloat(rotate) }}
+    whileInView={{ opacity: 1, scale: 1, rotate: parseFloat(rotate) }}
+    viewport={{ once: true }}
+    transition={{
+      type: "spring",
+      stiffness: 100,
+      damping: 15,
+      delay: delay 
+    }}
+    style={{
+      left,
+      top,
+    }}
+    drag
+    dragConstraints={constraintsRef}
+    whileHover={{ scale: 1.1, zIndex: 50 }}
+    whileTap={{ scale: 0.95 }}
+  >
+     <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{
+            duration: 4,
+            ease: "easeInOut",
+            repeat: Infinity,
+            repeatType: "reverse",
+            delay: Math.random() * 2
+        }}
+     >
+        <div className="px-6 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-[#151515] text-base font-bold font-manrope shadow-lg select-none">
+            {text}
+        </div>
+     </motion.div>
+  </motion.div>
+);
+
+const AboutMe = () => {
+  const constraintsRef = React.useRef(null);
+
+  return (
+    <div className="py-20 relative">
+        {/* Background glow for the entire section */}
+        <div className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="mx-4 sm:mx-6 lg:mx-auto max-w-[1400px] grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        {/* First Column (Left) */}
+        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+          {/* Introduction Header */}
+          <div className="flex flex-col gap-3 py-4 lg:py-0 justify-center">
+            <motion.span 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-[#b02222] font-bold font-manrope uppercase tracking-wider text-sm lg:text-base"
+            >
+              Beyond Portfolio
+            </motion.span>
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="text-white text-4xl lg:text-5xl font-manrope font-semibold leading-tight"
+            >
+              Get to know <br className="hidden lg:block"/> the person behind <br className="hidden lg:block"/> the screen.
+            </motion.h2>
+          </div>
+
+          {/* Workspace Card: Fills remaining space in the tallest column */}
+          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[400px] flex-1">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-white/5 rounded-lg">
+                 <img src="/star.svg" alt="Star" className="w-5 h-5" />
+              </div>
+              <h3 className="text-white text-xl font-semibold font-manrope">
+                The Setup
+              </h3>
+            </div>
+            
+            <p className="text-white/60 font-manrope text-base mb-6 leading-relaxed">
+              Where the magic happens. A space curated for focus and creativity.
+            </p>
+            
+            <div className="flex-1 w-full rounded-2xl overflow-hidden border border-white/5 relative group">
+                <img
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    src="/hero1.jpg"
+                    alt="Workspace"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                    <span className="text-white text-sm font-mono">My command center</span>
+                </div>
+            </div>
+          </GlassCard>
+        </div>
+
+        {/* Second Column (Middle) */}
+        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+           {/* My Stack Card: Fixed large height, but lets column stretch */}
+          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[480px]">
+           <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-white/5 rounded-lg">
+                 <img src="/star.svg" alt="Star" className="w-5 h-5" />
+              </div>
+              <h3 className="text-white text-xl font-semibold font-manrope">
+                Tech Arsenal
+              </h3>
+            </div>
+
+            <p className="text-white/60 font-manrope text-base mb-8 leading-relaxed">
+              Tools that empower my workflow and bring ideas to life.
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mx-auto w-full">
+               {[
+                 { src: "/ToolLogo1.svg", alt: "Illustrator" },
+                 { src: "/Nextjs.svg", alt: "Next.js" },
+                 { src: "/Webflow.svg", alt: "Webflow" },
+                 { src: "/Photoshop.svg", alt: "Photoshop" },
+                 { src: "/Figma.svg", alt: "Figma" },
+                 { src: "/Python.svg", alt: "Python" }
+               ].map((tool, index) => (
+                 <ToolLogo 
+                    key={tool.alt} 
+                    src={tool.src} 
+                    alt={tool.alt} 
+                    delay={0.1 + (index * 0.1)} 
+                 />
+               ))}
+            </div>
+            
+            <div className="mt-auto pt-8 text-center relative z-10">
+                 <StatusBadge />
+            </div>
+          </GlassCard>
+
+           {/* Quote Card: Fills remaining space */}
+           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[200px] flex-1" hoverEffect={true}>
+             <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 bg-white/5 rounded-lg">
+                    <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                </div>
+                <h3 className="text-white text-xl font-semibold font-manrope">
+                    Favorite Quote
+                </h3>
+             </div>
+
+             <div className="flex-1 flex flex-col justify-center relative">
+                 <div className="absolute right-4 -top-2 text-[#b02222]/10 text-9xl font-serif leading-none select-none">”</div>
+                 <blockquote className="text-white text-xl font-medium font-manrope leading-relaxed relative z-10">
+                   "Good design is as little design as possible."
+                 </blockquote>
+                 <footer className="mt-6 flex items-center gap-3">
+                    <div className="h-[1px] w-8 bg-[#b02222]"></div>
+                    <span className="text-white/60 text-sm font-mono uppercase tracking-widest">Dieter Rams</span>
+                 </footer>
+             </div>
+           </GlassCard>
+        </div>
+
+        {/* Third Column (Right) */}
+        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+           {/* Location Card: Fixed height */}
+           <GlassCard className="p-2 h-[280px] group flex-none">
+              <div className="w-full h-full rounded-[18px] overflow-hidden relative">
+                  <img
+                    src="/MyLocation.png"
+                    alt="Location"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
+                  <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"/>
+                      <span className="text-white text-xs font-mono">Based in Earth</span>
+                  </div>
+              </div>
+           </GlassCard>
+
+           {/* Persona Card: Fills remaining space */}
+           <GlassCard className="min-h-[400px] relative overflow-hidden flex-1">
+             <div ref={constraintsRef} className="absolute inset-0 z-0" /> {/* Constraints container */}
+             <div className="p-6 md:p-8 relative z-10 pointer-events-none"> {/* Text content shouldn't block drags, but we need text to separate? actually pointer-events-none on container is safer, text can retain pointer-events-auto if needed. */}
+                <div className="flex items-center gap-3 mb-2 pointer-events-auto">
+                    <div className="p-2 bg-white/5 rounded-lg">
+                        <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-white text-xl font-semibold font-manrope">
+                        Persona
+                    </h3>
+                </div>
+                <p className="text-white/60 font-manrope text-sm pointer-events-auto">
+                    The facets that make me, me.
+                </p>
+             </div>
+             
+             {/* Floating Badges Area */}
+             <div className="absolute inset-0 top-20 z-20">
+                <Badge constraintsRef={constraintsRef} text="Introvert 💻" rotate="-12deg" left="55%" top="20%" delay={0.1} />
+                <Badge constraintsRef={constraintsRef} text="Dancer 🕺" rotate="-5deg" left="15%" top="45%" delay={0.2} />
+                <Badge constraintsRef={constraintsRef} text="Artist 🎨" rotate="8deg" left="60%" top="55%" delay={0.3} />
+                <Badge constraintsRef={constraintsRef} text="Gamer 🎮" rotate="-15deg" left="10%" top="20%" delay={0.4} />
+                <Badge constraintsRef={constraintsRef} text="Dreamer 🌙" rotate="12deg" left="35%" top="70%" delay={0.5} />
+             </div>
+           </GlassCard>
+        </div>
+
       </div>
     </div>
   );
 };
 
 export default AboutMe;
+

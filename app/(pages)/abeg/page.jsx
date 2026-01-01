@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import ContactSection from "@/app/components/ContactSection";
 import FooterSection from "@/app/components/FooterSection";
 import { NavbarDemo } from "@/app/components/ui/ResizableNavbar";
+import Button from "@/app/components/ui/Button";
 
 const accounts = [
   {
@@ -129,25 +130,18 @@ export default function Page() {
                     </div>
 
                     <div>
-                      <button
+                      <Button
                         onClick={() =>
                           copyToClipboard(
                             `${account.accountNumber}`,
                             account.id
                           )
                         }
-                        style={{
-                          backgroundColor: "#DC2626", // red-600
-                          padding: "8px 16px",
-                          borderRadius: "10px",
-                          color: "#FFFFFF",
-                          fontWeight: "500",
-                          fontSize: "14px",
-                        }}
-                        className="hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+                        variant="primary"
+                        className="hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500"
                       >
                         {copiedId === account.id ? "Copied!" : "Copy"}
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </li>

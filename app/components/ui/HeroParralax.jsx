@@ -130,25 +130,25 @@ export const HeroParallax = ({ products }) => {
         {firstRow.length > 0 && (
           <ScrollableRow
             items={firstRow}
-            translate={translateX}
-            isMobile={isMobile}
+                translate={translateX}
+                isMobile={isMobile}
             reverseOnDesktop
-          />
+              />
         )}
         {secondRow.length > 0 && (
           <ScrollableRow
             items={secondRow}
-            translate={translateXReverse}
-            isMobile={isMobile}
-          />
+                translate={translateXReverse}
+                isMobile={isMobile}
+              />
         )}
         {thirdRow.length > 0 && (
           <ScrollableRow
             items={thirdRow}
-            translate={translateX}
-            isMobile={isMobile}
+                translate={translateX}
+                isMobile={isMobile}
             reverseOnDesktop
-          />
+              />
         )}
       </motion.div>
     </div>

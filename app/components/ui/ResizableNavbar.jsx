@@ -10,6 +10,7 @@ import {
   useMotionValueEvent,
 } from "motion/react";
 import React, { useRef, useState } from "react";
+import Button from "./Button";
 
 export const Navbar = ({ children, className }) => {
   const ref = useRef(null);
@@ -244,13 +245,13 @@ export function NavbarDemo() {
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
-          <div className="flex items-center gap-4">
-            <NavbarButton variant="primary" href="/blog" className="btn-primary !bg-gradient-to-r !from-[#b02222] !to-[#d38787] !text-white">
+          <div className="flex items-center gap-4 relative z-20">
+            <Button href="/blog" variant="primary">
               Blog
-            </NavbarButton>
-            <NavbarButton variant="primary" href="/contact" className="btn-primary !bg-gradient-to-r !from-[#b02222] !to-[#d38787] !text-white">
+            </Button>
+            <Button href="/contact" variant="primary">
               Hire Me
-            </NavbarButton>
+            </Button>
           </div>
         </NavBody>
 
@@ -279,24 +280,22 @@ export function NavbarDemo() {
               </a>
             ))}
             <div className="flex w-full flex-col gap-4">
-              <Link href="/blog">
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="primary"
-                  className="w-full"
-                >
-                  Blog
-                </NavbarButton>
-              </Link>
-              <Link href="/contact">
-                <NavbarButton
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  variant="primary"
-                  className="w-full"
-                >
-                  Hire Me
-                </NavbarButton>
-              </Link>
+              <Button
+                href="/blog"
+                variant="primary"
+                className="w-full"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </Button>
+              <Button
+                href="/contact"
+                variant="primary"
+                className="w-full"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Hire Me
+              </Button>
             </div>
           </MobileNavMenu>
         </MobileNav>

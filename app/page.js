@@ -2,6 +2,7 @@
 
 import React from "react";
 import { HeroSection } from "./components/HeroSection";
+import HeroSectionGSAP from "./components/HeroSectionGSAP";
 import AboutMe from "./components/AboutMe";
 import ProjectSection from "./components/ProjectSection";
 import ExperienceSection from "./components/ExperienceSection";
@@ -36,7 +37,7 @@ const HomePage = () => {
   }, []);
 
   const sections = [
-    { id: "hero", Component: HeroSection },
+    // { id: "hero", Component: HeroSection },
     { id: "about", Component: AboutMe },
     { id: "projects", Component: ProjectSection },
     { id: "experience", Component: ExperienceSection },
@@ -45,9 +46,9 @@ const HomePage = () => {
     { id: "contact", Component: ContactSection },
   ];
 
-
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
+<<<<<<< HEAD
           <NavbarDemo />
           <main className="flex-grow w-full max-w-full">
             {sections.map(({ id, Component }) => (
@@ -63,6 +64,27 @@ const HomePage = () => {
           </main>
           <FooterSection />
           <SocialSidebar />
+=======
+      <NavbarDemo />
+      <main className="flex-grow w-full max-w-full">
+        {/* New GSAP Hero Section */}
+        <HeroSectionGSAP />
+
+        {/* Existing Hero Section */}
+        {sections.map(({ id, Component }) => (
+          <AnimatedSection
+            key={id}
+            id={id}
+            className="w-full max-w-full px-0"
+            threshold={0.15}
+          >
+            <Component />
+          </AnimatedSection>
+        ))}
+      </main>
+      <FooterSection />
+      <SocialSidebar />
+>>>>>>> df230af (feat: Implement a comprehensive portfolio website with blog, admin panel, project pages, and various UI components.)
     </div>
   );
 };

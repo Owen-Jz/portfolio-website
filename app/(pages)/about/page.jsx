@@ -2,13 +2,13 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { cn } from "../../libs/utils"; // Assuming this path is correct
-import { NavbarDemo } from "../../components/ui/ResizableNavbar"; // Assuming this path is correct
+import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
 import ContactSection from "../../components/ContactSection";
-export default function AboutSectionRefined() {
+import GlassCard from "../../components/ui/GlassCard";
+import { Trophy, Users, Star, Sparkles, Code2, Palette } from "lucide-react";
+
+export default function AboutPage() {
   const skills = [
     "UI/UX Design",
     "React",
@@ -29,184 +29,166 @@ export default function AboutSectionRefined() {
       title: "Redesigned E-Commerce Platform",
       description:
         "Led the UI/UX redesign for a major e-commerce platform, increasing user engagement by 35% and boosting conversion rates.",
+      icon: <Users className="w-6 h-6 text-[#b02222]" />,
     },
     {
       title: "Open-Source Contributor",
       description:
         "Contributed to multiple open-source React libraries, enhancing functionality for thousands of developers worldwide.",
+      icon: <Code2 className="w-6 h-6 text-[#b02222]" />,
     },
     {
       title: "Award-Winning Portfolio",
       description:
         "Received the 2024 Web Design Excellence Award for creating a visually stunning and highly functional portfolio.",
+      icon: <Trophy className="w-6 h-6 text-[#b02222]" />,
     },
   ];
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: (delay = 0) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, delay },
-    }),
-  };
-
   return (
-    <div>
-      <section className="py-20 text-white">
-        {" "}
-        {/* Added bg-gray-900 for contrast if needed */}
-        <NavbarDemo />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
-          {" "}
-          {/* Increased space-y */}
-          {/* Hero Introduction */}
-          <motion.div
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            className="text-center"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-['Manrope'] leading-tight">
-              Hi, I'm Owen. <br className="hidden md:block" />I Craft Digital
-              Experiences That Connect.
-            </h1>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto font-['Manrope']">
-              A designer and developer passionate about building intuitive,
-              impactful, and beautiful solutions that users love and businesses
-              value.
-            </p>
-          </motion.div>
-          {/* My Story & Approach */}
-          <motion.div
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0.2}
-            className="grid grid-cols-1 md:grid-cols-5 gap-2 items-center"
-          >
-            <div className="md:col-span-2 flex justify-center md:justify-start">
-              <Image
-                src="/profile2.jpg" // Replace with your actual image
-                alt="Owen - Designer & Developer"
-                width={300} // Slightly larger
-                height={300}
-                className="rounded-full border-4 border-brandRed object-cover shadow-xl"
-                placeholder="blur"
-                blurDataURL="/placeholders/profile-blur.jpg" // Replace
-              />
-            </div>
-            <div className="md:col-span-3">
-              <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4 font-['Manrope']">
-                My Journey: From Pixels to Code
-              </h2>
-              <p className="text-base md:text-lg text-gray-300 font-['Manrope'] space-y-4">
-                <span>
-                  My path into the digital world began with a fascination for
-                  design—how aesthetics and usability can shape perception and
-                  interaction. This led me to master tools like Figma and Adobe
-                  XD, honing my eye for detail and user-centric interfaces.
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#b02222] selection:text-white">
+      <NavbarDemo />
+      
+      <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#b02222]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto relative z-10 space-y-24">
+          
+          {/* Header Section */}
+          <div className="text-center max-w-4xl mx-auto space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6">
+                <Sparkles className="w-4 h-4 text-[#b02222]" />
+                <span className="text-sm font-manrope text-white/80">More About Me</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-manrope leading-tight">
+                Crafting Digital <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#b02222] to-[#d38787]">
+                  Masterpieces
                 </span>
-                <span>
-                  But I didn't stop at the visuals. Curious about bringing these
-                  designs to life, I delved into development, embracing the
-                  power of React, Next.js, and modern web technologies. Today,
-                  with over five years of experience, I bridge the gap between
-                  creative vision and technical execution, delivering
-                  comprehensive solutions from concept to deployment.
-                </span>
-              </p>
+              </h1>
+            </motion.div>
+
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-lg md:text-xl text-white/60 font-manrope max-w-2xl mx-auto leading-relaxed"
+            >
+              A designer and developer passionate about building intuitive, 
+              impactful, and beautiful solutions that users love.
+            </motion.p>
+          </div>
+
+          {/* Journey Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-5 h-full">
+               <GlassCard className="h-full min-h-[400px] p-2 group">
+                 <div className="w-full h-full rounded-[20px] overflow-hidden relative">
+                    <img 
+                      src="/profile2.jpg" 
+                      alt="Owen" 
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80" />
+                    <div className="absolute bottom-6 left-6">
+                       <h3 className="text-2xl font-bold font-manrope">Owen Digitals</h3>
+                       <p className="text-white/60 font-mono text-sm">Design Engineer</p>
+                    </div>
+                 </div>
+               </GlassCard>
             </div>
-          </motion.div>
-          {/* My Philosophy: Design & Development */}
-          {/* <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          animate="visible"
-          custom={0.4}
-          className="bg-gray-800 rounded-xl p-8 md:p-12 border border-gray-700 shadow-lg"
-        >
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-8 text-center font-['Manrope']">
-            How I Work: My Approach
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-            <div className="flex flex-col items-center text-center md:items-start md:text-left">
-              <Image
-                src="/placeholders/design-showcase.jpg" // Replace
-                alt="UI/UX Design Showcase"
-                width={500}
-                height={350}
-                className="rounded-lg border border-gray-600 mb-6 object-cover w-full shadow-md"
-                placeholder="blur"
-                blurDataURL="/placeholders/design-showcase-blur.jpg" // Replace
-              />
-              <h3 className="text-2xl font-semibold text-brandRed mb-3 font-['Manrope']">
-                User-First Design
-              </h3>
-              <p className="text-base text-gray-300 font-['Manrope']">
-                I believe great design is invisible. It guides users
-                effortlessly. My process is rooted in empathy, research, and
-                iteration, ensuring every interface is intuitive, accessible,
-                and aligned with your brand's voice.
-              </p>
-            </div>
-            <div className="flex flex-col items-center text-center md:items-start md:text-left">
-              <Image
-                src="/placeholders/dev-project.jpg" // Replace
-                alt="Development Project Snippet"
-                width={500}
-                height={350}
-                className="rounded-lg border border-gray-600 mb-6 object-cover w-full shadow-md"
-                placeholder="blur"
-                blurDataURL="/placeholders/dev-project-blur.jpg" // Replace
-              />
-              <h3 className="text-2xl font-semibold text-brandRed mb-3 font-['Manrope']">
-                Scalable Development
-              </h3>
-              <p className="text-base text-gray-300 font-['Manrope']">
-                Clean, maintainable code is paramount. I leverage modern
-                frameworks and best practices to build responsive, performant,
-                and scalable web applications that stand the test of time and
-                adapt to future needs.
-              </p>
+            
+            <div className="lg:col-span-7 flex flex-col gap-8">
+              <GlassCard className="p-8 md:p-10 flex-1">
+                 <div className="flex items-center gap-4 mb-6">
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+                       <Palette className="w-6 h-6 text-[#b02222]" />
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-bold font-manrope">From Pixels to Code</h2>
+                 </div>
+                 
+                 <div className="space-y-6 text-white/70 text-base md:text-lg leading-relaxed font-manrope">
+                   <p>
+                     My path into the digital world began with a fascination for design—how aesthetics and usability can shape perception and interaction. This led me to master tools like Figma and Adobe XD, honing my eye for detail.
+                   </p>
+                   <p>
+                     But I didn't stop at the visuals. Curious about bringing these designs to life, I delved into development, embracing the power of React, Next.js, and modern web technologies. Today, I bridge the gap between creative vision and technical execution.
+                   </p>
+                 </div>
+              </GlassCard>
+
+              {/* Quick Stats Grid can go here if needed, or just more content */}
             </div>
           </div>
-        </motion.div> */}
-          {/* Skills Toolkit */}
-          <motion.div
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            custom={0.6}
-            className="bg-dark-900 rounded-xl p-8 md:p-12 border border-dark-600 shadow-lg"
-          >
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-8 text-center font-['Manrope']">
-              My Toolkit
-            </h2>
-            <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
-              {skills.map((skill, idx) => (
-                <span
-                  key={`skill-${idx}`}
-                  className={cn(
-                    "px-5 py-2.5 text-sm font-medium rounded-full border border-dark-600 font-['Manrope'] transition-all duration-300 ease-in-out",
-                    "hover:shadow-lg hover:scale-105",
-                    skill === "UI/UX Design" ||
-                      skill === "React" ||
-                      skill === "Next.js"
-                      ? "bg-brandRed text-white hover:bg-brandRed-dark"
-                      : "bg-dark-800 text-dark-text-primary hover:bg-dark-700 hover:border-dark-500"
-                  )}
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </motion.div>
-          {/* Achievements */}
-          {/* CTA */}
-          <ContactSection />
+
+          {/* Achievements Section */}
+          <div>
+             <motion.h2 
+               initial={{ opacity: 0, x: -20 }}
+               whileInView={{ opacity: 1, x: 0 }}
+               viewport={{ once: true }}
+               className="text-3xl md:text-4xl font-bold font-manrope mb-10 pl-4 border-l-4 border-[#b02222]"
+             >
+               Key Achievements
+             </motion.h2>
+             
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {achievements.map((item, idx) => (
+                  <GlassCard key={idx} className="p-8" hoverEffect={true}>
+                     <div className="w-12 h-12 rounded-full bg-[#b02222]/10 flex items-center justify-center mb-6 border border-[#b02222]/20">
+                        {item.icon}
+                     </div>
+                     <h3 className="text-xl font-bold font-manrope mb-3">{item.title}</h3>
+                     <p className="text-white/60 leading-relaxed text-sm">
+                       {item.description}
+                     </p>
+                  </GlassCard>
+                ))}
+             </div>
+          </div>
+
+          {/* Skills Section */}
+          <GlassCard className="p-8 md:p-12 text-center">
+             <div className="max-w-3xl mx-auto">
+               <div className="flex justify-center mb-6">
+                  <div className="p-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-xl shadow-lg shadow-[#b02222]/20">
+                     <Code2 className="w-6 h-6 text-white" />
+                  </div>
+               </div>
+               <h2 className="text-3xl font-bold font-manrope mb-4">Technical Arsenal</h2>
+               <p className="text-white/60 mb-10 max-w-xl mx-auto">
+                 The tools and technologies I use to bring ideas to life, constantly updated and refined.
+               </p>
+               
+               <div className="flex flex-wrap justify-center gap-3">
+                 {skills.map((skill, idx) => (
+                   <motion.div
+                     key={idx}
+                     whileHover={{ scale: 1.05, y: -2 }}
+                     className="px-5 py-2.5 rounded-full bg-white/5 border border-white/10 text-white/80 hover:bg-[#b02222] hover:text-white hover:border-[#b02222] transition-all duration-300 font-medium font-manrope cursor-default text-sm"
+                   >
+                     {skill}
+                   </motion.div>
+                 ))}
+               </div>
+             </div>
+          </GlassCard>
+
+          {/* CTA Section */}
+          <div className="pb-20">
+             <ContactSection />
+          </div>
+
         </div>
-      </section>
+      </main>
+      
       <FooterSection />
     </div>
   );

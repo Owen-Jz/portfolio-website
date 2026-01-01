@@ -75,6 +75,16 @@ export const projectsData = {
       tags: ["Next.js", "E-commerce", "Full Stack"],
       link: "https://numero-theta-dusky.vercel.app/",
     },
+    {
+      id: 8,
+      title: "Naija Diaspora Hub",
+      category: "Web Development",
+      image: "/projects/nigerian-diaspora-hub.png",
+      color: "#b0b022",
+      description: "A platform for Nigerians to connect with their diaspora.",
+      tags: ["Next.js", "E-commerce", "Full Stack"],
+      link: "https://naija-diaspora-hub.vercel.app/",
+    },
     // {
     //   id: 8,
     //   title: "Educational Platform",

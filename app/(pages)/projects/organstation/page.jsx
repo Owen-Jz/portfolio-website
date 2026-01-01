@@ -1,227 +1,69 @@
-import { NavbarDemo } from "@/app/components/ui/ResizableNavbar";
+"use client";
+
 import React from "react";
-import Image from "next/image";
+import ProjectPageTemplate from "@/app/components/ui/ProjectPageTemplate";
 
-import SocialSidebar from "@/app/components/SocialSidebar";
-import ContactSection from "@/app/components/ContactSection";
-// Add more items as needed
-
-// function section_create({ title, children, image }) {
-//   return (
-//     <section className="mb-12 space-y-4">
-//       <h2 className="text-2xl font-semibold">{title}</h2>
-//       <p>{children}</p>
-//       {image && (
-//         <Image
-//           src={image}
-//           alt={title}
-//           width={1200}
-//           height={200}
-//           className="rounded-2xl mt-10"
-//         />
-//       )}
-//     </section>
-//   );
-// }
-
-const WebKitchenBrandPage = () => {
+const OrganStationPage = () => {
   return (
-    <div>
-      <NavbarDemo />
-      <div className="max-w-7xl mx-auto px-4 py-12 mt-12">
-        <header className="mb-10">
-          <h1 className="text-4xl font-bold mb-2">OrganStation Brand Design</h1>
-          <div className="flex flex-row  gap-2">
-            <p className=" font-semibold bg-gray-700 w-fit p-2 rounded-3xl">
-              Client: OrganStation
-            </p>
-            <p className=" font-semibold bg-gray-700 w-fit p-2 rounded-3xl">
-              Industry: Healthcare
-            </p>
-          </div>
-          <p className="text-lg ">
-            Explore the brand identity, logo, and visual assets created for
-            OrganStation
-          </p>
-        </header>
-
-        {/* Intro section */}
-        <section className="mb-12 space-y-4">
-          <h2 className="text-2xl font-semibold">Project Overview</h2>
-          <p>
-            I was contracted by OrganStation, a forward-thinking healthcare
-            startup specializing in telemedical services. The company is
-            dedicated to delivering accessible and efficient medical
-            consultations through digital platforms. My role involved developing
-            a cohesive brand identity that reflected OrganStation's mission to
-            modernize healthcare and make quality medical care available to
-            everyone, anywhere.
-          </p>
-          <Image
-            src="/projects/organstation/OS1.png"
-            alt="OrganStation Logo"
-            width={1200}
-            height={200}
-            className="rounded-2xl mt-10"
-          />
-        </section>
-
-        {/* My Process section */}
-        <section className="mb-12 space-y-4">
-          {/* <h2 className="text-2xl font-semibold">My Process</h2>
-          <p>
-            Before beginning the logo design, I took time to deeply understand
-            the client’s vision and goals. I created a moodboard to visually
-            communicate ideas and ensure we were aligned from the start. This
-            collaborative step helped streamline the design process and
-            minimized unnecessary revisions by keeping both the client and
-            myself on the same page.
-          </p> */}
-
-          <Image
-            src="/projects/organstation/OS2.png"
-            alt="OrganStation Logo"
-            width={1200}
-            height={200}
-            className="rounded-2xl mt-10"
-          />
-        </section>
-
-        {/* Logo Breakdown section */}
-        <section className="mb-12 space-y-4">
-          {/* <h2 className="text-2xl font-semibold">Logo Breakdown</h2>
-          <p>
-            The logo design process began with a detailed breakdown of the
-            elements that would be included. I started by sketching a basic
-            knife shape, which would later be transformed into a more refined
-            version.
-          </p> */}
-
-          <Image
-            src="/projects/organstation/OS3.gif"
-            alt="OrganStation Logo"
-            width={1200}
-            height={200}
-            className="rounded-2xl mt-10"
-          />
-        </section>
-
-        <Image
-          src="/projects/organstation/OS4.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS5.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS6.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS7.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS8.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS9.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS10.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS11.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS12.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS13.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS14.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS15.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS16.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-
-        <Image
-          src="/projects/organstation/OS17.png"
-          alt="OrganStation Logo"
-          width={1200}
-          height={200}
-          className="rounded-2xl mt-10"
-        />
-      </div>
-      <ContactSection />
-      <SocialSidebar />
-    </div>
+    <ProjectPageTemplate
+      title="OrganStation Brand Identity"
+      subtitle="Developing a cohesive brand identity for a forward-thinking telemedical startup."
+      category="Brand Identity"
+      metadata={[
+        { label: "Client", value: "OrganStation" },
+        { label: "Industry", value: "Healthcare" },
+        { label: "Year", value: "2024" },
+        { label: "Service", value: "Branding" },
+      ]}
+      overviewContent={
+        <p>
+          I was contracted by OrganStation, a forward-thinking healthcare
+          startup specializing in telemedical services. The company is
+          dedicated to delivering accessible and efficient medical
+          consultations through digital platforms. My role involved developing
+          a cohesive brand identity that reflected OrganStation's mission to
+          modernize healthcare and make quality medical care available to
+          everyone, anywhere.
+        </p>
+      }
+      processContent={
+        <p>
+          Before beginning the logo design, I took time to deeply understand
+          the client’s vision and goals. I created a moodboard to visually
+          communicate ideas and ensure we were aligned from the start. This
+          collaborative step helped streamline the design process and methodically
+          narrowed down the visual direction to one that felt innovative yet trustworthy.
+        </p>
+      }
+      logoBreakdownContent={
+        <p>
+          The logo design process began with a detailed breakdown of the
+          elements that would be included. We focused on symbols of life and connection,
+          eventually arriving at a mark that signifies the seamless integration of hope
+          and technology.
+        </p>
+      }
+      galleryImages={[
+        { src: "/projects/organstation/OS1.png", alt: "OrganStation Logo" },
+        { src: "/projects/organstation/OS2.png", alt: "Moodboard" },
+        { src: "/projects/organstation/OS3.gif", alt: "Logo Animation" },
+        { src: "/projects/organstation/OS4.png", alt: "Brand Asset 1" },
+        { src: "/projects/organstation/OS5.png", alt: "Brand Asset 2" },
+        { src: "/projects/organstation/OS6.png", alt: "Brand Asset 3" },
+        { src: "/projects/organstation/OS7.png", alt: "Brand Asset 4" },
+        { src: "/projects/organstation/OS8.png", alt: "Brand Asset 5" },
+        { src: "/projects/organstation/OS9.png", alt: "Brand Asset 6" },
+        { src: "/projects/organstation/OS10.png", alt: "Brand Asset 7" },
+        { src: "/projects/organstation/OS11.png", alt: "Brand Asset 8" },
+        { src: "/projects/organstation/OS12.png", alt: "Brand Asset 9" },
+        { src: "/projects/organstation/OS13.png", alt: "Brand Asset 10" },
+        { src: "/projects/organstation/OS14.png", alt: "Brand Asset 11" },
+        { src: "/projects/organstation/OS15.png", alt: "Brand Asset 12" },
+        { src: "/projects/organstation/OS16.png", alt: "Brand Asset 13" },
+        { src: "/projects/organstation/OS17.png", alt: "Brand Asset 14" },
+      ]}
+    />
   );
 };
 
-export default WebKitchenBrandPage;
+export default OrganStationPage;

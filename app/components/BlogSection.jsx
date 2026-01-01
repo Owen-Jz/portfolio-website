@@ -1,266 +1,177 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import React, { useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { blogPosts } from "../(pages)/blog/blogData";
+import Button from "./ui/Button";
+import { ArrowUpRight, Calendar, Clock, ChevronRight } from "lucide-react";
 
-// Featured hero post (first post)
-const featuredPost = blogPosts[0];
+// GlassCard Component
+const GlassCard = ({ children, className = "", hoverEffect = true }) => {
+  return (
+    <div
+      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 ${
+        hoverEffect
+          ? "hover:border-white/20 hover:bg-[#151515]/70 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-2"
+          : ""
+      } ${className}`}
+    >
+      <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="relative z-10 h-full">{children}</div>
+    </div>
+  );
+};
 
-// Other blog posts for the grid (showing first 2 after featured)
-const blogPostsForSection = blogPosts.slice(1, 3);
-
-// Featured Hero Post Component
+// Featured Featured Post
 const FeaturedPostHero = ({ post }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="relative w-full mb-12 md:mb-16"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="w-full mb-12"
     >
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative group cursor-pointer overflow-hidden rounded-3xl border border-gray-600 bg-gray-800/30 backdrop-blur-sm hover:border-gray-500 transition-all duration-500">
-          {/* Background Image with Overlay */}
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
-            {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-10" />
-            
-            {/* Animated Background Image */}
-            <motion.div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.image})` }}
-              whileHover={{
-                scale: 1.1,
-                transition: { duration: 1, ease: "easeOut" },
-              }}
-            />
-            
-            {/* Content */}
-            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16">
-              {/* Category Badge */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="mb-4"
-              >
-                <span className="inline-block px-4 py-2 rounded-full text-sm font-semibold text-white bg-[#b02222] backdrop-blur-sm">
-                  {post.category}
-                </span>
-              </motion.div>
+      <Link href={`/blog/${post.slug}`} className="block group">
+        <GlassCard className="min-h-[400px]">
+          <div className="grid md:grid-cols-2 gap-0 h-full">
+            {/* Image Side */}
+            <div className="relative h-[300px] md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-white/5">
+               <motion.div
+                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                 style={{ backgroundImage: `url(${post.image})` }}
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-60" />
+               
+               <div className="absolute top-6 left-6">
+                  <span className="px-3 py-1 text-xs font-mono font-medium tracking-wider text-white bg-black/50 backdrop-blur-md rounded-full border border-white/10 uppercase">
+                    Featured
+                  </span>
+               </div>
+            </div>
 
-              {/* Title */}
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight mb-4 group-hover:text-[#b02222] transition-colors duration-300"
-              >
-                {post.title}
-              </motion.h2>
+            {/* Content Side */}
+            <div className="p-8 md:p-12 flex flex-col justify-center">
+               <div className="flex items-center gap-4 text-xs font-mono text-white/50 mb-6">
+                  <span className="px-2 py-1 rounded bg-white/5 text-white/70 uppercase tracking-wider">{post.category}</span>
+                  <div className="flex items-center gap-1">
+                     <Calendar className="w-3 h-3" />
+                     <span>{post.date}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                     <Clock className="w-3 h-3" />
+                     <span>{post.readTime}</span>
+                  </div>
+               </div>
 
-              {/* Excerpt */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-gray-200 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mb-6 line-clamp-3"
-              >
-                {post.excerpt}
-              </motion.p>
+               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-manrope text-white mb-6 group-hover:text-[#b02222] transition-colors leading-tight">
+                  {post.title}
+               </h3>
 
-              {/* Meta Info and CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-              >
-                <div className="flex items-center gap-4 text-sm md:text-base text-gray-300">
-                  <span>{post.date}</span>
-                  <span>•</span>
-                  <span>{post.readTime}</span>
-                </div>
-                <div className="flex items-center gap-2 text-white group-hover:text-[#b02222] transition-colors duration-300">
-                  <span className="font-semibold text-base md:text-lg">Read Article</span>
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 md:h-6 md:w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </motion.svg>
-                </div>
-              </motion.div>
+               <p className="text-white/60 text-base md:text-lg leading-relaxed line-clamp-3 mb-8">
+                  {post.excerpt}
+               </p>
+
+               <div className="flex items-center gap-2 text-white font-medium group/link">
+                  <span>Read Full Article</span>
+                  <ArrowUpRight className="w-4 h-4 text-[#b02222] transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+               </div>
             </div>
           </div>
-        </div>
+        </GlassCard>
       </Link>
     </motion.div>
   );
 };
 
-// Regular Blog Card Component
+// Standard Blog Card
 const BlogCard = ({ post, index }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    }),
-    hover: {
-      y: -10,
-      scale: 1.02,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 25,
-      },
-    },
-  };
-
   return (
     <motion.div
-      ref={ref}
-      custom={index}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      variants={cardVariants}
-      whileHover="hover"
-      className="w-full"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      className="h-full"
     >
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative flex flex-col h-full border border-gray-600 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-sm transition-all duration-500 hover:border-[#b02222]/50 hover:shadow-2xl hover:shadow-[#b02222]/20 group cursor-pointer">
-          {/* Decorative Gradient */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#b02222]/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          {/* Image */}
-          <div className="relative aspect-[16/10] w-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
-            <motion.div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.image})` }}
-              whileHover={{
-                scale: 1.15,
-                transition: { duration: 0.7, ease: "easeOut" },
-              }}
-            />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4 z-20">
-              <motion.span
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-[#b02222] backdrop-blur-sm shadow-lg"
-                whileHover={{ scale: 1.1 }}
-              >
-                {post.category}
-              </motion.span>
-            </div>
-          </div>
+      <Link href={`/blog/${post.slug}`} className="block h-full cursor-pointer group">
+        <GlassCard className="h-full">
+           <div className="flex flex-col h-full">
+               <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-white/5">
+                  <motion.div
+                     className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                     style={{ backgroundImage: `url(${post.image})` }}
+                  />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
+                  
+                  <div className="absolute top-4 left-4">
+                    <span className="px-2 py-1 text-[10px] font-mono font-medium tracking-wider text-white bg-black/50 backdrop-blur-md rounded-md border border-white/10 uppercase">
+                      {post.category}
+                    </span>
+                  </div>
+               </div>
 
-          {/* Content */}
-          <div className="relative p-6 flex flex-col flex-grow space-y-4 z-10">
-            {/* Meta Info */}
-            <div className="flex items-center gap-3 text-xs md:text-sm text-gray-400">
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {post.date}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {post.readTime}
-              </span>
-            </div>
+               <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex items-center gap-3 text-xs font-mono text-white/40 mb-3">
+                     <span>{post.date}</span>
+                     <span>•</span>
+                     <span>{post.readTime}</span>
+                  </div>
 
-            {/* Title */}
-            <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[#b02222] transition-colors duration-300 line-clamp-2 leading-tight">
-              {post.title}
-            </h3>
+                  <h3 className="text-xl font-bold font-manrope text-white mb-3 group-hover:text-[#b02222] transition-colors line-clamp-2">
+                     {post.title}
+                  </h3>
 
-            {/* Excerpt */}
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed line-clamp-2 flex-grow">
-              {post.excerpt}
-            </p>
+                  <p className="text-white/50 text-sm leading-relaxed line-clamp-3 mb-6 flex-grow">
+                     {post.excerpt}
+                  </p>
 
-            {/* Read More */}
-            <div className="flex items-center gap-2 text-white group-hover:text-[#b02222] transition-colors duration-300 pt-2">
-              <span className="font-semibold text-sm md:text-base">Read More</span>
-              <motion.svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 md:h-5 md:w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </motion.svg>
-            </div>
-          </div>
-        </div>
+                  <div className="flex items-center gap-2 text-sm text-white/80 group-hover:text-white transition-colors pt-4 border-t border-white/5">
+                     <span>Read Article</span>
+                     <ChevronRight className="w-4 h-4 text-[#b02222] group-hover:translate-x-1 transition-transform" />
+                  </div>
+               </div>
+           </div>
+        </GlassCard>
       </Link>
     </motion.div>
   );
 };
 
 const BlogSection = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const [featuredPost, setFeaturedPost] = useState(null);
+  const [blogPostsForSection, setBlogPostsForSection] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const headingVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/blog");
+        const result = await response.json();
+
+        if (result.success && result.data && result.data.length > 0) {
+          setFeaturedPost(result.data[0]);
+          setBlogPostsForSection(result.data.slice(1, 3));
+        }
+      } catch (err) {
+        console.error("Error fetching blog posts:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+     return <div className="py-24 bg-[#0a0a0a]" />; // Simple placeholder to avoid layout shift jumpiness or just return null
+  }
+  
+  if (!featuredPost) return null;
 
   return (
+<<<<<<< HEAD
     <section ref={ref} className="relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
@@ -281,48 +192,52 @@ const BlogSection = () => {
             Latest Blog Posts
           </h2>
         </motion.div>
+=======
+    <section className="py-24 relative overflow-hidden bg-[#0a0a0a]" id="blog">
+      {/* Background Elements */}
+      <div className="absolute top-1/2 right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+>>>>>>> df230af (feat: Implement a comprehensive portfolio website with blog, admin panel, project pages, and various UI components.)
 
-        {/* Featured Hero Post */}
-        <FeaturedPostHero post={featuredPost} />
-
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
-          {blogPostsForSection.map((post, index) => (
-            <BlogCard key={post.id} post={post} index={index} />
-          ))}
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="flex flex-col items-center text-center mb-16">
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.5 }}
+           >
+              <p className="text-[#b02222] text-sm md:text-base font-bold font-manrope uppercase tracking-widest mb-3">
+                Insights & Updates
+              </p>
+              <h2 className="text-4xl md:text-5xl font-bold font-manrope text-white mb-6">
+                Latest from the Blog
+              </h2>
+           </motion.div>
         </div>
 
-        {/* View All Blog Posts Button */}
-        <motion.div
-          className="flex justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ duration: 0.4, delay: 0.6 }}
-        >
-          <Link href="/blog">
-            <motion.button
-              className="btn-primary font-semibold flex items-center gap-2"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
+        {/* Featured Post */}
+        <FeaturedPostHero post={featuredPost} />
+
+        {/* Regular Grid */}
+        {blogPostsForSection.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {blogPostsForSection.map((post, index) => (
+              <BlogCard key={post._id || post.slug} post={post} index={index} />
+            ))}
+          </div>
+        )}
+
+        {/* Footer CTA */}
+        <div className="flex justify-center mt-16">
+            <Button
+               href="/blog"
+               variant="secondary"
+               className="group"
             >
-              <span>View All Posts</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </motion.button>
-          </Link>
-        </motion.div>
+               <span>View All Articles</span>
+               <ArrowUpRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Button>
+        </div>
       </div>
     </section>
   );

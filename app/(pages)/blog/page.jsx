@@ -5,137 +5,80 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
+import GlassCard from "../../components/ui/GlassCard";
 import Link from "next/link";
-import { blogPosts } from "./blogData";
-
-// Featured hero post (first post)
-const featuredPost = blogPosts[0];
+import { Calendar, Clock, ArrowUpRight, ChevronRight, Tag } from "lucide-react";
 
 // Filter Tab Component
 const FilterTab = ({ active, setActive, category, label }) => {
+  const isActive = active === category;
   return (
-    <motion.button
-      className={`relative px-4 py-3 text-sm md:text-base font-medium focus:outline-none transition-colors duration-200 ${
-        active === category ? "text-white" : "text-gray-400 hover:text-gray-300"
-      }`}
+    <button
       onClick={() => setActive(category)}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      className={`relative px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+        isActive 
+          ? "text-white bg-white/10 border border-[#b02222]/50 shadow-[0_0_15px_rgba(176,34,34,0.3)]" 
+          : "text-white/40 hover:text-white hover:bg-white/5 border border-transparent"
+      }`}
     >
       {label}
-      {active === category && (
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#b02222] to-[#d38787]"
-          layoutId="underline"
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-        />
-      )}
-    </motion.button>
+    </button>
   );
 };
 
 // Featured Hero Post Component
 const FeaturedPostHero = ({ post }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="relative w-full"
+      className="w-full mb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
     >
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative group cursor-pointer overflow-hidden border-b border-gray-600 bg-gray-800/30 backdrop-blur-sm hover:border-gray-500 transition-all duration-500">
-          {/* Background Image with Overlay */}
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
-            {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-10" />
-            
-            {/* Animated Background Image */}
-            <motion.div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.image})` }}
-              whileHover={{
-                scale: 1.1,
-                transition: { duration: 1, ease: "easeOut" },
-              }}
-            />
-            
-            {/* Content */}
-            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
-              {/* Category Badge */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="mb-4"
-              >
-                <span className="inline-block px-4 py-2 rounded-full text-sm font-semibold text-white bg-[#b02222] backdrop-blur-sm">
-                  {post.category}
-                </span>
-              </motion.div>
-
-              {/* Title */}
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight mb-4 group-hover:text-[#b02222] transition-colors duration-300"
-              >
-                {post.title}
-              </motion.h2>
-
-              {/* Excerpt */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-gray-200 text-base md:text-lg lg:text-xl leading-relaxed max-w-3xl mb-6 line-clamp-3"
-              >
-                {post.excerpt}
-              </motion.p>
-
-              {/* Meta Info and CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-              >
-                <div className="flex items-center gap-4 text-sm md:text-base text-gray-300">
-                  <span>{post.date}</span>
-                  <span>•</span>
-                  <span>{post.readTime}</span>
-                </div>
-                <div className="flex items-center gap-2 text-white group-hover:text-[#b02222] transition-colors duration-300">
-                  <span className="font-semibold text-base md:text-lg">Read Article</span>
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5 md:h-6 md:w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14 5l7 7m0 0l-7 7m7-7H3"
-                    />
-                  </motion.svg>
-                </div>
-              </motion.div>
+      <Link href={`/blog/${post.slug}`} className="block group">
+        <GlassCard className="overflow-hidden min-h-[500px] relative">
+            {/* Background Image as absolute layer to span full card */}
+            <div className="absolute inset-0 z-0">
+               <div 
+                 className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+                 style={{ backgroundImage: `url(${post.image})` }}
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent z-10" />
+               <div className="absolute inset-0 bg-[#0a0a0a]/40 z-10" />
             </div>
-          </div>
-        </div>
+
+            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 h-[500px]">
+                <div className="max-w-4xl space-y-6">
+                    <div className="flex items-center gap-4">
+                       <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#b02222] text-white uppercase tracking-wider shadow-lg shadow-red-900/20">
+                          {post.category}
+                       </span>
+                       <div className="flex items-center gap-2 text-white/60 text-sm font-mono">
+                          <Calendar className="w-4 h-4" />
+                          <span>{post.date}</span>
+                          <span className="w-1 h-1 bg-white/20 rounded-full" />
+                          <Clock className="w-4 h-4" />
+                          <span>{post.readTime}</span>
+                       </div>
+                    </div>
+    
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold font-manrope text-white leading-tight group-hover:text-white/90 transition-colors">
+                      {post.title}
+                    </h2>
+    
+                    <p className="text-lg text-white/70 max-w-2xl line-clamp-3 leading-relaxed">
+                      {post.excerpt}
+                    </p>
+    
+                    <div className="pt-4">
+                       <div className="inline-flex items-center gap-2 text-white font-medium group/btn">
+                          <span className="border-b border-[#b02222] pb-0.5">Read Featured Article</span>
+                          <ArrowUpRight className="w-5 h-5 text-[#b02222] transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </GlassCard>
       </Link>
     </motion.div>
   );
@@ -143,267 +86,162 @@ const FeaturedPostHero = ({ post }) => {
 
 // Regular Blog Card Component
 const BlogCard = ({ post, index }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: (i) => ({
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1,
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    }),
-    hover: {
-      y: -10,
-      scale: 1.02,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 25,
-      },
-    },
-  };
-
   return (
     <motion.div
-      ref={ref}
-      custom={index}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      variants={cardVariants}
-      whileHover="hover"
-      className="w-full"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
     >
-      <Link href={`/blog/${post.slug}`}>
-        <div className="relative flex flex-col h-full border border-gray-600 rounded-3xl overflow-hidden bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-sm transition-all duration-500 hover:border-[#b02222]/50 hover:shadow-2xl hover:shadow-[#b02222]/20 group cursor-pointer">
-          {/* Decorative Gradient */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#b02222]/10 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          
-          {/* Image */}
-          <div className="relative aspect-[16/10] w-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
-            <motion.div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.image})` }}
-              whileHover={{
-                scale: 1.15,
-                transition: { duration: 0.7, ease: "easeOut" },
-              }}
-            />
-            
-            {/* Category Badge */}
-            <div className="absolute top-4 left-4 z-20">
-              <motion.span
-                className="px-3 py-1.5 rounded-full text-xs font-semibold text-white bg-[#b02222] backdrop-blur-sm shadow-lg"
-                whileHover={{ scale: 1.1 }}
-              >
-                {post.category}
-              </motion.span>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="relative p-6 flex flex-col flex-grow space-y-4 z-10">
-            {/* Meta Info */}
-            <div className="flex items-center gap-3 text-xs md:text-sm text-gray-400">
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {post.date}
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {post.readTime}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-[#b02222] transition-colors duration-300 line-clamp-2 leading-tight">
-              {post.title}
-            </h3>
-
-            {/* Excerpt */}
-            <p className="text-gray-300 text-sm md:text-base leading-relaxed line-clamp-2 flex-grow">
-              {post.excerpt}
-            </p>
-
-            {/* Read More */}
-            <div className="flex items-center gap-2 text-white group-hover:text-[#b02222] transition-colors duration-300 pt-2">
-              <span className="font-semibold text-sm md:text-base">Read More</span>
-              <motion.svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 md:h-5 md:w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                whileHover={{ x: 5 }}
-                transition={{ type: "spring", stiffness: 400 }}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+      <Link href={`/blog/${post.slug}`} className="block h-full group">
+        <GlassCard className="h-full flex flex-col">
+            <div className="relative aspect-[16/10] overflow-hidden border-b border-white/5">
+                <div 
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  style={{ backgroundImage: `url(${post.image})` }}
                 />
-              </motion.svg>
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
+                
+                <div className="absolute top-4 left-4 z-10">
+                   <span className="px-2 py-1 rounded-md text-[10px] font-bold bg-black/60 backdrop-blur-md border border-white/10 text-white uppercase tracking-wider">
+                      {post.category}
+                   </span>
+                </div>
             </div>
-          </div>
-        </div>
+
+            <div className="p-6 flex flex-col flex-grow">
+                <div className="flex items-center gap-3 text-xs font-mono text-white/40 mb-4">
+                   <span>{post.date}</span>
+                   <span className="w-1 h-1 bg-white/10 rounded-full" />
+                   <span>{post.readTime}</span>
+                </div>
+
+                <h3 className="text-xl font-bold font-manrope text-white mb-3 group-hover:text-[#b02222] transition-colors leading-tight line-clamp-2">
+                   {post.title}
+                </h3>
+
+                <p className="text-white/50 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+                   {post.excerpt}
+                </p>
+
+                <div className="flex items-center gap-2 text-sm text-white/80 group-hover:text-white transition-colors pt-4 border-t border-white/5">
+                   <span>Read Article</span>
+                   <ChevronRight className="w-4 h-4 text-[#b02222] group-hover:translate-x-1 transition-transform" />
+                </div>
+            </div>
+        </GlassCard>
       </Link>
     </motion.div>
   );
 };
 
 const BlogPage = () => {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [activeFilter, setActiveFilter] = useState("All");
-  
-  // Other blog posts (excluding the featured one)
-  const otherPosts = blogPosts.slice(1);
-  const [filteredPosts, setFilteredPosts] = useState(otherPosts);
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [featuredPost, setFeaturedPost] = useState(null);
+  const [filteredPosts, setFilteredPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("/api/blog");
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setBlogPosts(result.data);
+          if (result.data.length > 0) {
+            setFeaturedPost(result.data[0]);
+            setFilteredPosts(result.data.slice(1));
+          }
+        } else {
+          setError("Failed to load blog posts");
+        }
+      } catch (err) {
+        console.error("Error fetching blog posts:", err);
+        setError("Failed to load blog posts");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  useEffect(() => {
+    if (!blogPosts.length) return;
+    
+    // Always exclude featured post from the grid
+    const postsToFilter = blogPosts.filter(p => p !== featuredPost);
+
     if (activeFilter === "All") {
-      setFilteredPosts(otherPosts);
+      setFilteredPosts(postsToFilter);
     } else {
-      setFilteredPosts(otherPosts.filter((post) => post.category === activeFilter));
+      setFilteredPosts(postsToFilter.filter((post) => post.category === activeFilter));
     }
-  }, [activeFilter, otherPosts]);
+  }, [activeFilter, blogPosts, featuredPost]);
 
-  const headingVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
-      },
-    },
-    exit: {
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
+  const categories = ["All", "Personal Life", "Business", "Design"];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0a0a0a] relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
-      
+    <div className="min-h-screen bg-[#0a0a0a] font-manrope selection:bg-[#b02222] selection:text-white">
       <NavbarDemo />
-      <main className="flex-grow relative z-10 pt-0">
-        {/* Featured Hero Post - Full Width */}
-        <div className="w-full">
-          <FeaturedPostHero post={featuredPost} />
-        </div>
+      
+      <main className="pt-32 pb-20 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#b02222]/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Content Section */}
-        <div className="py-12 md:py-16">
-          <div className="mx-auto px-4 sm:px-6 max-w-[1400px]">
-            {/* Heading Section - Below Hero */}
-            <motion.div
-              ref={ref}
-              className="flex flex-col gap-2 mb-8 md:mb-12 text-center"
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              variants={headingVariants}
-            >
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight">
-                Latest Articles
-              </h1>
-              <p className="text-gray-300 text-base md:text-lg mt-4 max-w-2xl mx-auto">
-                Insights on UI/UX design, web development, and creative inspiration.
-              </p>
-            </motion.div>
+        <div className="relative z-10">
+           
+           {/* Loading / Error States */}
+           {loading && (
+             <div className="flex justify-center py-20">
+                <div className="flex items-center gap-2 text-white/50 animate-pulse">
+                   <div className="w-2 h-2 rounded-full bg-[#b02222]" />
+                   Loading articles...
+                </div>
+             </div>
+           )}
 
-            {/* Filter Tabs */}
-            <motion.div
-              className="flex justify-center mb-10 md:mb-12 border-b border-gray-600/50"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, delay: 0.2 }}
-            >
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="All"
-                label="All"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Personal Life"
-                label="Personal Life"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Business"
-                label="Business"
-              />
-              <FilterTab
-                active={activeFilter}
-                setActive={setActiveFilter}
-                category="Design"
-                label="Design"
-              />
-            </motion.div>
+           {!loading && !error && (
+             <>
+               {/* Featured Post - Now the Hero */}
+               {featuredPost && <FeaturedPostHero post={featuredPost} />}
 
-            {/* Blog Posts Grid */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeFilter}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-              >
-                {filteredPosts.map((post, index) => (
-                  <BlogCard key={post.id} post={post} index={index} />
-                ))}
-              </motion.div>
-            </AnimatePresence>
+               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  {/* Filter Tabs */}
+                  <div className="flex flex-wrap justify-center gap-2 mb-12">
+                     {categories.map((cat) => (
+                        <FilterTab 
+                           key={cat}
+                           category={cat}
+                           label={cat}
+                           active={activeFilter}
+                           setActive={setActiveFilter}
+                        />
+                     ))}
+                  </div>
 
-            {/* No Posts Message */}
-            {filteredPosts.length === 0 && (
-              <motion.div
-                className="text-center py-12"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <p className="text-gray-400 text-lg">
-                  No posts found in this category.
-                </p>
-              </motion.div>
-            )}
-          </div>
+                  {/* Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                     <AnimatePresence mode="popLayout">
+                        {filteredPosts.map((post, idx) => (
+                           <BlogCard key={post.id || idx} post={post} index={idx} />
+                        ))}
+                     </AnimatePresence>
+                  </div>
+
+                  {filteredPosts.length === 0 && (
+                     <div className="text-center py-20 text-white/30 italic">
+                        No articles found in this category.
+                     </div>
+                  )}
+               </div>
+             </>
+           )}
         </div>
       </main>
       <FooterSection />
