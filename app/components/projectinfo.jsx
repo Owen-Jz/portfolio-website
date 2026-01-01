@@ -94,7 +94,7 @@ export const projectsData = {
     //   description: "Interactive learning environment with advanced features.",
     //   tags: ["React", "EdTech", "Interactive"],
     //   link: "/projects/web-kitchen",
-    // },
+  
     // {
     //   id: 9,
     //   title: "Real Estate Listing Portal",
