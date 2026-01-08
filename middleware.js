@@ -7,7 +7,7 @@ export default withAuth(
     if (req.nextUrl.pathname === "/admin/login") {
       return NextResponse.next();
     }
-    
+
     // Additional middleware logic can go here
     return NextResponse.next();
   },
@@ -18,7 +18,7 @@ export default withAuth(
         if (req.nextUrl.pathname === "/admin/login") {
           return true;
         }
-        
+
         // Check if user is admin for other admin routes
         if (req.nextUrl.pathname.startsWith("/admin")) {
           return token?.role === "admin";
@@ -33,6 +33,16 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - _next/webpack-hmr (HMR websocket)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/admin/:path*",
+  ],
 };
 

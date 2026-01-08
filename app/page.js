@@ -48,29 +48,12 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
-<<<<<<< HEAD
-          <NavbarDemo />
-          <main className="flex-grow w-full max-w-full">
-            {sections.map(({ id, Component }) => (
-              <AnimatedSection
-                key={id}
-                id={id}
-                className="py-8 md:py-12 lg:py-16 w-full max-w-full px-0"
-                threshold={0.15}
-              >
-                <Component />
-              </AnimatedSection>
-            ))}
-          </main>
-          <FooterSection />
-          <SocialSidebar />
-=======
       <NavbarDemo />
       <main className="flex-grow w-full max-w-full">
         {/* New GSAP Hero Section */}
         <HeroSectionGSAP />
 
-        {/* Existing Hero Section */}
+        {/* Other Sections */}
         {sections.map(({ id, Component }) => (
           <AnimatedSection
             key={id}
@@ -84,7 +67,6 @@ const HomePage = () => {
       </main>
       <FooterSection />
       <SocialSidebar />
->>>>>>> df230af (feat: Implement a comprehensive portfolio website with blog, admin panel, project pages, and various UI components.)
     </div>
   );
 };

@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const authOptions = {
   providers: [
-    CredentialsProvider({
+    (CredentialsProvider.default || CredentialsProvider)({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
@@ -86,7 +86,7 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
 };
 
-const handler = NextAuth(authOptions);
+const handler = (NextAuth.default || NextAuth)(authOptions);
 
 export { handler as GET, handler as POST };
 

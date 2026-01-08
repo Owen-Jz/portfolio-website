@@ -13,15 +13,7 @@ export const metadata = {
   title: "Owen Digitals | Portfolio",
   description:
     "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
-  icons: {
-    icon: "/icon.svg",
-  },
-  robots: "index, follow",
-  themeColor: "#0a0a0a",
-  metadataBase: new URL("https://www.owendigitals.work"),
-  alternates: {
-    canonical: "/",
-  },
+  // Icons are automatically handled by app/icon.svg
   openGraph: {
     title: "Owen Digitals | Portfolio",
     description:
@@ -29,6 +21,27 @@ export const metadata = {
     url: "https://www.owendigitals.work",
     siteName: "Owen Digitals",
     type: "website",
+    images: [
+      {
+        url: "/Logo.svg",
+        width: 800,
+        height: 600,
+        alt: "Owen Digitals Logo",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Owen Digitals | Portfolio",
+    description:
+      "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
+    images: ["/Logo.svg"],
+  },
+  robots: "index, follow",
+  themeColor: "#0a0a0a",
+  metadataBase: new URL("https://www.owendigitals.work"),
+  alternates: {
+    canonical: "/",
   },
 };
 
