@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { NavbarDemo } from "../../../components/ui/ResizableNavbar";
+import Image from "next/image";
+import { NavbarDemo } from "../../../components/ui/RevampedNavbar";
 import FooterSection from "../../../components/FooterSection";
 import Link from "next/link";
 import Button from "../../../components/ui/Button";
@@ -87,19 +88,34 @@ const BlogPostPage = () => {
       <main className="flex-grow relative z-10">
         {/* Hero Section */}
         <div className="relative w-full">
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden border-b border-gray-600">
+          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden border-b border-gray-600 group">
             {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-10" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-20 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-20 pointer-events-none" />
 
-            {/* Background Image */}
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${post.image})` }}
-            />
+            {/* Background Image using Next/Image */}
+            <div className="absolute inset-0 z-0">
+               {post.image ? (
+                 <Image
+                   src={
+                     post.image.startsWith("http") 
+                       ? post.image 
+                       : post.image.startsWith("/") 
+                         ? post.image 
+                         : `/${post.image}`
+                   }
+                   alt={post.title}
+                   fill
+                   priority
+                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                 />
+               ) : (
+                 <div className="w-full h-full bg-[#1a1a1a]" />
+               )}
+            </div>
 
             {/* Content */}
-            <div className="relative z-20 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
+            <div className="relative z-30 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
               {/* Category Badge */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}

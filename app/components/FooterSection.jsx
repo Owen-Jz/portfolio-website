@@ -116,8 +116,8 @@ const FooterSection = () => {
               { name: "Contact", href: "/#contact" },
             ].map((link) => (
               <Link key={link.name} href={link.href}>
-                <motion.a
-                  className="text-gray-400 hover:text-[#b02222] font-['Manrope'] relative"
+                <motion.span
+                  className="text-gray-400 hover:text-[#b02222] font-['Manrope'] relative inline-block cursor-pointer"
                   whileHover={{ y: -2 }}
                 >
                   {link.name}
@@ -127,7 +127,7 @@ const FooterSection = () => {
                     whileHover={{ scaleX: 1 }}
                     transition={{ duration: 0.3 }}
                   />
-                </motion.a>
+                </motion.span>
               </Link>
             ))}
           </motion.nav>

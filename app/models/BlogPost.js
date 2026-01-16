@@ -47,6 +47,14 @@ const BlogPostSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    order: {
+      type: Number,
+      default: 0,
+    },
     seoTitle: {
       type: String,
       trim: true,

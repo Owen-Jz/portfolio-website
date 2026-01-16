@@ -2,7 +2,8 @@
 
 import React from "react";
 import { HeroSection } from "./components/HeroSection";
-import HeroSectionGSAP from "./components/HeroSectionGSAP";
+// import HeroSectionGSAP from "./components/HeroSectionGSAP";
+import HeroSectionRevamped from "./components/HeroSectionRevamped";
 import AboutMe from "./components/AboutMe";
 import ProjectSection from "./components/ProjectSection";
 import ExperienceSection from "./components/ExperienceSection";
@@ -10,7 +11,8 @@ import { TestimonialsSection } from "./components/TestimonialsSection";
 import BlogSection from "./components/BlogSection";
 import ContactSection from "./components/ContactSection";
 import FooterSection from "./components/FooterSection";
-import { NavbarDemo } from "./components/ui/ResizableNavbar";
+// import { NavbarDemo } from "./components/ui/ResizableNavbar";
+import { NavbarDemo } from "./components/ui/RevampedNavbar";
 import AnimatedSection from "./components/AnimatedSection";
 import SocialSidebar from "./components/SocialSidebar";
 import Lenis from "lenis";
@@ -50,8 +52,8 @@ const HomePage = () => {
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
       <NavbarDemo />
       <main className="flex-grow w-full max-w-full">
-        {/* New GSAP Hero Section */}
-        <HeroSectionGSAP />
+        {/* New Revamped Hero Section */}
+        <HeroSectionRevamped />
 
         {/* Other Sections */}
         {sections.map(({ id, Component }) => (

@@ -1,7 +1,48 @@
-// Blog posts data - Educational content for designers and developers
-export const blogPosts = [
+/**
+ * Script to update existing blog posts in MongoDB with new content and images
+ * Run: node scripts/updateBlogPosts.js
+ */
+
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables from .env.local
+dotenv.config({ path: join(__dirname, "..", ".env.local") });
+
+const MONGODB_URI = process.env.MONGODB_URI;
+
+if (!MONGODB_URI) {
+  console.error("❌ MONGODB_URI not found in .env.local");
+  process.exit(1);
+}
+
+// Blog Post Schema
+const BlogPostSchema = new mongoose.Schema(
   {
-    id: 1,
+    slug: { type: String, required: true, unique: true, trim: true },
+    title: { type: String, required: true, trim: true },
+    excerpt: { type: String, required: true },
+    content: { type: String, required: true },
+    category: { type: String, required: true, enum: ["Design", "Business", "Personal Life"] },
+    date: { type: String, required: true },
+    readTime: { type: String, required: true },
+    image: { type: String, required: true },
+    author: { type: String, required: true, default: "Owen Digitals" },
+    published: { type: Boolean, default: true },
+  },
+  { timestamps: true }
+);
+
+const BlogPost = mongoose.models.BlogPost || mongoose.model("BlogPost", BlogPostSchema);
+
+// Updated blog posts with educational content and better images
+const updatedBlogPosts = [
+  {
     slug: "the-future-of-ui-ux-design-in-2024",
     title: "The Future of UI/UX Design in 2024",
     excerpt:
@@ -58,7 +99,6 @@ export const blogPosts = [
     author: "Owen Digitals",
   },
   {
-    id: 2,
     slug: "building-scalable-nextjs-applications",
     title: "Building Scalable Next.js Applications",
     excerpt:
@@ -138,7 +178,6 @@ export const dynamic = 'force-dynamic';
     author: "Owen Digitals",
   },
   {
-    id: 3,
     slug: "design-systems-complete-guide",
     title: "Design Systems: A Complete Guide",
     excerpt:
@@ -237,7 +276,6 @@ export const tokens = {
     author: "Owen Digitals",
   },
   {
-    id: 4,
     slug: "accessibility-modern-web-design",
     title: "Accessibility in Modern Web Design",
     excerpt:
@@ -259,21 +297,21 @@ export const tokens = {
       <p>Semantic HTML provides structure that assistive technologies can understand. Here's how to use it effectively:</p>
       
       <pre><code>
-<!-- Bad: No semantic meaning -->
-<div class="header">
-  <div class="nav">
-    <div class="nav-item">Home</div>
-  </div>
-</div>
+&lt;!-- Bad: No semantic meaning --&gt;
+&lt;div class="header"&gt;
+  &lt;div class="nav"&gt;
+    &lt;div class="nav-item"&gt;Home&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
 
-<!-- Good: Clear semantic structure -->
-<header role="banner">
-  <nav aria-label="Main navigation">
-    <ul>
-      <li><a href="/">Home</a></li>
-    </ul>
-  </nav>
-</header>
+&lt;!-- Good: Clear semantic structure --&gt;
+&lt;header role="banner"&gt;
+  &lt;nav aria-label="Main navigation"&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href="/"&gt;Home&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/nav&gt;
+&lt;/header&gt;
       </code></pre>
       
       <h2>Essential Techniques</h2>
@@ -301,21 +339,6 @@ export const tokens = {
         <li>Provide skip links for repetitive content</li>
       </ul>
       
-      <p><strong>4. Form Accessibility</strong></p>
-      <pre><code>
-<label for="email">Email Address</label>
-<input 
-  type="email" 
-  id="email" 
-  name="email"
-  aria-describedby="email-hint"
-  required
-/>
-<p id="email-hint" class="hint">
-  We'll never share your email
-</p>
-      </code></pre>
-      
       <h2>Testing Tools and Methods</h2>
       <ul>
         <li><strong>Automated:</strong> axe DevTools, WAVE, Lighthouse</li>
@@ -334,7 +357,6 @@ export const tokens = {
     author: "Owen Digitals",
   },
   {
-    id: 5,
     slug: "performance-optimization-techniques",
     title: "Performance Optimization Techniques",
     excerpt:
@@ -355,11 +377,11 @@ export const tokens = {
       
       <p><strong>Modern Formats:</strong></p>
       <pre><code>
-<picture>
-  <source srcset="image.avif" type="image/avif" />
-  <source srcset="image.webp" type="image/webp" />
-  <img src="image.jpg" alt="Description" loading="lazy" />
-</picture>
+&lt;picture&gt;
+  &lt;source srcset="image.avif" type="image/avif" /&gt;
+  &lt;source srcset="image.webp" type="image/webp" /&gt;
+  &lt;img src="image.jpg" alt="Description" loading="lazy" /&gt;
+&lt;/picture&gt;
       </code></pre>
       
       <p><strong>Best Practices:</strong></p>
@@ -380,7 +402,7 @@ export const tokens = {
 const HeavyComponent = dynamic(
   () => import('./HeavyComponent'),
   { 
-    loading: () => <Skeleton />,
+    loading: () => &lt;Skeleton /&gt;,
     ssr: false 
   }
 );
@@ -403,22 +425,6 @@ const HeavyComponent = dynamic(
         <li><strong>Service Worker:</strong> Cache assets for offline access</li>
       </ul>
       
-      <h2>Critical Rendering Path</h2>
-      <ul>
-        <li>Inline critical CSS in the document head</li>
-        <li>Preload important resources</li>
-        <li>Preconnect to required origins</li>
-        <li>Minimize render-blocking resources</li>
-      </ul>
-      
-      <pre><code>
-<head>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preload" href="/critical.css" as="style" />
-  <link rel="preload" href="/hero.webp" as="image" />
-</head>
-      </code></pre>
-      
       <h2>Conclusion</h2>
       <p>Performance optimization is an ongoing process, not a one-time task. Regular monitoring, testing on real devices, and staying updated with new techniques are essential for maintaining fast, user-friendly websites.</p>
     `,
@@ -429,7 +435,6 @@ const HeavyComponent = dynamic(
     author: "Owen Digitals",
   },
   {
-    id: 6,
     slug: "psychology-color-ui-design",
     title: "The Psychology of Color in UI Design",
     excerpt:
@@ -534,7 +539,6 @@ const HeavyComponent = dynamic(
     author: "Owen Digitals",
   },
   {
-    id: 7,
     slug: "my-journey-as-a-creative",
     title: "My Journey as a Creative Professional",
     excerpt:
@@ -543,7 +547,7 @@ const HeavyComponent = dynamic(
       <p>Every creative professional has a unique journey. Mine has been filled with unexpected turns, valuable lessons, and countless moments that shaped who I am today. I'm sharing my story not as a blueprint, but as a reminder that there's no single path to success in this industry.</p>
       
       <h2>The Beginning: Finding My Passion</h2>
-      <p>I didn't start as a designer. Like many in this field, I discovered my passion through exploration. My first encounter with design was customizing MySpace pages (yes, I'm dating myself here). What started as tweaking CSS to make my profile look cool became a genuine fascination with how visual elements affect perception.</p>
+      <p>I didn't start as a designer. Like many in this field, I discovered my passion through exploration. My first encounter with design was customizing MySpace pages. What started as tweaking CSS to make my profile look cool became a genuine fascination with how visual elements affect perception.</p>
       
       <p>The turning point came when I realized that design wasn't just about making things pretty—it was about solving problems. A well-designed interface could make complex tasks simple. A thoughtful user experience could turn frustration into delight. This realization changed everything.</p>
       
@@ -596,7 +600,6 @@ const HeavyComponent = dynamic(
     author: "Owen Digitals",
   },
   {
-    id: 8,
     slug: "building-a-creative-business",
     title: "Building a Creative Business from Scratch",
     excerpt:
@@ -686,7 +689,6 @@ const HeavyComponent = dynamic(
     author: "Owen Digitals",
   },
   {
-    id: 9,
     slug: "work-life-balance-creative",
     title: "Finding Balance: Life as a Creative Professional",
     excerpt:
@@ -797,12 +799,59 @@ const HeavyComponent = dynamic(
   },
 ];
 
-// Helper function to get post by slug
-export function getPostBySlug(slug) {
-  return blogPosts.find((post) => post.slug === slug);
+async function updateBlogPosts() {
+  try {
+    console.log("🔌 Connecting to MongoDB...");
+    await mongoose.connect(MONGODB_URI);
+    console.log("✅ Connected to MongoDB\n");
+
+    // Check existing posts
+    const existingCount = await BlogPost.countDocuments();
+    console.log(`📊 Found ${existingCount} existing blog post(s)\n`);
+
+    let updated = 0;
+    let notFound = 0;
+
+    for (const post of updatedBlogPosts) {
+      const result = await BlogPost.findOneAndUpdate(
+        { slug: post.slug },
+        {
+          $set: {
+            title: post.title,
+            excerpt: post.excerpt,
+            content: post.content,
+            category: post.category,
+            date: post.date,
+            readTime: post.readTime,
+            image: post.image,
+            author: post.author,
+          },
+        },
+        { new: true }
+      );
+
+      if (result) {
+        console.log(`✅ Updated: "${post.title}"`);
+        updated++;
+      } else {
+        console.log(`⚠️  Not found: "${post.title}" - Creating new...`);
+        await BlogPost.create(post);
+        console.log(`   ✅ Created: "${post.title}"`);
+        notFound++;
+      }
+    }
+
+    console.log(`\n📝 Summary: ${updated} updated, ${notFound} created (were missing)`);
+
+    await mongoose.connection.close();
+    console.log("\n🔌 Database connection closed");
+    console.log("\n✨ All blog posts have been updated with new content and images!");
+    process.exit(0);
+  } catch (error) {
+    console.error("\n❌ Error:", error.message);
+    await mongoose.connection.close();
+    process.exit(1);
+  }
 }
 
-// Helper function to get all slugs
-export function getAllSlugs() {
-  return blogPosts.map((post) => post.slug);
-}
+updateBlogPosts();

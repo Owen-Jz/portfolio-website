@@ -150,8 +150,12 @@ const BlogSection = () => {
         const result = await response.json();
 
         if (result.success && result.data && result.data.length > 0) {
-          setFeaturedPost(result.data[0]);
-          setBlogPostsForSection(result.data.slice(1, 3));
+          // Find the post marked as featured, or use the first one
+          const featured = result.data.find(post => post.isFeatured) || result.data[0];
+          const otherPosts = result.data.filter(post => post._id !== featured._id);
+          
+          setFeaturedPost(featured);
+          setBlogPostsForSection(otherPosts.slice(0, 2));
         }
       } catch (err) {
         console.error("Error fetching blog posts:", err);

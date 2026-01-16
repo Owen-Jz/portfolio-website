@@ -40,7 +40,7 @@ const BlogPostSchema = new mongoose.Schema(
 
 const BlogPost = mongoose.models.BlogPost || mongoose.model("BlogPost", BlogPostSchema);
 
-// Sample blog posts to add
+// Updated blog posts with educational content and better images
 const blogPosts = [
   {
     slug: "the-future-of-ui-ux-design-in-2024",
@@ -48,24 +48,32 @@ const blogPosts = [
     excerpt:
       "Exploring the latest trends and innovations shaping the design landscape this year. From AI-powered design tools to sustainable design practices, discover what's next in the world of digital design.",
     content: `
-      <p>The world of UI/UX design is constantly evolving, and 2024 brings exciting new trends and technologies that are reshaping how we create digital experiences.</p>
+      <p>The world of UI/UX design is undergoing a revolutionary transformation in 2024. As technology advances at an unprecedented pace, designers must adapt to new tools, methodologies, and user expectations. This comprehensive guide will walk you through the most significant trends shaping our industry.</p>
       
-      <h2>AI-Powered Design Tools</h2>
-      <p>Artificial intelligence is revolutionizing the design process. Tools like Figma's AI features and Midjourney are helping designers create faster and more efficiently. AI can now generate design variations, suggest color palettes, and even create entire layouts based on simple prompts.</p>
+      <h2>AI-Powered Design Tools: The New Creative Partner</h2>
+      <p>Artificial intelligence is no longer a futuristic concept—it's actively transforming how we design. Tools like Figma's AI features, Adobe Firefly, and Midjourney are becoming essential parts of the modern designer's toolkit.</p>
       
-      <h2>Sustainable Design Practices</h2>
-      <p>As environmental concerns grow, designers are focusing on creating more sustainable digital products. This includes optimizing for energy efficiency, reducing data usage, and designing for longevity rather than planned obsolescence.</p>
+      <p><strong>Key AI Applications in Design:</strong></p>
+      <ul>
+        <li><strong>Automated Design Variations:</strong> AI can generate dozens of layout variations in seconds</li>
+        <li><strong>Smart Color Palette Generation:</strong> Algorithms suggest harmonious color combinations</li>
+        <li><strong>Content-Aware Layouts:</strong> AI adapts designs based on content length and type</li>
+        <li><strong>User Behavior Prediction:</strong> Machine learning predicts user interactions</li>
+      </ul>
       
-      <h2>Accessibility First</h2>
-      <p>Accessibility is no longer an afterthought. Designers are prioritizing inclusive design from the start, ensuring that digital products are usable by everyone, regardless of their abilities.</p>
+      <h2>Sustainable Design: Responsibility in the Digital Age</h2>
+      <p>As the world grapples with climate change, the tech industry is recognizing its environmental impact. Sustainable design practices are becoming a moral imperative and competitive advantage.</p>
+      
+      <h2>Accessibility: From Compliance to Core Value</h2>
+      <p>Accessibility is evolving from a checkbox requirement to a fundamental design principle. The best designers now approach every project with an "accessibility-first" mindset.</p>
       
       <h2>Conclusion</h2>
-      <p>The future of UI/UX design is bright, with new technologies and practices that make design more efficient, inclusive, and sustainable. As designers, we must stay ahead of these trends to create the best possible experiences for our users.</p>
+      <p>The future of UI/UX design is bright but demanding. Success requires continuous learning, embracing new technologies, and maintaining focus on human-centered design principles.</p>
     `,
     category: "Design",
     date: "March 15, 2024",
-    readTime: "5 min read",
-    image: "/projects/ecommerce.png",
+    readTime: "8 min read",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop",
     author: "Owen Digitals",
     published: true,
   },
@@ -75,24 +83,24 @@ const blogPosts = [
     excerpt:
       "Best practices and patterns for creating maintainable and performant web applications. Learn about server components, caching strategies, and optimization techniques.",
     content: `
-      <p>Next.js has become the go-to framework for building modern React applications. In this article, we'll explore best practices for creating scalable and maintainable Next.js applications.</p>
+      <p>Next.js has become the industry standard for building production-grade React applications. With the introduction of the App Router and Server Components, the framework offers powerful new paradigms for building scalable applications.</p>
       
-      <h2>Server Components</h2>
-      <p>Next.js 13+ introduced Server Components, which allow you to render components on the server. This reduces the JavaScript bundle size and improves performance by moving computation to the server.</p>
+      <h2>Understanding the App Router Architecture</h2>
+      <p>The App Router represents a fundamental shift in how we structure Next.js applications. It uses React Server Components by default and provides more granular control over layouts and loading states.</p>
       
-      <h2>Caching Strategies</h2>
-      <p>Effective caching is crucial for performance. Next.js provides multiple caching options including static generation, server-side rendering, and incremental static regeneration.</p>
+      <h2>Server Components: The Game Changer</h2>
+      <p>Server Components revolutionize how we think about React applications. By rendering on the server, they eliminate the client-side JavaScript bundle for those components.</p>
       
-      <h2>Code Splitting</h2>
-      <p>Proper code splitting ensures that users only download the JavaScript they need. Use dynamic imports and React.lazy to split your code effectively.</p>
+      <h2>Advanced Caching Strategies</h2>
+      <p>Next.js provides multiple layers of caching that can dramatically improve performance. Understanding when and how to use each is crucial for building scalable applications.</p>
       
       <h2>Conclusion</h2>
-      <p>Building scalable Next.js applications requires careful planning and following best practices. By leveraging server components, effective caching, and code splitting, you can create applications that perform well at scale.</p>
+      <p>Building scalable Next.js applications requires a holistic approach. By leveraging Server Components, implementing proper caching, and following best practices for data handling, you can create applications that perform excellently at any scale.</p>
     `,
     category: "Business",
     date: "March 10, 2024",
-    readTime: "8 min read",
-    image: "/projects/finddr.png",
+    readTime: "12 min read",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2000&auto=format&fit=crop",
     author: "Owen Digitals",
     published: true,
   },
@@ -102,24 +110,24 @@ const blogPosts = [
     excerpt:
       "Reflecting on my path from aspiring designer to running my own creative studio. The challenges, lessons learned, and what keeps me motivated.",
     content: `
-      <p>Looking back on my journey, I can see how each experience has shaped me into the creative professional I am today.</p>
+      <p>Every creative professional has a unique journey. Mine has been filled with unexpected turns, valuable lessons, and countless moments that shaped who I am today.</p>
       
-      <h2>The Early Days</h2>
-      <p>Starting out, I was fascinated by how design could solve problems and create beautiful experiences. Every project was a learning opportunity.</p>
+      <h2>The Beginning: Finding My Passion</h2>
+      <p>I didn't start as a designer. Like many in this field, I discovered my passion through exploration. The turning point came when I realized that design wasn't just about making things pretty—it was about solving problems.</p>
       
-      <h2>Building a Career</h2>
-      <p>As I grew, I learned the importance of balancing creativity with business acumen. Running a creative business requires more than just design skills.</p>
+      <h2>The Learning Years</h2>
+      <p>I'm a firm believer in learning by doing. Some of my most valuable lessons came from personal projects, open source contributions, and yes, failure.</p>
       
-      <h2>Lessons Learned</h2>
-      <p>The biggest lesson? Never stop learning. The design industry evolves rapidly, and staying curious is essential for growth.</p>
+      <h2>Going Independent</h2>
+      <p>The decision to start Owen Digitals wasn't easy. It meant leaving the security of a steady paycheck for the uncertainty of freelancing.</p>
       
       <h2>Conclusion</h2>
-      <p>My journey continues, and I'm excited about what's next. Every day brings new challenges and opportunities to create something meaningful.</p>
+      <p>My journey continues, and I'm excited about what's next. If you're starting your own creative path, remember: comparison is the thief of joy. Focus on your own growth.</p>
     `,
     category: "Personal Life",
     date: "February 10, 2024",
-    readTime: "4 min read",
-    image: "/projects/ecommerce.png",
+    readTime: "7 min read",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2000&auto=format&fit=crop",
     author: "Owen Digitals",
     published: true,
   },
@@ -163,4 +171,3 @@ async function seedBlog() {
 }
 
 seedBlog();
-

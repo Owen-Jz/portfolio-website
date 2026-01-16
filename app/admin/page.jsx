@@ -178,13 +178,27 @@ export default function AdminDashboard() {
                   <h2 className="text-2xl font-bold text-white mb-1">Content Database</h2>
                   <p className="text-white/40 text-sm">Manage and monitor all published entities.</p>
               </div>
-              <Link 
-                href="/admin/posts/new"
-                className="flex items-center gap-2 px-5 py-2.5 bg-[#b02222] hover:bg-[#c92e2e] text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(176,34,34,0.3)] hover:shadow-[0_0_30px_rgba(176,34,34,0.5)] active:scale-95"
-              >
-                <Plus className="w-5 h-5" />
-                <span>Create Entry</span>
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link 
+                  href="/admin/blog-order"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl font-medium transition-all"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="21" y1="10" x2="3" y2="10"></line>
+                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                    <line x1="21" y1="18" x2="3" y2="18"></line>
+                  </svg>
+                  <span>Manage Order</span>
+                </Link>
+                <Link 
+                  href="/admin/posts/new"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-[#b02222] hover:bg-[#c92e2e] text-white rounded-xl font-medium transition-all shadow-[0_0_20px_rgba(176,34,34,0.3)] hover:shadow-[0_0_30px_rgba(176,34,34,0.5)] active:scale-95"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span>Create Entry</span>
+                </Link>
+              </div>
           </div>
 
           {/* Control Panel (Filters) */}
