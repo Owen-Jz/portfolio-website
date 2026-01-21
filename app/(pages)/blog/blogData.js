@@ -791,13 +791,8 @@ const HeavyComponent = dynamic(
     `,
     category: "Personal Life",
     date: "January 28, 2024",
-<<<<<<< HEAD
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2000&auto=format&fit=crop",
-=======
     readTime: "5 min read",
     image: "/projects/true-north.webp",
->>>>>>> 07c5271 (feat: Add Naija Diaspora Hub project and optimize image assets to webp format across components and project data.)
     author: "Owen Digitals",
   },
 ];
