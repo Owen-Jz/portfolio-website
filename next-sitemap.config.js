@@ -20,5 +20,15 @@ export default {
     })
 
     return result;
-  }
+  },
+  exclude: ["/admin*", "/admin/*"],
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin", "/admin/*"],
+      },
+    ],
+  },
 };
