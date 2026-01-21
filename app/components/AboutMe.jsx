@@ -172,7 +172,7 @@ const AboutMe = () => {
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[400px] flex-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 The Setup
@@ -188,6 +188,7 @@ const AboutMe = () => {
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 src="/hero1.webp"
                 alt="Workspace"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                 <span className="text-white text-sm font-mono">My command center</span>
@@ -202,7 +203,7 @@ const AboutMe = () => {
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[480px]">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 Tech Arsenal
@@ -240,7 +241,7 @@ const AboutMe = () => {
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[200px] flex-1" hoverEffect={true}>
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 Favorite Quote
@@ -269,6 +270,7 @@ const AboutMe = () => {
                 src="/MyLocation.png"
                 alt="Location"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors duration-500" />
               <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 flex items-center gap-2">
@@ -284,7 +286,7 @@ const AboutMe = () => {
             <div className="p-6 md:p-8 relative z-10 pointer-events-none"> {/* Text content shouldn't block drags, but we need text to separate? actually pointer-events-none on container is safer, text can retain pointer-events-auto if needed. */}
               <div className="flex items-center gap-3 mb-2 pointer-events-auto">
                 <div className="p-2 bg-white/5 rounded-lg">
-                  <img src="/star.svg" alt="Star" className="w-5 h-5" />
+                  <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
                 </div>
                 <h3 className="text-white text-xl font-semibold font-manrope">
                   Persona
