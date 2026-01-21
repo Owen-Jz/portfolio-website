@@ -38,6 +38,11 @@ export const metadata = {
     images: ["/Logo.svg"],
   },
   robots: "index, follow",
+  icons: {
+    icon: "/Logo.svg",
+    shortcut: "/Logo.svg",
+    apple: "/Logo.svg",
+  },
   themeColor: "#0a0a0a",
   metadataBase: new URL("https://www.owendigitals.work"),
   alternates: {

@@ -16,8 +16,8 @@ const GlassCard = ({ children, className = "", hoverEffect = true }) => {
     <div
       onMouseMove={handleMouseMove}
       className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 group/card ${hoverEffect
-          ? "hover:border-white/20 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
-          : ""
+        ? "hover:border-white/20 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
+        : ""
         } ${className}`}
     >
       <motion.div
@@ -186,7 +186,7 @@ const AboutMe = () => {
             <div className="flex-1 w-full rounded-2xl overflow-hidden border border-white/5 relative group">
               <img
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src="/hero1.jpg"
+                src="/hero1.webp"
                 alt="Workspace"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">

@@ -53,8 +53,8 @@ export const blogPosts = [
     `,
     category: "Design",
     date: "March 15, 2024",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=2000&auto=format&fit=crop",
+    readTime: "5 min read",
+    image: "/projects/ecommerce.webp",
     author: "Owen Digitals",
   },
   {
@@ -133,8 +133,8 @@ export const dynamic = 'force-dynamic';
     `,
     category: "Business",
     date: "March 10, 2024",
-    readTime: "12 min read",
-    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2000&auto=format&fit=crop",
+    readTime: "8 min read",
+    image: "/projects/finddr.webp",
     author: "Owen Digitals",
   },
   {
@@ -232,8 +232,8 @@ export const tokens = {
     `,
     category: "Design",
     date: "March 5, 2024",
-    readTime: "10 min read",
-    image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=2000&auto=format&fit=crop",
+    readTime: "6 min read",
+    image: "/projects/true-north.webp",
     author: "Owen Digitals",
   },
   {
@@ -329,8 +329,8 @@ export const tokens = {
     `,
     category: "Design",
     date: "February 28, 2024",
-    readTime: "9 min read",
-    image: "https://images.unsplash.com/photo-1573164713988-8665fc963095?q=80&w=2000&auto=format&fit=crop",
+    readTime: "7 min read",
+    image: "/projects/WK1.webp",
     author: "Owen Digitals",
   },
   {
@@ -424,8 +424,8 @@ const HeavyComponent = dynamic(
     `,
     category: "Business",
     date: "February 20, 2024",
-    readTime: "11 min read",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop",
+    readTime: "6 min read",
+    image: "/projects/jedidah.webp",
     author: "Owen Digitals",
   },
   {
@@ -529,8 +529,8 @@ const HeavyComponent = dynamic(
     `,
     category: "Design",
     date: "February 15, 2024",
-    readTime: "8 min read",
-    image: "https://images.unsplash.com/photo-1525909002-1b05e0c869d8?q=80&w=2000&auto=format&fit=crop",
+    readTime: "5 min read",
+    image: "/projects/organstation.webp",
     author: "Owen Digitals",
   },
   {
@@ -591,8 +591,8 @@ const HeavyComponent = dynamic(
     `,
     category: "Personal Life",
     date: "February 10, 2024",
-    readTime: "7 min read",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2000&auto=format&fit=crop",
+    readTime: "4 min read",
+    image: "/projects/ecommerce.webp",
     author: "Owen Digitals",
   },
   {
@@ -681,8 +681,8 @@ const HeavyComponent = dynamic(
     `,
     category: "Business",
     date: "February 5, 2024",
-    readTime: "9 min read",
-    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=2000&auto=format&fit=crop",
+    readTime: "6 min read",
+    image: "/projects/finddr.webp",
     author: "Owen Digitals",
   },
   {
@@ -791,8 +791,13 @@ const HeavyComponent = dynamic(
     `,
     category: "Personal Life",
     date: "January 28, 2024",
+<<<<<<< HEAD
     readTime: "8 min read",
     image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2000&auto=format&fit=crop",
+=======
+    readTime: "5 min read",
+    image: "/projects/true-north.webp",
+>>>>>>> 07c5271 (feat: Add Naija Diaspora Hub project and optimize image assets to webp format across components and project data.)
     author: "Owen Digitals",
   },
 ];

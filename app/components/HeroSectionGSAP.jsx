@@ -161,7 +161,7 @@ export default function HeroSectionGSAP() {
         ref={backgroundRef}
         className="absolute inset-0"
         style={{
-          backgroundImage: "url('/hero2.jpg')",
+          backgroundImage: "url('/hero2.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

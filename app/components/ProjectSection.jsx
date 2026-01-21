@@ -12,8 +12,8 @@ const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   return (
     <div
       className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 ${hoverEffect
-          ? "hover:border-white/20 hover:bg-[#151515]/70 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-2"
-          : ""
+        ? "hover:border-white/20 hover:bg-[#151515]/70 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-2"
+        : ""
         } ${className}`}
     >
       <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/10 rounded-full blur-[80px] pointer-events-none" />
@@ -117,8 +117,8 @@ const Tab = ({ active, setActive, category, label }) => {
 };
 
 const ProjectsSection = () => {
-  const [activeTab, setActiveTab] = useState('brandDesign');
-  const [currentProjects, setCurrentProjects] = useState(projectsData['brandDesign'] || []);
+  const [activeTab, setActiveTab] = useState('productDesign');
+  const [currentProjects, setCurrentProjects] = useState(projectsData['productDesign'] || []);
 
   useEffect(() => {
     // Fallback if category doesn't exist
@@ -146,9 +146,9 @@ const ProjectsSection = () => {
 
           {/* Tab Navigation */}
           <div className="bg-white/5 p-1.5 rounded-full backdrop-blur-md border border-white/5 flex gap-1">
-            <Tab active={activeTab} setActive={setActiveTab} category="brandDesign" label="Branding" />
             <Tab active={activeTab} setActive={setActiveTab} category="productDesign" label="Product" />
             <Tab active={activeTab} setActive={setActiveTab} category="webDevelopment" label="Development" />
+            <Tab active={activeTab} setActive={setActiveTab} category="brandDesign" label="Branding" />
           </div>
         </div>
 
