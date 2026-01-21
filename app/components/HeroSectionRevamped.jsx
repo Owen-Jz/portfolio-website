@@ -88,24 +88,24 @@ export default function HeroSectionRevamped() {
       className="relative min-h-[100vh] w-full flex flex-col items-center justify-center bg-[#0a0a0a] overflow-hidden selection:bg-red-500/30"
     >
       {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-[0]" 
+      <div
+        className="absolute inset-0 z-[0]"
         style={{
-          backgroundImage: "url('/hero2.jpg')",
+          backgroundImage: "url('/hero2.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       >
-         <div className="absolute inset-0 bg-[#0a0a0a]/80" />
-         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
+        <div className="absolute inset-0 bg-[#0a0a0a]/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
       </div>
-      
+
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20 z-[2]"
         fill="rgba(176, 34, 34, 0.4)"
       />
-      
+
       {/* Floating Icons with Parallax */}
       <FloatingIcon icon={Monitor} delay={1.2} className="top-1/4 left-[15%] rotate-[-12deg]" parallaxY={y1} />
       <FloatingIcon icon={Code2} delay={1.4} className="bottom-1/4 right-[15%] rotate-[12deg]" parallaxY={y2} />
@@ -127,17 +127,17 @@ export default function HeroSectionRevamped() {
 
         {/* Main Title - Reduced Size */}
         <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="mb-6 relative" 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="mb-6 relative"
         >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-2 leading-[1.1]">
-              Hello, I am <br className="md:hidden" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">
-                Owen
-              </span>
-            </h1>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-2 leading-[1.1]">
+            Hello, I am <br className="md:hidden" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">
+              Owen
+            </span>
+          </h1>
         </motion.div>
 
         {/* Description */}
@@ -147,7 +147,7 @@ export default function HeroSectionRevamped() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed"
         >
-          I combine design and development to build high-performance websites and applications. 
+          I combine design and development to build high-performance websites and applications.
           Focused on interaction, motion, and visual excellence.
         </motion.p>
 
