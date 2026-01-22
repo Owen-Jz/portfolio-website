@@ -11,51 +11,48 @@ const manrope = Manrope({
 
 export const metadata = {
   title: "Owen Digitals | Portfolio",
+  // Optimized for SEO (approx. 150 chars)
   description:
-    "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
+    "Expert UI/UX design, full-stack Next.js development, and digital branding solutions by Owen. Crafting high-performance, user-centric web experiences.",
   // Icons are automatically handled by app/icon.svg
   openGraph: {
     title: "Owen Digitals | Portfolio",
+    // Optimized to encourage clicks on social media
     description:
-      "UI/UX design and development by Owen. Explore projects that I've worked on.",
+      "View the portfolio of Owen Digitals. Specializing in scalable web applications, modern interface design, and distinctive brand identities.",
     url: "https://www.owendigitals.work",
     siteName: "Owen Digitals",
     type: "website",
-    images: [
-      {
-        url: "/Logo.svg",
-        width: 800,
-        height: 600,
-        alt: "Owen Digitals Logo",
-      },
-    ],
+    locale: "en_US", // Good practice to add
   },
   twitter: {
     card: "summary_large_image",
     title: "Owen Digitals | Portfolio",
     description:
-      "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
-    images: ["/Logo.svg"],
+      "View the portfolio of Owen Digitals. Specializing in scalable web applications, modern interface design, and distinctive brand identities.",
+    creator: "@yourtwitterhandle", // Optional: Add your handle if you have one
   },
   robots: "index, follow",
-  icons: {
-    icon: "/Logo.svg",
-    shortcut: "/Logo.svg",
-    apple: "/Logo.svg",
-  },
-  themeColor: "#0a0a0a",
   metadataBase: new URL("https://www.owendigitals.work"),
   alternates: {
     canonical: "/",
   },
 };
 
+/* Note: In Next.js 14+, 'themeColor' and 'viewport' are strictly 
+   moved to the distinct 'viewport' export object, though metadata
+   will still work in some versions. 
+*/
+export const viewport = {
+  themeColor: "#0a0a0a",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
+      {/* Viewport is now handled by the export above, keeping head clean */}
       <body className={manrope.className}>
         <Providers>
           {children}
