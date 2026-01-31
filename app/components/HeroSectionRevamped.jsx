@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Smartphone, Monitor, Code2, Rocket } from "lucide-react";
 import Button from "./ui/Button";
 
@@ -62,14 +62,63 @@ const FloatingIcon = ({ icon: Icon, delay, className, parallaxY }) => {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: delay, duration: 0.8 }}
       >
-        <Icon className="text-white/70 w-6 h-6" />
+        <motion.div
+          animate={{ y: [0, -8, 0] }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: delay + 1 // Offset floating start to feel organic
+          }}
+        >
+          <Icon className="text-white/70 w-6 h-6" />
+        </motion.div>
       </motion.div>
+    </motion.div>
+  );
+};
+
+// Magnetic Button Wrapper Component
+const MagneticWrapper = ({ children, strength = 0.5 }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * strength, y: middleY * strength });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const { x, y } = position;
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x, y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+    >
+      {children}
     </motion.div>
   );
 };
 
 export default function HeroSectionRevamped() {
   const containerRef = useRef(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    let { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
 
   // Scroll Parallax Logic
   const { scrollYProgress } = useScroll({
@@ -82,10 +131,13 @@ export default function HeroSectionRevamped() {
   const y3 = useTransform(scrollYProgress, [0, 1], [0, -250]);
   const y4 = useTransform(scrollYProgress, [0, 1], [0, -150]);
 
+  const spotlightGradient = useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(176, 34, 34, 0.15), transparent 80%)`;
+
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center bg-[#0a0a0a] overflow-hidden selection:bg-red-500/30"
+      onMouseMove={handleMouseMove}
+      className="relative min-h-[100vh] w-full flex flex-col items-center justify-center bg-[#0a0a0a] overflow-hidden selection:bg-red-500/30 group/hero"
     >
       {/* Background Image with Overlay */}
       <div
@@ -101,9 +153,29 @@ export default function HeroSectionRevamped() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
       </div>
 
+      {/* Mouse Follower Spotlight */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-[1] opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
+        style={{ background: spotlightGradient }}
+      />
+
       <Spotlight
         className="-top-40 left-0 md:left-60 md:-top-20 z-[2]"
         fill="rgba(176, 34, 34, 0.4)"
+      />
+
+      {/* Pulsing Background Blob */}
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.3, 0.1],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#b02222]/20 rounded-full blur-[120px] pointer-events-none z-[1]"
       />
 
       {/* Floating Icons with Parallax */}
@@ -119,26 +191,50 @@ export default function HeroSectionRevamped() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-400 mb-8 hover:bg-white/10 transition-colors cursor-default"
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-400 mb-8 hover:bg-white/10 transition-colors cursor-default backdrop-blur-md"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#b02222] animate-pulse" />
           Available for new projects
         </motion.div>
 
-        {/* Main Title - Reduced Size */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="mb-6 relative"
-        >
+        {/* Main Title - Staggered Animation */}
+        <div className="mb-6 relative overflow-visible">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-2 leading-[1.1]">
-            Hello, I am <br className="md:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">
-              Owen
-            </span>
+            {/* Mobile Line Break Handling is tricky with split text, keeping simple structure for animation */}
+            <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
+              {["Hello,", "I", "am"].map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: i * 0.1,
+                    ease: [0.2, 0.65, 0.3, 0.9],
+                  }}
+                  className="inline-block"
+                >
+                  {word}
+                </motion.span>
+              ))}
+              <motion.span
+                initial={{ y: 40, opacity: 0, scale: 0.9 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.3,
+                  ease: "backOut"
+                }}
+                className="inline-block relative"
+              >
+                {/* Shimmering Text Gradient */}
+                <span className="text-transparent bg-clip-text bg-[linear-gradient(110deg,#ffffff,45%,#b02222,55%,#ffffff)] bg-[length:250%_100%] animate-text-shimmer">
+                  Owen
+                </span>
+              </motion.span>
+            </div>
           </h1>
-        </motion.div>
+        </div>
 
         {/* Description */}
         <motion.p
@@ -158,12 +254,17 @@ export default function HeroSectionRevamped() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
         >
-          <Button href="/contact" variant="primary" className="h-12 px-6 text-sm md:text-base">
-            Start a Project <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
-          </Button>
-          <Button href="/cv.pdf" variant="secondary" className="h-12 px-6 text-sm md:text-base bg-transparent border-white/10 hover:bg-white/5">
-            Download CV <Download className="ml-2 w-4 h-4 md:w-5 md:h-5" />
-          </Button>
+          <MagneticWrapper>
+            <Button href="/contact" variant="primary" className="h-12 px-6 text-sm md:text-base">
+              Start a Project <ArrowRight className="ml-2 w-4 h-4 md:w-5 md:h-5" />
+            </Button>
+          </MagneticWrapper>
+
+          <MagneticWrapper>
+            <Button href="/cv.pdf" variant="secondary" className="h-12 px-6 text-sm md:text-base bg-transparent border-white/10 hover:bg-white/5">
+              Download CV <Download className="ml-2 w-4 h-4 md:w-5 md:h-5" />
+            </Button>
+          </MagneticWrapper>
         </motion.div>
       </div>
 

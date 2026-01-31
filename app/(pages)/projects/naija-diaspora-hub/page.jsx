@@ -99,7 +99,7 @@ const NaijaDiasporaHubPage = () => {
                             className="mt-6"
                         >
                             <a
-                                href="https://naija-diaspora-hub.vercel.app/"
+                                href="https://www.naijadiasporahub.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-[#1B7940] text-white rounded-full font-medium text-sm hover:bg-[#155d32] transition-colors"

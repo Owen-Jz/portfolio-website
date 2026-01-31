@@ -18,8 +18,26 @@ import SocialSidebar from "./components/SocialSidebar";
 import Lenis from "lenis";
 import { useEffect } from "react";
 
+import { AnimatePresence } from "framer-motion";
+import IntroOverlay from "./components/IntroOverlay";
+
 const HomePage = () => {
+  const [showIntro, setShowIntro] = React.useState(true);
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
   useEffect(() => {
+    // Check if we've shown the intro in this session
+    try {
+      const hasShown = sessionStorage.getItem("introShown");
+      if (hasShown) {
+        setShowIntro(false);
+      }
+    } catch (e) {
+      console.warn("Session storage not available:", e);
+    } finally {
+      setIsLoaded(true);
+    }
+
     const lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
@@ -38,6 +56,11 @@ const HomePage = () => {
     };
   }, []);
 
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+    sessionStorage.setItem("introShown", "true");
+  };
+
   const sections = [
     // { id: "hero", Component: HeroSection },
     { id: "about", Component: AboutMe },
@@ -48,8 +71,17 @@ const HomePage = () => {
     { id: "contact", Component: ContactSection },
   ];
 
+  // Prevent flash of "true" state by hiding everything until mounted and checked
+  if (!isLoaded) {
+    return <div className="min-h-screen bg-[#0a0a0a]" />;
+  }
+
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
+      <AnimatePresence>
+        {showIntro && <IntroOverlay onComplete={handleIntroComplete} />}
+      </AnimatePresence>
+
       <NavbarDemo />
       <main className="flex-grow w-full max-w-full">
         {/* New Revamped Hero Section */}

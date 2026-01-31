@@ -1,6 +1,16 @@
 export const projectsData = {
   productDesign: [
     {
+      id: 11,
+      title: "Nova Decentralized Trading Dashboard",
+      category: "Product Design",
+      image: "/projects/nova-trade-case-study/cover.png",
+      color: "#8A2BE2",
+      description: "A high-performance crypto trading dashboard and command center.",
+      tags: ["UI/UX", "Case Study", "Crypto", "DeFi"],
+      link: "/projects/nova-trade-case-study",
+    },
+    {
       id: 10,
       title: "Naija Diaspora Hub",
       category: "Product Design",
@@ -60,7 +70,7 @@ export const projectsData = {
       color: "#1B7940",
       description: "A platform for Nigerians to connect with their diaspora.",
       tags: ["Next.js", "E-commerce", "Full Stack"],
-      link: "https://naija-diaspora-hub.vercel.app/",
+      link: "https://www.naijadiasporahub.com",
     },
     {
       id: 9,
