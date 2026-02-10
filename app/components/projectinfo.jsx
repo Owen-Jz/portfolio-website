@@ -53,6 +53,16 @@ export const projectsData = {
   ],
   webDevelopment: [
     {
+      id: 12,
+      title: "Flux Board",
+      category: "Web Development",
+      image: "/projects/flux.svg",
+      color: "#4f46e5",
+      description: "A premium multi-tenant Kanban project management system.",
+      tags: ["Next.js", "Tailwind 4", "SaaS"],
+      link: "https://www.fluxboard.site",
+    },
+    {
       id: 7,
       title: "Financial Tracking App",
       category: "Web Development",
@@ -60,7 +70,7 @@ export const projectsData = {
       color: "#b0b022",
       description: "A financial tracking app for tracking personal finances.",
       tags: ["Next.js", "E-commerce", "Full Stack"],
-      link: "https://numero-theta-dusky.vercel.app/",
+      link: "https://numero-finance.vercel.app/",
     },
     {
       id: 8,
