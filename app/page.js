@@ -26,11 +26,16 @@ const HomePage = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   useEffect(() => {
-    // Check if we've shown the intro in this session
+    // Check if we've shown the intro in this session or if on mobile
     try {
       const hasShown = sessionStorage.getItem("introShown");
-      if (hasShown) {
+      const isMobile = window.innerWidth < 768;
+
+      if (hasShown || isMobile) {
         setShowIntro(false);
+        if (isMobile) {
+          sessionStorage.setItem("introShown", "true");
+        }
       }
     } catch (e) {
       console.warn("Session storage not available:", e);
@@ -38,22 +43,27 @@ const HomePage = () => {
       setIsLoaded(true);
     }
 
-    const lenis = new Lenis({
-      lerp: 0.1,
-      smoothWheel: true,
-    });
+    // Only enable smooth scrolling on desktop for better mobile performance
+    const isMobile = window.innerWidth < 768;
 
-    let rafId;
-    const raf = (time) => {
-      lenis.raf(time);
+    if (!isMobile) {
+      const lenis = new Lenis({
+        lerp: 0.1,
+        smoothWheel: true,
+      });
+
+      let rafId;
+      const raf = (time) => {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      };
       rafId = requestAnimationFrame(raf);
-    };
-    rafId = requestAnimationFrame(raf);
 
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      lenis.destroy();
-    };
+      return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        lenis.destroy();
+      };
+    }
   }, []);
 
   const handleIntroComplete = () => {

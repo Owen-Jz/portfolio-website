@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Smartphone, Monitor, Code2, Rocket } from "lucide-react";
 import Button from "./ui/Button";
@@ -113,8 +113,14 @@ export default function HeroSectionRevamped() {
   const containerRef = useRef(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
 
   function handleMouseMove({ currentTarget, clientX, clientY }) {
+    if (isMobile) return; // Skip on mobile
     let { left, top } = currentTarget.getBoundingClientRect();
     mouseX.set(clientX - left);
     mouseY.set(clientY - top);
@@ -153,18 +159,18 @@ export default function HeroSectionRevamped() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
       </div>
 
-      {/* Mouse Follower Spotlight */}
+      {/* Mouse Follower Spotlight - Hidden on mobile */}
       <motion.div
-        className="pointer-events-none absolute inset-0 z-[1] opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
+        className="hidden md:block pointer-events-none absolute inset-0 z-[1] opacity-0 group-hover/hero:opacity-100 transition-opacity duration-300"
         style={{ background: spotlightGradient }}
       />
 
       <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20 z-[2]"
+        className="hidden md:block -top-40 left-0 md:left-60 md:-top-20 z-[2]"
         fill="rgba(176, 34, 34, 0.4)"
       />
 
-      {/* Pulsing Background Blob */}
+      {/* Pulsing Background Blob - Hidden on mobile */}
       <motion.div
         animate={{
           scale: [1, 1.2, 1],
@@ -175,7 +181,7 @@ export default function HeroSectionRevamped() {
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#b02222]/20 rounded-full blur-[120px] pointer-events-none z-[1]"
+        className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#b02222]/20 rounded-full blur-[120px] pointer-events-none z-[1]"
       />
 
       {/* Floating Icons with Parallax */}
@@ -190,7 +196,7 @@ export default function HeroSectionRevamped() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: isMobile ? 0.3 : 0.5 }}
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm text-gray-400 mb-8 hover:bg-white/10 transition-colors cursor-default backdrop-blur-md"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-[#b02222] animate-pulse" />
@@ -208,8 +214,8 @@ export default function HeroSectionRevamped() {
                   initial={{ y: 40, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{
-                    duration: 0.8,
-                    delay: i * 0.1,
+                    duration: isMobile ? 0.4 : 0.8,
+                    delay: isMobile ? 0 : i * 0.1,
                     ease: [0.2, 0.65, 0.3, 0.9],
                   }}
                   className="inline-block"
@@ -221,8 +227,8 @@ export default function HeroSectionRevamped() {
                 initial={{ y: 40, opacity: 0, scale: 0.9 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}
                 transition={{
-                  duration: 0.8,
-                  delay: 0.3,
+                  duration: isMobile ? 0.4 : 0.8,
+                  delay: isMobile ? 0 : 0.3,
                   ease: "backOut"
                 }}
                 className="inline-block relative"
@@ -240,7 +246,7 @@ export default function HeroSectionRevamped() {
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: isMobile ? 0.3 : 0.5, delay: isMobile ? 0 : 0.2 }}
           className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed"
         >
           I combine design and development to build high-performance websites and applications.
@@ -251,7 +257,7 @@ export default function HeroSectionRevamped() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: isMobile ? 0.3 : 0.5, delay: isMobile ? 0 : 0.4 }}
           className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
         >
           <MagneticWrapper>

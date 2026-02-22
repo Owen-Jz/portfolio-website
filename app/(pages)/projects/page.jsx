@@ -8,7 +8,7 @@ import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
 import { projectsData } from "../../components/projectinfo";
 import GlassCard from "../../components/ui/GlassCard";
-import { ArrowUpRight, Github, Sparkles, Layers, Box, Code } from "lucide-react";
+import { ArrowUpRight, Sparkles, Layers, Box, Code } from "lucide-react";
 
 /**
  * Reusing the exact Card logic but wrapped in our new GlassCard for consistency
@@ -68,7 +68,7 @@ const ProjectCard = ({ project, index }) => {
           {/* Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-white/5">
             <Link href={project.link} className="flex items-center gap-2 group/link" target={project.link.startsWith('http') ? '_blank' : undefined} rel={project.link.startsWith('http') ? 'noopener noreferrer' : undefined}>
-              <span className="text-white text-sm font-medium group-hover/link:underline decoration-[#b02222] underline-offset-4">{project.link.startsWith('http') ? 'View Website' : 'View Case Study'}</span>
+              <span className="text-white text-sm font-medium group-hover/link:underline decoration-[#b02222] underline-offset-4">{project.link.startsWith('http') ? 'View Live Website' : 'View Case Study'}</span>
               <ArrowUpRight className="w-4 h-4 text-[#b02222] transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
             </Link>
           </div>

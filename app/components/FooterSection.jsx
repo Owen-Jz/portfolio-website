@@ -73,7 +73,7 @@ const FooterSection = () => {
     },
     {
       name: "Email",
-      href: "mailto:your.email@example.com",
+      href: "mailto:official@owendigitals.work",
       icon: (
         <svg
           className="w-6 h-6"

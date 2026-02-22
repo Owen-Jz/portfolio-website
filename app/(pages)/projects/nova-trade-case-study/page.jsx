@@ -1,14 +1,14 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { NavbarDemo } from "@/app/components/ui/ResizableNavbar";
 import FooterSection from "@/app/components/FooterSection";
 import ContactSection from "@/app/components/ContactSection";
 import GlassCard from "@/app/components/ui/GlassCard";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Zap, Layers, Brain, Coins, User, Globe, TrendingUp } from "lucide-react";
+import { ArrowLeft, Zap, Layers, Brain, Coins, User, Globe, TrendingUp, ExternalLink, X, ZoomIn, ZoomOut } from "lucide-react";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -49,6 +49,19 @@ const features = [
 ];
 
 const NovaTradePage = () => {
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [zoomLevel, setZoomLevel] = useState(1);
+
+    const handleZoomIn = (e) => {
+        e.stopPropagation();
+        setZoomLevel((prev) => Math.min(prev + 0.5, 4));
+    };
+
+    const handleZoomOut = (e) => {
+        e.stopPropagation();
+        setZoomLevel((prev) => Math.max(prev - 0.5, 1));
+    };
+
     return (
         <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#8A2BE2] selection:text-white font-manrope">
             <NavbarDemo />
@@ -65,7 +78,7 @@ const NovaTradePage = () => {
                         repeat: Infinity,
                         ease: "easeInOut"
                     }}
-                    className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#8A2BE2]/20 rounded-full blur-[120px] pointer-events-none"
+                    className="hidden md:block fixed top-0 left-1/4 w-[500px] h-[500px] bg-[#8A2BE2]/20 rounded-full blur-[120px] pointer-events-none"
                 />
                 <motion.div
                     animate={{
@@ -78,7 +91,7 @@ const NovaTradePage = () => {
                         ease: "easeInOut",
                         delay: 1
                     }}
-                    className="fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-[#4A90D9]/10 rounded-full blur-[120px] pointer-events-none"
+                    className="hidden md:block fixed bottom-0 right-1/4 w-[600px] h-[600px] bg-[#4A90D9]/10 rounded-full blur-[120px] pointer-events-none"
                 />
 
                 <div className="max-w-5xl mx-auto relative z-10">
@@ -126,10 +139,33 @@ const NovaTradePage = () => {
 
                             <motion.p
                                 variants={fadeInUp}
-                                className="text-xl text-white/60 max-w-2xl leading-relaxed"
+                                className="text-xl text-white/60 max-w-2xl leading-relaxed mb-8"
                             >
                                 A high-performance crypto trading dashboard and command center designed to unify the fragmented experience of decentralized finance (DeFi).
                             </motion.p>
+
+                            {/* Live Link */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="flex flex-wrap gap-4"
+                            >
+                                <a
+                                    href="https://nova-trade-dashboard-ui-design.vercel.app"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-[#8A2BE2] text-white rounded-full font-semibold text-sm hover:bg-[#7324c4] transition-all hover:scale-105 active:scale-95 shadow-lg shadow-[#8A2BE2]/20"
+                                >
+                                    <span>View Demo</span>
+                                    <ExternalLink className="w-4 h-4" />
+                                </a>
+
+                                <div className="inline-flex items-center gap-2 px-4 py-3 rounded-full bg-white/5 border border-white/10 text-white/60 text-sm font-medium">
+                                    <span className="w-2 h-2 rounded-full bg-[#8A2BE2] animate-pulse" />
+                                    Live Demo
+                                </div>
+                            </motion.div>
                         </motion.div>
                     </div>
 
@@ -232,8 +268,8 @@ const NovaTradePage = () => {
                 </div>
 
                 {/* Case Study Slides */}
-                <div className="mt-32 max-w-7xl mx-auto space-y-32">
-                    <div className="text-center mb-24">
+                <div className="mt-12 md:mt-32 max-w-7xl mx-auto space-y-4 md:space-y-32">
+                    <div className="text-center mb-12 md:mb-24 px-4">
                         <h2 className="text-3xl font-bold mb-4">Case Study Walkthrough</h2>
                         <p className="text-white/60">A detailed look at the interface and design system.</p>
                     </div>
@@ -241,11 +277,13 @@ const NovaTradePage = () => {
                     {Array.from({ length: 25 }, (_, i) => i + 2).map((num) => (
                         <motion.div
                             key={num}
+                            layoutId={`slide-${num}`}
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.6 }}
-                            className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#151515]"
+                            className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#151515] cursor-pointer"
+                            onClick={() => setSelectedImage(`/projects/nova-trade-case-study/${num}.png`)}
                         >
                             <Image
                                 src={`/projects/nova-trade-case-study/${num}.png`}
@@ -265,6 +303,67 @@ const NovaTradePage = () => {
 
             </main>
             <FooterSection />
+
+            {/* Lightbox Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 md:p-8 overflow-hidden"
+                        onClick={() => { setSelectedImage(null); setZoomLevel(1); }}
+                    >
+                        <div className="absolute top-4 right-4 md:top-8 md:right-8 flex items-center gap-2 md:gap-4 z-[110]">
+                            <button
+                                className="text-white p-2 md:p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={handleZoomOut}
+                                disabled={zoomLevel <= 1}
+                                title="Zoom Out"
+                            >
+                                <ZoomOut className="w-5 h-5 md:w-6 md:h-6" />
+                            </button>
+                            <button
+                                className="text-white p-2 md:p-3 bg-white/10 rounded-full hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                onClick={handleZoomIn}
+                                disabled={zoomLevel >= 4}
+                                title="Zoom In"
+                            >
+                                <ZoomIn className="w-5 h-5 md:w-6 md:h-6" />
+                            </button>
+                            <div className="w-[1px] h-8 bg-white/20 mx-1"></div>
+                            <button
+                                className="text-white p-2 md:p-3 bg-[#8A2BE2]/80 hover:bg-[#8A2BE2] rounded-full transition-colors"
+                                onClick={(e) => { e.stopPropagation(); setSelectedImage(null); setZoomLevel(1); }}
+                            >
+                                <X className="w-5 h-5 md:w-6 md:h-6" />
+                            </button>
+                        </div>
+                        <motion.div
+                            layoutId={`slide-${selectedImage.split('/').pop().replace('.png', '')}`}
+                            className="relative w-full h-full flex items-center justify-center"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <motion.div
+                                animate={{ scale: zoomLevel }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                drag={zoomLevel > 1}
+                                dragConstraints={{ top: -500, bottom: 500, left: -500, right: 500 }}
+                                dragElastic={0.1}
+                                className={`relative w-full h-[85vh] ${zoomLevel > 1 ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'}`}
+                            >
+                                <Image
+                                    src={selectedImage}
+                                    alt="Zoomed Slide"
+                                    fill
+                                    className="object-contain"
+                                    quality={100}
+                                />
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

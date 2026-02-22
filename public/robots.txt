@@ -1,0 +1,11 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/*
+
+# Host
+Host: https://www.owendigitals.work
+
+# Sitemaps
+Sitemap: https://www.owendigitals.work/sitemap.xml

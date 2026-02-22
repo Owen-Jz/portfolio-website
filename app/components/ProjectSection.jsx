@@ -6,17 +6,17 @@ import { useInView } from 'react-intersection-observer';
 import { projectsData } from './projectinfo';
 import Link from 'next/link';
 import Button from './ui/Button';
-import { ArrowUpRight, Github } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   return (
     <div
-      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 ${hoverEffect
+      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-md md:backdrop-blur-xl transition-all duration-500 ${hoverEffect
         ? "hover:border-white/20 hover:bg-[#151515]/70 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-2"
         : ""
         } ${className}`}
     >
-      <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/10 rounded-full blur-[40px] md:blur-[80px] pointer-events-none" />
       <div className="relative z-10 h-full">{children}</div>
     </div>
   );
@@ -28,12 +28,18 @@ const ProjectCard = ({ project, index }) => {
     threshold: 0.1,
   });
 
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
   return (
     <motion.div
       ref={ref}
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
+      transition={{ delay: isMobile ? 0 : index * 0.1, duration: isMobile ? 0.3 : 0.5, ease: "easeOut" }}
       className="h-full"
     >
       <GlassCard className="flex flex-col h-full group">
@@ -76,15 +82,19 @@ const ProjectCard = ({ project, index }) => {
 
           {/* Actions */}
           <div className="flex items-center justify-between pt-4 border-t border-white/5">
-            <Link href={project.link} className="flex items-center gap-2 group/link">
-              <span className="text-white text-sm font-medium group-hover/link:underline decoration-[#b02222] underline-offset-4">View Case Study</span>
+            <Link
+              href={project.link}
+              className="flex items-center gap-2 group/link"
+              target={project.link.startsWith('http') ? '_blank' : undefined}
+              rel={project.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+            >
+              <span className="text-white text-sm font-medium group-hover/link:underline decoration-[#b02222] underline-offset-4">
+                {project.link.startsWith('http') ? 'View Live Website' : 'View Case Study'}
+              </span>
               <ArrowUpRight className="w-4 h-4 text-[#b02222] transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
             </Link>
 
-            {/* Optional: Add Github link if available in data, simplified here */}
-            <div className="p-2 rounded-full hover:bg-white/5 transition-colors cursor-pointer text-white/40 hover:text-white">
-              <Github className="w-4 h-4" />
-            </div>
+
           </div>
         </div>
       </GlassCard>
@@ -130,8 +140,8 @@ const ProjectsSection = () => {
   return (
     <section className="py-24 relative overflow-hidden" id="projects">
       {/* Background Elements */}
-      <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="hidden md:block absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="hidden md:block absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">

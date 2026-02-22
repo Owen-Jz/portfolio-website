@@ -86,8 +86,8 @@ const ContactSection = () => {
               <ContactItem
                 icon={Mail}
                 label="Email Me"
-                value="hello@owendigitals.com"
-                href="mailto:hello@owendigitals.com"
+                value="official@owendigitals.work"
+                href="mailto:official@owendigitals.work"
               />
               <ContactItem
                 icon={MapPin}

@@ -13,7 +13,7 @@ export const products = [
   },
   {
     title: "Numero",
-    link: "https://numero-theta-dusky.vercel.app/",
+    link: "https://numero-finance.vercel.app/",
     thumbnail: "/projects/numero.png",
   },
 

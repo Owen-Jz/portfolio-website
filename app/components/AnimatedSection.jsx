@@ -12,9 +12,11 @@ const AnimatedSection = ({ children, className, threshold = 0.2, id }) => {
 
   // State to track if the component is ready (i.e., page is loaded)
   const [isReady, setIsReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Set isReady to true after a slight delay to ensure content is loaded
   useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
     const timer = setTimeout(() => {
       setIsReady(true);
     }, 100); // Small delay to ensure initial render completes
@@ -30,12 +32,12 @@ const AnimatedSection = ({ children, className, threshold = 0.2, id }) => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.7, ease: "easeOut", delay: 0.2 },
+      transition: { duration: isMobile ? 0 : 0.7, ease: "easeOut", delay: isMobile ? 0 : 0.2 },
     },
     outOfView: {
-      opacity: 0.5, // Slight fade when out of view
-      y: 20, // Slight upward movement when out of view
-      transition: { duration: 0.5, ease: "easeOut" },
+      opacity: isMobile ? 1 : 0.5, // No fade on mobile
+      y: isMobile ? 0 : 20, // No movement on mobile
+      transition: { duration: isMobile ? 0 : 0.5, ease: "easeOut" },
     },
   };
 
