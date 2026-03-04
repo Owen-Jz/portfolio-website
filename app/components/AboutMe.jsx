@@ -68,70 +68,15 @@ const ToolLogo = ({ src, alt, delay }) => {
   );
 };
 
-const StatusBadge = () => {
-  const texts = ["Constantly Evolving", "Always Learning", "Building Future"];
-  const [index, setIndex] = React.useState(0);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % texts.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="min-w-[200px] h-[30px] flex items-center justify-center relative">
-      <AnimatePresence mode="wait">
-        <motion.span
-          key={index}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-          className="absolute text-xs text-white/30 font-mono uppercase tracking-widest bg-[#151515] px-3 py-1 rounded-full border border-white/5"
-        >
-          {texts[index]}
-        </motion.span>
-      </AnimatePresence>
-    </div>
-  )
-}
-
-const Badge = ({ text, rotate, left, top, delay, constraintsRef }) => (
+const SolutionCard = ({ title, description, delay }) => (
   <motion.div
-    className="absolute z-10 cursor-grab active:cursor-grabbing"
-    initial={{ opacity: 0, scale: 0, rotate: parseFloat(rotate) }}
-    whileInView={{ opacity: 1, scale: 1, rotate: parseFloat(rotate) }}
-    viewport={{ once: true }}
-    transition={{
-      type: "spring",
-      stiffness: 100,
-      damping: 15,
-      delay: delay
-    }}
-    style={{
-      left,
-      top,
-    }}
-    drag
-    dragConstraints={constraintsRef}
-    whileHover={{ scale: 1.1, zIndex: 50 }}
-    whileTap={{ scale: 0.95 }}
+    initial={{ opacity: 0, x: -20 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ delay: delay, duration: 0.5 }}
+    className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-[#b02222]/40 transition-all"
   >
-    <motion.div
-      animate={{ y: [0, -10, 0] }}
-      transition={{
-        duration: 4,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "reverse",
-        delay: Math.random() * 2
-      }}
-    >
-      <div className="px-6 py-3 bg-gradient-to-r from-[#b02222] to-[#d38787] rounded-full text-[#151515] text-base font-bold font-manrope shadow-lg select-none">
-        {text}
-      </div>
-    </motion.div>
+    <h4 className="text-[#b02222] font-bold text-sm mb-1 uppercase tracking-tighter">{title}</h4>
+    <p className="text-white/50 text-xs leading-relaxed">{description}</p>
   </motion.div>
 );
 
@@ -155,7 +100,7 @@ const AboutMe = () => {
               viewport={{ once: true }}
               className="text-[#b02222] font-bold font-manrope uppercase tracking-wider text-sm lg:text-base"
             >
-              Beyond Portfolio
+              Strategic Design Engineering
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -164,35 +109,36 @@ const AboutMe = () => {
               transition={{ delay: 0.1, duration: 0.6 }}
               className="text-white text-4xl lg:text-5xl font-manrope font-semibold leading-tight"
             >
-              Get to know <br className="hidden lg:block" /> the person behind <br className="hidden lg:block" /> the screen.
+              Solving complex <br className="hidden lg:block" /> problems through <br className="hidden lg:block" /> elite engineering.
             </motion.h2>
           </div>
 
-          {/* Workspace Card: Fills remaining space in the tallest column */}
-          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[400px] flex-1">
-            <div className="flex items-center gap-3 mb-4">
+          {/* Solutions Card */}
+          <GlassCard className="p-6 md:p-8 flex flex-col flex-1">
+             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
                 <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
-                The Setup
+                Solutions
               </h3>
             </div>
-
-            <p className="text-white/60 font-manrope text-base mb-6 leading-relaxed">
-              Where the magic happens. A space curated for focus and creativity.
-            </p>
-
-            <div className="flex-1 w-full rounded-2xl overflow-hidden border border-white/5 relative group">
-              <img
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                src="/hero1.webp"
-                alt="Workspace"
-                loading="lazy"
+            <div className="grid grid-cols-1 gap-3">
+              <SolutionCard 
+                title="Revenue-Optimized Web Apps" 
+                description="Engineered for high conversion, global scalability, and sub-second performance."
+                delay={0.1}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                <span className="text-white text-sm font-mono">My command center</span>
-              </div>
+              <SolutionCard 
+                title="Autonomous System Design" 
+                description="Bridging AI logic with visual interfaces to reclaim operational efficiency."
+                delay={0.2}
+              />
+              <SolutionCard 
+                title="Enterprise Design Systems" 
+                description="Robust, documented UI infrastructure designed to govern brand excellence at scale."
+                delay={0.3}
+              />
             </div>
           </GlassCard>
         </div>
