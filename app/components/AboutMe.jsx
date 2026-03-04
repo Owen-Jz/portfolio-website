@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
+import { Target, Terminal, Quote, User } from "lucide-react";
 
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   const mouseX = useMotionValue(0);
@@ -80,6 +81,32 @@ const SolutionCard = ({ title, description, delay }) => (
   </motion.div>
 );
 
+const StatusBadge = () => (
+  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md hover:bg-white/10 transition-colors cursor-pointer">
+    <div className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+    </div>
+    <span className="text-xs font-mono text-white/80 uppercase tracking-widest">Available for work</span>
+  </div>
+);
+
+const Badge = ({ constraintsRef, text, rotate, left, top, delay }) => (
+  <motion.div
+    drag
+    dragConstraints={constraintsRef}
+    initial={{ opacity: 0, scale: 0 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    transition={{ delay, type: "spring", stiffness: 200, damping: 20 }}
+    style={{ left, top, rotate }}
+    className="absolute cursor-grab active:cursor-grabbing px-4 py-2 bg-[#1a1a1a]/80 backdrop-blur-xl border border-white/10 rounded-full shadow-lg"
+    whileHover={{ scale: 1.1, zIndex: 30 }}
+    whileDrag={{ scale: 1.1, zIndex: 40 }}
+  >
+    <span className="text-white/90 text-sm font-medium whitespace-nowrap">{text}</span>
+  </motion.div>
+);
+
 const AboutMe = () => {
   const constraintsRef = React.useRef(null);
 
@@ -115,27 +142,27 @@ const AboutMe = () => {
 
           {/* Solutions Card */}
           <GlassCard className="p-6 md:p-8 flex flex-col flex-1">
-             <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
+                <Target className="w-5 h-5 text-white/80" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 Solutions
               </h3>
             </div>
             <div className="grid grid-cols-1 gap-3">
-              <SolutionCard 
-                title="Revenue-Optimized Web Apps" 
+              <SolutionCard
+                title="Revenue-Optimized Web Apps"
                 description="Engineered for high conversion, global scalability, and sub-second performance."
                 delay={0.1}
               />
-              <SolutionCard 
-                title="Autonomous System Design" 
+              <SolutionCard
+                title="Autonomous System Design"
                 description="Bridging AI logic with visual interfaces to reclaim operational efficiency."
                 delay={0.2}
               />
-              <SolutionCard 
-                title="Enterprise Design Systems" 
+              <SolutionCard
+                title="Enterprise Design Systems"
                 description="Robust, documented UI infrastructure designed to govern brand excellence at scale."
                 delay={0.3}
               />
@@ -149,7 +176,7 @@ const AboutMe = () => {
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[480px]">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
+                <Terminal className="w-5 h-5 text-white/80" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 Tech Arsenal
@@ -187,7 +214,7 @@ const AboutMe = () => {
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[200px] flex-1" hoverEffect={true}>
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
-                <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
+                <Quote className="w-5 h-5 text-white/80" />
               </div>
               <h3 className="text-white text-xl font-semibold font-manrope">
                 Favorite Quote
@@ -232,7 +259,7 @@ const AboutMe = () => {
             <div className="p-6 md:p-8 relative z-10 pointer-events-none"> {/* Text content shouldn't block drags, but we need text to separate? actually pointer-events-none on container is safer, text can retain pointer-events-auto if needed. */}
               <div className="flex items-center gap-3 mb-2 pointer-events-auto">
                 <div className="p-2 bg-white/5 rounded-lg">
-                  <img src="/star.svg" alt="Star" className="w-5 h-5" loading="lazy" />
+                  <User className="w-5 h-5 text-white/80" />
                 </div>
                 <h3 className="text-white text-xl font-semibold font-manrope">
                   Persona
