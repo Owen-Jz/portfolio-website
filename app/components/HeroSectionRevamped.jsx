@@ -249,7 +249,7 @@ export default function HeroSectionRevamped() {
           transition={{ duration: isMobile ? 0.3 : 0.5, delay: isMobile ? 0 : 0.2 }}
           className="text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed"
         >
-          I combine design and development to build high-performance websites and applications.
+          I build high-performance digital products that scale revenue.
           Focused on interaction, motion, and visual excellence.
         </motion.p>
 
