@@ -24,8 +24,8 @@ export default async function handler(req, res) {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: "onboarding@resend.dev", // Replace with verified domain email (e.g., noreply@owendigitals.work)
-      to: "owendigitals@gmail.com",
+      from: "Contact Form <noreply@owendigitals.work>",
+      to: "officia@owendigtals.work",
       subject: `New Contact Form Submission from ${name}`,
       text: `
         Name: ${name}

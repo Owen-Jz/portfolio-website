@@ -1,6 +1,8 @@
 "use server";
 
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(formData) {
   try {
@@ -8,24 +10,14 @@ export async function sendEmail(formData) {
     const subject = formData.get("subject");
     const information = formData.get("information");
 
-    // Check if all fields are filled
     if (!name || !subject || !information) {
       return { success: false, message: "Please fill out all fields" };
     }
 
-    // Set up the email sender
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    // Email details
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL, // admin@owendigitals.work
+    await resend.emails.send({
+      from: "Contact Form <noreply@owendigitals.work>",
+      to: "officia@owendigtals.work",
+      reply_to: name,
       subject: `New Contact Form Submission: ${subject}`,
       text: `
         Name: ${name}
@@ -79,10 +71,7 @@ export async function sendEmail(formData) {
         </body>
         </html>
       `,
-    };
-
-    // Send the email
-    await transporter.sendMail(mailOptions);
+    });
 
     return { success: true, message: "Email sent successfully" };
   } catch (error) {

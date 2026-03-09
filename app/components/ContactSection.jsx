@@ -92,7 +92,7 @@ const ContactSection = () => {
               <ContactItem
                 icon={MapPin}
                 label="Location"
-                value="Lagos, Nigeria (Remote)"
+                value="Port Harcourt, Nigeria (Remote)"
                 href="#"
               />
 

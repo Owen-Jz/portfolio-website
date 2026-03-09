@@ -121,7 +121,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <p className="text-white/40 text-xs font-mono uppercase tracking-wider mb-1">Located In</p>
-                  <p className="text-lg font-medium">Lagos, Nigeria (Remote)</p>
+                  <p className="text-lg font-medium">Port Harcourt, Nigeria (Remote)</p>
                 </div>
               </div>
             </div>

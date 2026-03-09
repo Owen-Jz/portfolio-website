@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import Link from "next/link";
-import { LayoutDashboard, FilePlus, LogOut, Terminal } from "lucide-react";
+import { LayoutDashboard, FilePlus, LogOut, Terminal, FileText } from "lucide-react";
 
 export default function AdminLayout({ children }) {
   const { data: session, status } = useSession();
@@ -92,6 +92,17 @@ export default function AdminLayout({ children }) {
                 >
                   <FilePlus className="w-4 h-4" />
                   New Entry
+                </Link>
+                <Link
+                  href="/admin/briefs"
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                       pathname === '/admin/briefs'
+                       ? "bg-white/10 text-white" 
+                       : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <FileText className="w-4 h-4" />
+                  Briefs
                 </Link>
               </nav>
             </div>

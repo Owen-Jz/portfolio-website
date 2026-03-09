@@ -1,11 +1,12 @@
 "use server";
 
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(formData) {
   const { name, email, message } = formData;
 
-  // Validate required fields
   if (!name || !email || !message) {
     return {
       success: false,
@@ -13,7 +14,6 @@ export async function sendEmail(formData) {
     };
   }
 
-  // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return {
@@ -22,23 +22,11 @@ export async function sendEmail(formData) {
     };
   }
 
-  // Create a transporter using SMTP
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
   try {
-    // Send email
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.RECEIVER_EMAIL,
-      replyTo: email,
+    await resend.emails.send({
+      from: "Contact Form <noreply@owendigitals.work>",
+      to: "officia@owendigtals.work",
+      reply_to: email,
       subject: `New Contact Form Submission from ${name}`,
       text: `
 Name: ${name}
