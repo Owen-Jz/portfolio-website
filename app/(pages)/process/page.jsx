@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { NavbarDemo } from "../../../components/ui/ResizableNavbar";
+import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
 import GlassCard from "../../components/ui/GlassCard";
 import { ArrowRight, FileText, Map, Palette, MousePointer, Code, Rocket } from "lucide-react";

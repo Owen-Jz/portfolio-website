@@ -6,7 +6,7 @@ import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
 import ContactSection from "../../components/ContactSection";
 import GlassCard from "../../components/ui/GlassCard";
-import { Trophy, Users, Star, Sparkles, Code2, Palette } from "lucide-react";
+import { Trophy, Users, Star, Sparkles, Code2, Palette, ArrowRight } from "lucide-react";
 
 export default function AboutPage() {
   const skills = [
@@ -152,6 +152,53 @@ export default function AboutPage() {
                   </GlassCard>
                 ))}
              </div>
+          </div>
+
+          {/* Process Teaser Section */}
+          <div>
+            <motion.h2
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-4xl font-bold font-manrope mb-8 pl-4 border-l-4 border-[#b02222]"
+            >
+              My Process
+            </motion.h2>
+
+            <GlassCard className="p-8">
+              <div className="flex flex-wrap gap-3 mb-6">
+                {[
+                  { num: 1, name: "Discovery" },
+                  { num: 2, name: "Strategy" },
+                  { num: 3, name: "Design" },
+                  { num: 4, name: "Prototype" },
+                  { num: 5, name: "Handoff" },
+                  { num: 6, name: "Launch & Iterate" },
+                ].map((phase, idx) => (
+                  <motion.div
+                    key={phase.num}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.08 }}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:border-[#b02222]/40 hover:text-white transition-colors cursor-default font-manrope text-sm"
+                  >
+                    <span className="w-5 h-5 rounded-full bg-[#b02222]/20 text-[#b02222] flex items-center justify-center text-xs font-bold">
+                      {phase.num}
+                    </span>
+                    {phase.name}
+                  </motion.div>
+                ))}
+              </div>
+
+              <a
+                href="/process"
+                className="inline-flex items-center gap-2 text-[#b02222] hover:text-[#d38787] font-manrope font-medium transition-colors group"
+              >
+                View Full Process
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </a>
+            </GlassCard>
           </div>
 
           {/* Skills Section */}
