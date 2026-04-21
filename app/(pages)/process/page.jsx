@@ -1,11 +1,14 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { NavbarDemo } from "../../components/ui/ResizableNavbar";
 import FooterSection from "../../components/FooterSection";
 import ContactSection from "../../components/ContactSection";
 import GlassCard from "../../components/ui/GlassCard";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // ─── Phase Animation Components ───────────────────────────────────────────────
 
@@ -41,25 +44,20 @@ const StrategyAnim = () => (
         strokeWidth="2"
         fill="none"
         strokeLinecap="round"
-        className="path-draw"
         style={{
           strokeDasharray: 120,
           strokeDashoffset: 120,
           animation: "draw-line 2s ease-out 0.2s forwards infinite",
         }}
       />
-      <circle cx="40" cy="10" r="4" fill="#b02222" className="dot-appear" style={{ animation: "dot-appear 0.3s ease-out 0.8s forwards", opacity: 0 }} />
-      <circle cx="40" cy="30" r="4" fill="rgba(255,255,255,0.4)" className="dot-appear" style={{ animation: "dot-appear 0.3s ease-out 1.1s forwards", opacity: 0 }} />
-      <circle cx="20" cy="50" r="4" fill="rgba(255,255,255,0.4)" className="dot-appear" style={{ animation: "dot-appear 0.3s ease-out 1.4s forwards", opacity: 0 }} />
-      <circle cx="60" cy="50" r="4" fill="rgba(255,255,255,0.4)" className="dot-appear" style={{ animation: "dot-appear 0.3s ease-out 1.7s forwards", opacity: 0 }} />
+      <circle cx="40" cy="10" r="4" fill="#b02222" style={{ animation: "dot-appear 0.3s ease-out 0.8s forwards", opacity: 0 }} />
+      <circle cx="40" cy="30" r="4" fill="rgba(255,255,255,0.4)" style={{ animation: "dot-appear 0.3s ease-out 1.1s forwards", opacity: 0 }} />
+      <circle cx="20" cy="50" r="4" fill="rgba(255,255,255,0.4)" style={{ animation: "dot-appear 0.3s ease-out 1.4s forwards", opacity: 0 }} />
+      <circle cx="60" cy="50" r="4" fill="rgba(255,255,255,0.4)" style={{ animation: "dot-appear 0.3s ease-out 1.7s forwards", opacity: 0 }} />
     </svg>
     <style>{`
-      @keyframes draw-line {
-        to { stroke-dashoffset: 0; }
-      }
-      @keyframes dot-appear {
-        to { opacity: 1; }
-      }
+      @keyframes draw-line { to { stroke-dashoffset: 0; } }
+      @keyframes dot-appear { to { opacity: 1; } }
     `}</style>
   </div>
 );
@@ -94,18 +92,9 @@ const PrototypeAnim = () => (
   <div className="relative w-20 h-20 flex items-center justify-center">
     <div className="w-10 h-16 rounded-xl border-2 border-white/20 bg-white/5 relative overflow-hidden">
       <div className="absolute top-1 left-1/2 -translate-x-1/2 w-4 h-1 rounded-full bg-white/20" />
-      <div
-        className="absolute left-1 top-4 w-8 h-3 rounded bg-[#b02222]/60"
-        style={{ animation: "ui-slide 2s ease-in-out 0.3s infinite alternate" }}
-      />
-      <div
-        className="absolute left-1 top-9 w-6 h-3 rounded bg-white/30"
-        style={{ animation: "ui-slide 2s ease-in-out 0.7s infinite alternate" }}
-      />
-      <div
-        className="absolute left-1 top-14 w-7 h-3 rounded bg-white/20"
-        style={{ animation: "ui-slide 2s ease-in-out 1.1s infinite alternate" }}
-      />
+      <div className="absolute left-1 top-4 w-8 h-3 rounded bg-[#b02222]/60" style={{ animation: "ui-slide 2s ease-in-out 0.3s infinite alternate" }} />
+      <div className="absolute left-1 top-9 w-6 h-3 rounded bg-white/30" style={{ animation: "ui-slide 2s ease-in-out 0.7s infinite alternate" }} />
+      <div className="absolute left-1 top-14 w-7 h-3 rounded bg-white/20" style={{ animation: "ui-slide 2s ease-in-out 1.1s infinite alternate" }} />
     </div>
     <style>{`
       @keyframes ui-slide {
@@ -153,10 +142,7 @@ const LaunchAnim = () => (
           }}
         />
       ))}
-      <div
-        className="w-3 h-3 rounded-full bg-[#b02222] shadow-[0_0_10px_#b02222]"
-        style={{ animation: "rocket-float 1.5s ease-in-out infinite" }}
-      />
+      <div className="w-3 h-3 rounded-full bg-[#b02222] shadow-[0_0_10px_#b02222]" style={{ animation: "rocket-float 1.5s ease-in-out infinite" }} />
     </div>
     <div className="w-10 h-1 rounded-full bg-gradient-to-r from-[#b02222] to-transparent opacity-40" style={{ animation: "trail-glow 1.5s ease-in-out infinite" }} />
     <style>{`
@@ -178,57 +164,51 @@ const LaunchAnim = () => (
 );
 
 const PHASE_ANIMATIONS = [
-  <DiscoveryAnim key="discovery" />,
-  <StrategyAnim key="strategy" />,
-  <DesignAnim key="design" />,
-  <PrototypeAnim key="prototype" />,
-  <HandoffAnim key="handoff" />,
-  <LaunchAnim key="launch" />,
+  <DiscoveryAnim key="d" />,
+  <StrategyAnim key="s" />,
+  <DesignAnim key="ds" />,
+  <PrototypeAnim key="p" />,
+  <HandoffAnim key="h" />,
+  <LaunchAnim key="l" />,
 ];
 
-// ─── Phase Data ───────────────────────────────────────────────────────────────
+// ─── Phase Data — Spontaneous, conversational tone ───────────────────────────
 
 const PHASES = [
   {
-    number: 1,
     name: "Discovery",
-    description:
-      "Deep-dive research into your users, market, and competitors. I conduct stakeholder interviews and gather insights to understand the problem space fully.",
+    tagline: "First, I figure out what we're actually solving",
+    body: "Before anything else, I talk to people — users, stakeholders, whoever's痛感 — to understand the real problem versus the stated one. I dig into who the users are, what's working, what's broken, and why. Competitive analysis helps too, so we're not reinventing the wheel when there's already a perfectly good one out there.",
     deliverable: "Project Brief",
   },
   {
-    number: 2,
     name: "Strategy",
-    description:
-      "Define clear goals, map user personas, and establish information architecture. This is where we align business objectives with user needs.",
+    tagline: "Then we map out the path forward",
+    body: "Once I know the landscape, I define what success actually looks like. Who are the key users we're designing for? What do they need vs. want? I sketch out the information architecture so the product flows naturally, and I align every decision back to real business goals — not just aesthetic preferences.",
     deliverable: "Roadmap",
   },
   {
-    number: 3,
     name: "Design",
-    description:
-      "From low-fidelity wireframes to high-fidelity mockups in Figma. I build a comprehensive design system ensuring consistency across every component.",
+    tagline: "Now the fun part — making it look and feel right",
+    body: "Starting on paper, then moving to Figma. I work from rough wireframes to high-fidelity mockups, building out a proper design system along the way — typography scales, color tokens, spacing, components. The goal is a cohesive visual language that doesn't fall apart the moment you look at it on a different screen size.",
     deliverable: "Design System & Mockups",
   },
   {
-    number: 4,
     name: "Prototype",
-    description:
-      "Transform static designs into interactive, clickable prototypes. Realistic interactions let us validate flows and catch issues before development.",
+    tagline: "Let's see if this actually works in motion",
+    body: "Static mockups lie to you. So I build interactive prototypes — not just clicking through screens, but realistic flows with real micro-interactions. This is where we catch confusing navigation patterns, awkward transitions, and broken assumptions before a single line of code gets written.",
     deliverable: "Clickable Prototype",
   },
   {
-    number: 5,
     name: "Handoff",
-    description:
-      "Developer-friendly documentation with annotated specs, design tokens, and component guidelines. I collaborate closely with engineers to ensure fidelity.",
+    tagline: "Turning the design over to engineering, properly",
+    body: "I write things down so developers don't have to guess. Annotated specs, component documentation, design tokens in a format they can actually use. I stay close during the build phase — answering questions, resolving edge cases, and making sure what's shipped matches what was designed.",
     deliverable: "Annotated Designs",
   },
   {
-    number: 6,
     name: "Launch & Iterate",
-    description:
-      "Rigorous QA, smooth deployment, and post-launch monitoring. I track metrics and gather feedback to drive continuous improvement.",
+    tagline: "It's live — now let's make it better",
+    body: "Deployment isn't the finish line, it's the starting point. I track how the product is actually performing — user behavior, error rates, conversion. Feedback loops stay open. Based on real usage data, we iterate: fix what's broken, improve what's ambiguous, and double down on what's working.",
     deliverable: "Live Product",
   },
 ];
@@ -236,55 +216,114 @@ const PHASES = [
 // ─── PhaseCard ───────────────────────────────────────────────────────────────
 
 const PhaseCard = ({ phase, index }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -40 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.15, duration: 0.5, ease: "easeOut" }}
-      className="relative pl-12 md:pl-16"
-    >
-      {/* Timeline connector (vertical line) */}
-      <div className="absolute left-0 top-0 bottom-0 flex flex-col items-center">
-        {index < PHASES.length - 1 && (
-          <div className="w-0.5 flex-1 bg-gradient-to-b from-[#b02222] to-[#b02222]/20 mt-8" />
-        )}
-      </div>
+  const cardRef = useRef(null);
+  const animRef = useRef(null);
+  const textRef = useRef(null);
 
-      {/* Number badge */}
-      <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-[#b02222] flex items-center justify-center text-white text-sm font-bold font-manrope shadow-lg shadow-[#b02222]/30 z-10">
-        {phase.number}
-      </div>
+  useEffect(() => {
+    const card = cardRef.current;
+    const anim = animRef.current;
+    const text = textRef.current;
+    if (!card || !anim || !text) return;
+
+    const ctx = gsap.context(() => {
+      gsap.set(anim, { opacity: 0, x: -30 });
+      gsap.set(text, { opacity: 0, x: 30 });
+
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top 80%",
+        onEnter: () => {
+          gsap.to(anim, {
+            opacity: 1,
+            x: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            delay: index * 0.05,
+          });
+          gsap.to(text, {
+            opacity: 1,
+            x: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            delay: index * 0.05 + 0.1,
+          });
+        },
+      });
+    }, card);
+
+    return () => ctx.revert();
+  }, [index]);
+
+  return (
+    <div
+      ref={cardRef}
+      className="relative pl-10 md:pl-14"
+    >
+      {/* Timeline dot */}
+      <div className="absolute left-0 top-6 w-3 h-3 rounded-full bg-[#b02222] shadow-[0_0_12px_#b02222] z-10" />
+
+      {/* Timeline line — hide for last */}
+      {index < PHASES.length - 1 && (
+        <div className="absolute left-[5px] top-9 bottom-0 w-px bg-gradient-to-b from-[#b02222]/60 to-transparent" />
+      )}
 
       <GlassCard className="p-6 md:p-8">
-        <div className="flex flex-col sm:flex-row gap-6 items-start">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
           {/* Animated visual */}
-          <div className="flex-shrink-0 w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+          <div
+            ref={animRef}
+            className="flex-shrink-0 w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center"
+          >
             {PHASE_ANIMATIONS[index]}
           </div>
 
           {/* Text content */}
-          <div className="flex-1 min-w-0">
-            <h3 className="text-xl md:text-2xl font-bold font-manrope text-white mb-2">
-              {phase.name}
-            </h3>
-            <p className="text-white/60 font-manrope text-base leading-relaxed mb-4">
-              {phase.description}
+          <div ref={textRef} className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-3 mb-2">
+              <h3 className="text-xl md:text-2xl font-bold font-manrope text-white">
+                {phase.name}
+              </h3>
+              <span className="text-white/30 text-sm font-mono">— {phase.tagline}</span>
+            </div>
+            <p className="text-white/55 font-manrope text-base leading-relaxed mb-5">
+              {phase.body}
             </p>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#b02222]/40 bg-[#b02222]/10 text-[#b02222] text-sm font-manrope font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-[#b02222]" />
-              Deliverable: {phase.deliverable}
+              {phase.deliverable}
             </div>
           </div>
         </div>
       </GlassCard>
-    </motion.div>
+    </div>
   );
 };
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export default function ProcessPage() {
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        headerRef.current.children,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: "power3.out",
+          stagger: 0.12,
+          delay: 0.2,
+        }
+      );
+    }, headerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#b02222] selection:text-white">
       <NavbarDemo />
@@ -296,33 +335,27 @@ export default function ProcessPage() {
 
         <div className="max-w-4xl mx-auto relative z-10">
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-6">
+          <div ref={headerRef} className="text-center mb-16 space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10">
               <span className="text-sm font-manrope text-white/80">The Blueprint</span>
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold font-manrope leading-tight mb-4">
+            <h1 className="text-4xl md:text-6xl font-bold font-manrope leading-tight">
               My Design <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#b02222] to-[#d38787]">Process</span>
             </h1>
-            <p className="text-lg text-white/60 font-manrope max-w-2xl mx-auto">
-              A structured approach to transforming ideas into polished, high-impact products — from first insight to live launch.
+            <p className="text-lg text-white/60 font-manrope max-w-2xl mx-auto leading-relaxed">
+              Not a rigid formula — more like a loose set of principles I actually follow, in the order I actually follow them.
             </p>
-          </motion.div>
+          </div>
 
           {/* Timeline */}
           <div className="space-y-6">
             {PHASES.map((phase, index) => (
-              <PhaseCard key={phase.number} phase={phase} index={index} />
+              <PhaseCard key={phase.name} phase={phase} index={index} />
             ))}
           </div>
         </div>
       </main>
 
-      {/* ContactSection replaces footer on this page */}
       <ContactSection />
       <FooterSection />
     </div>
