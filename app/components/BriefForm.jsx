@@ -30,7 +30,7 @@ const briefFields = {
         {
           name: "projectPurpose",
           label: "What is the main purpose of your website? *",
-          type: "select",
+          type: "select-with-custom",
           required: true,
           options: [
             "Select an option",
@@ -38,6 +38,7 @@ const briefFields = {
             "Sell products (E-commerce)",
             "Generate leads",
             "Provide information",
+            "Order system",
             "Other",
           ],
         },
@@ -56,7 +57,7 @@ const briefFields = {
         {
           name: "style",
           label: "What overall style do you prefer? *",
-          type: "select",
+          type: "select-with-custom",
           required: true,
           options: [
             "Select an option",
@@ -201,18 +202,9 @@ const briefFields = {
         {
           name: "budget",
           label: "What is your budget range? *",
-          type: "select-with-custom",
+          type: "text",
           required: true,
-          options: [
-            "Select an option",
-            "Under $1,000",
-            "$1,000 - $3,000",
-            "$3,000 - $5,000",
-            "$5,000 - $10,000",
-            "$10,000+",
-            "Let's discuss",
-            "Other",
-          ],
+          placeholder: "e.g., $5,000 - $10,000",
         },
         {
           name: "additionalNotes",
@@ -338,18 +330,9 @@ const briefFields = {
         {
           name: "budget",
           label: "What is your budget range? *",
-          type: "select-with-custom",
+          type: "text",
           required: true,
-          options: [
-            "Select an option",
-            "Under $1,000",
-            "$1,000 - $3,000",
-            "$3,000 - $5,000",
-            "$5,000 - $10,000",
-            "$10,000+",
-            "Let's discuss",
-            "Other",
-          ],
+          placeholder: "e.g., $5,000 - $10,000",
         },
         {
           name: "additionalNotes",
@@ -533,18 +516,9 @@ const briefFields = {
         {
           name: "budget",
           label: "What is your budget range? *",
-          type: "select-with-custom",
+          type: "text",
           required: true,
-          options: [
-            "Select an option",
-            "Under $2,000",
-            "$2,000 - $5,000",
-            "$5,000 - $10,000",
-            "$10,000 - $25,000",
-            "$25,000+",
-            "Let's discuss",
-            "Other",
-          ],
+          placeholder: "e.g., $10,000 - $25,000",
         },
         {
           name: "additionalNotes",
@@ -576,11 +550,6 @@ function BriefForm({ type, title, description, icon: Icon }) {
 
     try {
       const dataToSubmit = { ...formData, type };
-      
-      if (dataToSubmit.budget === "Other" && dataToSubmit.budgetCustom) {
-        dataToSubmit.budget = dataToSubmit.budgetCustom;
-        delete dataToSubmit.budgetCustom;
-      }
 
       const response = await fetch("/api/briefs", {
         method: "POST",
@@ -666,7 +635,7 @@ function BriefForm({ type, title, description, icon: Icon }) {
                       onChange={(e) => {
                         const value = e.target.value;
                         handleChange(field.name, value);
-                        if (value !== "Other") {
+                        if (value !== "Other" && value !== "Order system") {
                           handleChange(`${field.name}Custom`, "");
                         }
                       }}
@@ -680,13 +649,13 @@ function BriefForm({ type, title, description, icon: Icon }) {
                         </option>
                       ))}
                     </select>
-                    {formData[field.name] === "Other" && (
+                    {(formData[field.name] === "Other" || formData[field.name] === "Order system") && (
                       <input
                         type="text"
                         value={formData[`${field.name}Custom`] || ""}
                         onChange={(e) => handleChange(`${field.name}Custom`, e.target.value)}
                         required={field.required}
-                        placeholder="Enter your budget range"
+                        placeholder={field.name === "projectPurpose" ? "Describe what you need..." : "Tell us more..."}
                         className="w-full px-4 py-3 mt-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/30 focus:outline-none focus:border-[#b02222] focus:ring-1 focus:ring-[#b02222] transition-all"
                       />
                     )}
