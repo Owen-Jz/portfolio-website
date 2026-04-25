@@ -24,6 +24,14 @@ export const metadata = {
     siteName: "Owen Digitals",
     type: "website",
     locale: "en_US", // Good practice to add
+    images: [
+      {
+        url: "/new_workspace.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Owen Digitals Portfolio",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -31,6 +39,7 @@ export const metadata = {
     description:
       "View the portfolio of Owen Digitals. Specializing in scalable web applications, modern interface design, and distinctive brand identities.",
     creator: "@yourtwitterhandle", // Optional: Add your handle if you have one
+    images: ["/new_workspace.jpeg"],
   },
   robots: "index, follow",
   metadataBase: new URL("https://www.owendigitals.work"),
