@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
@@ -11,6 +11,40 @@ const FooterSection = () => {
     triggerOnce: true,
     threshold: 0.2,
   });
+
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setErrorMessage("Please enter a valid email address");
+      setStatus("error");
+      return;
+    }
+    setStatus("loading");
+    setErrorMessage("");
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setStatus("success");
+        setEmail("");
+      } else {
+        setStatus("error");
+        setErrorMessage(result.error || "Something went wrong");
+      }
+    } catch {
+      setStatus("error");
+      setErrorMessage("Failed to subscribe");
+    }
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -132,6 +166,36 @@ const FooterSection = () => {
             ))}
           </motion.nav>
         </div>
+
+        {/* Newsletter Signup */}
+        <motion.div
+          variants={itemVariants}
+          className="mt-8 max-w-md mx-auto text-center"
+        >
+          <h3 className="text-lg font-semibold text-white mb-2">Subscribe to my Newsletter</h3>
+          <p className="text-gray-400 text-sm mb-4">Get the latest blog posts and updates straight to your inbox.</p>
+          {status === "success" ? (
+            <p className="text-green-400 text-sm py-2">Thanks for subscribing!</p>
+          ) : (
+            <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#b02222] transition-all text-sm"
+              />
+              <button
+                type="submit"
+                disabled={status === "loading"}
+                className="px-5 py-2.5 bg-[#b02222] text-white text-sm font-medium rounded-lg hover:bg-[#991d1d] transition-all disabled:opacity-50"
+              >
+                {status === "loading" ? "..." : "Subscribe"}
+              </button>
+            </form>
+          )}
+          {errorMessage && <p className="text-red-400 text-xs mt-2">{errorMessage}</p>}
+        </motion.div>
 
         {/* Copyright */}
         <motion.p
