@@ -53,7 +53,7 @@ const FeaturedHero = ({ post }) => {
         {/* Image Background with Parallax-like effect on Hover */}
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
-          style={{ backgroundImage: `url(${post.image})` }}
+          style={{ backgroundImage: `url("${post.image}")` }}
         />
 
         {/* Gradient Overlays */}
@@ -126,7 +126,7 @@ const ModernBlogCard = ({ post, index }) => {
         <div className="relative aspect-[3/2] overflow-hidden">
           <div
             className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-            style={{ backgroundImage: `url(${post.image})` }}
+            style={{ backgroundImage: `url("${post.image}")` }}
           />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
 

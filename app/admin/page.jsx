@@ -5,21 +5,24 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { 
-    Search, 
-    Filter, 
-    Plus, 
-    MoreHorizontal, 
-    Edit3, 
-    Trash2, 
-    Eye, 
+import {
+    Search,
+    Filter,
+    Plus,
+    MoreHorizontal,
+    Edit3,
+    Trash2,
+    Eye,
     EyeOff,
     FileText,
     CheckCircle2,
     Clock,
     ChevronLeft,
     ChevronRight,
-    ArrowUpRight
+    ArrowUpRight,
+    Bell,
+    BellRing,
+    Users
 } from "lucide-react";
 
 const StatsCard = ({ title, value, icon: Icon, color }) => (
@@ -51,11 +54,69 @@ export default function AdminDashboard() {
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
+  const [subscriberCount, setSubscriberCount] = useState(0);
   const postsPerPage = 10;
 
   useEffect(() => {
     fetchPosts();
+    fetchSubscriberCount();
   }, [currentPage, filterCategory, searchTerm]);
+
+  const fetchSubscriberCount = async () => {
+    try {
+      const response = await fetch("/api/newsletter/subscribers?status=all");
+      const result = await response.json();
+      if (result.success) {
+        setSubscriberCount(result.data.total);
+      }
+    } catch (err) {
+      console.error("Failed to fetch subscriber count:", err);
+    }
+  };
+
+  useEffect(() => {
+    const tableBody = document.getElementById("subscriber-table-body");
+    if (!tableBody) return;
+
+    const fetchSubscribers = async () => {
+      try {
+        const res = await fetch("/api/newsletter/subscribers?status=all&limit=5");
+        const result = await res.json();
+        if (!result.success || result.data.subscribers.length === 0) {
+          tableBody.innerHTML = `<tr><td colSpan="4" class="px-6 py-8 text-center text-white/30 text-sm">No subscribers yet</td></tr>`;
+          return;
+        }
+
+        tableBody.innerHTML = result.data.subscribers.map((sub) => `
+          <tr class="hover:bg-white/[0.02] transition-colors">
+            <td class="px-6 py-4">
+              <span class="text-white/80 text-sm font-mono">${sub.email}</span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="text-white/50 text-sm">${sub.name || "—"}</span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${
+                sub.status === "active"
+                  ? "bg-green-500/10 border-green-500/20 text-green-400"
+                  : "bg-red-500/10 border-red-500/20 text-red-400"
+              }">
+                <div class="w-1.5 h-1.5 rounded-full ${sub.status === "active" ? "bg-green-500" : "bg-red-500"}" />
+                ${sub.status}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="text-white/40 text-xs">${sub.subscribedAt ? new Date(sub.subscribedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—"}</span>
+            </td>
+          </tr>
+        `).join("");
+      } catch (err) {
+        tableBody.innerHTML = `<tr><td colSpan="4" class="px-6 py-8 text-center text-red-400/50 text-sm">Failed to load</td></tr>`;
+      }
+    };
+
+    fetchSubscribers();
+  }, []);
 
   const fetchPosts = async () => {
     try {
@@ -138,6 +199,31 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleNotify = async (post) => {
+    if (!confirm(`Send notification to all subscribers about "${post.title}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/admin/notify-post`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: post._id }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert(`Notifications sent! ${result.notified} delivered, ${result.failed} failed.`);
+      } else {
+        alert(result.error || "Failed to send notifications");
+      }
+    } catch (err) {
+      alert("Failed to send notifications");
+      console.error(err);
+    }
+  };
+
   if (!session) {
     return null;
   }
@@ -158,11 +244,11 @@ export default function AdminDashboard() {
               icon={CheckCircle2} 
               color="bg-green-500"
            />
-           <StatsCard 
-              title="Active View" 
-              value={`${posts.length} Items`} 
-              icon={FileText} 
-              color="bg-blue-500"
+           <StatsCard
+              title="Newsletter Subscribers"
+              value={subscriberCount}
+              icon={Users}
+              color="bg-purple-500"
            />
            <StatsCard 
               title="Drafts Pending" 
@@ -320,6 +406,13 @@ export default function AdminDashboard() {
                             <Edit3 className="w-4 h-4" />
                         </Link>
                         <button
+                            onClick={() => handleNotify(post)}
+                            title="Notify subscribers"
+                            className="p-2 hover:bg-[#b02222]/10 rounded-lg text-[#b02222]/70 hover:text-[#b02222] transition-colors"
+                        >
+                            <BellRing className="w-4 h-4" />
+                        </button>
+                        <button
                             onClick={() => handleDelete(post._id, post.title)}
                             title="Delete"
                             className="p-2 hover:bg-red-500/10 rounded-lg text-red-500/80 hover:text-red-500 transition-colors"
@@ -334,6 +427,43 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
+      </div>
+
+      {/* Subscribers Section */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-white">Newsletter Subscribers</h2>
+            <p className="text-white/40 text-sm mt-1">People who signed up via the newsletter popup</p>
+          </div>
+          <Link
+            href="/admin/subscribers"
+            className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-xl text-sm font-medium transition-all"
+          >
+            View All
+            <ArrowUpRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="bg-[#121212] border border-white/5 rounded-2xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-white/5 bg-white/[0.02]">
+                  <th className="px-6 py-4 text-xs font-mono uppercase tracking-wider text-white/40 font-medium">Email</th>
+                  <th className="px-6 py-4 text-xs font-mono uppercase tracking-wider text-white/40 font-medium">Name</th>
+                  <th className="px-6 py-4 text-xs font-mono uppercase tracking-wider text-white/40 font-medium">Status</th>
+                  <th className="px-6 py-4 text-xs font-mono uppercase tracking-wider text-white/40 font-medium">Subscribed</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5" id="subscriber-table-body">
+                <tr>
+                  <td colSpan="4" className="px-6 py-8 text-center text-white/30 text-sm">Loading subscribers...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Pagination */}

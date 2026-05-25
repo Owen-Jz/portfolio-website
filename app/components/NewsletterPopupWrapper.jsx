@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewsletterPopup from "./ui/NewsletterPopup";
 
-export default function NewsletterPopupWrapper() {
-  const [subscribed, setSubscribed] = useState(false);
+const POPUP_DISMISSED_KEY = "owen_newsletter_dismissed";
+const POPUP_SUBSCRIBED_KEY = "owen_newsletter_subscribed";
 
-  if (subscribed) return null;
+export default function NewsletterPopupWrapper() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem(POPUP_DISMISSED_KEY);
+    const subscribed = localStorage.getItem(POPUP_SUBSCRIBED_KEY);
+    if (dismissed || subscribed) return;
+    setVisible(true);
+  }, []);
+
+  if (!visible) return null;
 
   return (
     <NewsletterPopup
@@ -17,7 +27,6 @@ export default function NewsletterPopupWrapper() {
           body: JSON.stringify({ email }),
         });
         const result = await res.json();
-        if (result.success) setSubscribed(true);
         return result;
       }}
     />

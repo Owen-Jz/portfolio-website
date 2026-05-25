@@ -83,8 +83,67 @@ const BlogPostPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
-        <div className="text-gray-400 text-lg">Loading post...</div>
+      <div className="min-h-screen flex flex-col bg-[#0a0a0a] relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
+
+        <div className="flex-grow relative z-10">
+          {/* Hero Skeleton */}
+          <div className="relative w-full">
+            <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden border-b border-gray-600">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-20 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-20 pointer-events-none" />
+              <div className="absolute inset-0 z-0 bg-[#1a1a1a]" />
+
+              <div className="relative z-30 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
+                {/* Category Badge Skeleton */}
+                <div className="mb-4">
+                  <div className="h-8 w-24 bg-gray-700/50 rounded-full animate-pulse" />
+                </div>
+
+                {/* Title Skeleton */}
+                <div className="space-y-3 mb-4">
+                  <div className="h-10 md:h-14 lg:h-16 w-3/4 bg-gray-700/50 rounded-lg animate-pulse" />
+                  <div className="h-10 md:h-14 lg:h-16 w-1/2 bg-gray-700/50 rounded-lg animate-pulse" />
+                </div>
+
+                {/* Meta Skeleton */}
+                <div className="flex items-center gap-4">
+                  <div className="h-4 w-20 bg-gray-700/50 rounded animate-pulse" />
+                  <div className="h-4 w-4 bg-gray-600/50 rounded-full animate-pulse" />
+                  <div className="h-4 w-16 bg-gray-700/50 rounded animate-pulse" />
+                  <div className="h-4 w-4 bg-gray-600/50 rounded-full animate-pulse" />
+                  <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Skeleton */}
+          <div className="py-12 md:py-16">
+            <div className="mx-auto px-4 sm:px-6 max-w-4xl space-y-4">
+              {[100, 95, 88, 100, 92, 85, 100, 90, 78, 88, 95, 100].map((w, i) => (
+                <div key={i} className="space-y-2">
+                  <div
+                    className="h-4 bg-gray-800/60 rounded animate-pulse"
+                    style={{ width: `${w}%` }}
+                  />
+                </div>
+              ))}
+              <div className="h-4" />
+              <div className="h-4 w-2/3 bg-gray-800/60 rounded animate-pulse" />
+              <div className="h-4" />
+              {[92, 100, 85, 95, 88].map((w, i) => (
+                <div key={i} className="space-y-2">
+                  <div
+                    className="h-4 bg-gray-800/60 rounded animate-pulse"
+                    style={{ width: `${w}%` }}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
