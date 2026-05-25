@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NavbarDemo } from "../../components/ui/RevampedNavbar";
 import FooterSection from "../../components/FooterSection";
+import NewsletterPopupWrapper from "../../components/NewsletterPopupWrapper";
 import Link from "next/link";
 import {
   Calendar,
@@ -232,6 +233,7 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-[#050505] font-sans selection:bg-[#b02222] selection:text-white">
       <NavbarDemo />
+      <NewsletterPopupWrapper />
 
       <main className="pt-32 pb-24 relative">
         {/* Subtle Background Gradients */}

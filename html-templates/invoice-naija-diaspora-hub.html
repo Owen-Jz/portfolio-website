@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Owen Digitals</title>
+    <style>
+        :root {
+            --primary: #b02222;
+            --secondary: #d38787;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: rgba(0,0,0,0.6);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.3;
+            padding: 16px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 10px;
+            border: 1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 32px; height: 31px; }
+        .brand-name { font-size: 18px; font-weight: 700; }
+
+        .invoice-title { text-align: right; }
+        .invoice-title h1 { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 2px; }
+        .invoice-meta { color: var(--text-muted); font-size: 11px; }
+        .invoice-meta p { margin-bottom: 1px; }
+        .invoice-meta strong { color: var(--text); }
+
+        .body-section { padding: 16px 24px; }
+
+        .client-project {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .info-grid { display: flex; flex-direction: column; gap: 4px; }
+        .info-row { display: flex; gap: 6px; }
+        .info-label { color: var(--text-muted); font-size: 11px; min-width: 50px; }
+        .info-value { font-size: 11px; font-weight: 500; }
+
+        .services-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14px;
+        }
+
+        .services-table th {
+            text-align: left;
+            padding: 8px 10px;
+            background: rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .services-table th:last-child { text-align: right; }
+        .services-table td { padding: 8px 10px; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 11px; }
+        .services-table td:last-child { text-align: right; font-weight: 600; }
+
+        .totals { display: flex; justify-content: flex-end; margin-bottom: 14px; }
+        .totals-table { width: 220px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .totals-row.total { border-bottom: none; padding-top: 8px; font-size: 14px; font-weight: 700; }
+        .totals-row.total .amount { color: var(--primary); }
+
+        .payment-schedule {
+            background: rgba(176, 34, 34, 0.1);
+            border: 1px solid rgba(176, 34, 34, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .payment-schedule h3 { font-size: 10px; font-weight: 600; color: var(--primary); margin-bottom: 8px; }
+        .payment-items { display: flex; flex-direction: column; gap: 6px; }
+        .payment-item { display: flex; justify-content: space-between; align-items: center; }
+        .payment-item span { color: var(--text-muted); font-size: 11px; }
+        .payment-item .amount { font-weight: 600; }
+        .payment-item.paid { color: #22c55e; }
+        .payment-item.paid .status { font-size: 9px; padding: 1px 5px; background: rgba(34, 197, 94, 0.2); border-radius: 3px; }
+
+        .payment-details {
+            background: rgba(0,0,0,0.03);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .payment-details h3 { font-size: 10px; font-weight: 600; margin-bottom: 8px; }
+        .bank-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .bank-item { display: flex; flex-direction: column; gap: 1px; }
+        .bank-item .label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .bank-item .value { font-size: 11px; font-weight: 500; }
+
+        .footer {
+            text-align: center;
+            padding: 12px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            color: var(--text-muted);
+            font-size: 9px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border: none; }
+            .client-project, .services-table, .totals, .payment-schedule, .payment-details { break-inside: avoid; page-break-inside: avoid; }
+            tr { break-inside: avoid; page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <svg class="logo" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24.1299 12.0043C24.1299 8.25957 24.1299 4.51807 24.1107 0.776575C24.1107 0.136456 24.3188 -0.0203727 24.9205 0.00203151C29.0543 0.140814 33.0806 1.35422 36.6026 3.52269C39.2478 5.11428 41.5508 7.21496 43.3783 9.70304C47.3886 15.144 48.8833 21.2892 47.7823 27.9208C46.6237 34.9045 42.9814 40.4032 36.9803 44.2439C31.4081 47.7933 25.3269 48.8015 18.8553 47.3772C13.0527 46.097 8.40219 42.986 4.85273 38.2812C1.94674 34.4417 0.302948 29.7954 0.147859 24.9827C0.109452 24.0225 0.115853 24.0225 1.10804 24.0225H12.1245L12.1053 24.0033C12.1917 27.1303 13.1871 29.8892 15.3603 32.1872C18.0808 35.0678 21.4414 36.348 25.3493 35.9543C28.3961 35.6367 31.2067 34.168 33.2071 31.8482C35.2075 29.5283 36.2469 26.5323 36.113 23.472C35.8313 17.0964 30.4479 11.9403 24.1107 11.9755L24.1299 12.0043Z" fill="#B02222"/>
+                    <path d="M12.0959 12.0203H24.1301L24.1109 12.0011C24.1109 15.7554 24.1109 22.4318 24.1109 23.2671C24.1109 24.1025 24.2357 24.0481 23.4292 24.0321C22.6226 24.0161 15.8694 24.0129 12.0927 24.0097V24.0289V11.9979L12.0959 12.0203Z" fill="#B02222"/>
+                    <path d="M12.1181 11.9979H3.38049C5.51209 8.23716 8.39263 5.49105 12.0957 3.24743V12.0203L12.1181 11.9979Z" fill="#B02222"/>
+                </svg>
+                <span class="brand-name">Owen Digitals</span>
+            </div>
+            <div class="invoice-title">
+                <h1>INVOICE</h1>
+                <div class="invoice-meta">
+                    <p><strong>Invoice #:</strong> INV-002</p>
+                    <p><strong>Date:</strong> May 7, 2026</p>
+                    <p><strong>Due:</strong> May 14, 2026</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="body-section">
+            <div class="client-project">
+                <div>
+                    <div class="section-title">Bill To</div>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Client:</span>
+                            <span class="info-value">Mrs Ineba</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Company:</span>
+                            <span class="info-value">Naija Diaspora Hub</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">support@naijadiasporahub.com</span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="section-title">Project</div>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Project:</span>
+                            <span class="info-value">Naija Diaspora Hub</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Service:</span>
+                            <span class="info-value">Web Development</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <table class="services-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Discover Home Vendor</td>
+                        <td>₦300,000</td>
+                    </tr>
+                    <tr>
+                        <td>Media Upload in Chat</td>
+                        <td>₦50,000</td>
+                    </tr>
+                    <tr>
+                        <td>Events Filter + Homepage Vendor Thumbnail + Message Vendor Button</td>
+                        <td>₦30,000</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Details Flagging</td>
+                        <td>₦30,000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="totals">
+                <div class="totals-table">
+                    <div class="totals-row">
+                        <span>Subtotal</span>
+                        <span class="amount">₦410,000</span>
+                    </div>
+                    <div class="totals-row total">
+                        <span>Total</span>
+                        <span class="amount">₦410,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-schedule">
+                <h3>Payment Schedule</h3>
+                <div class="payment-items">
+                    <div class="payment-item paid">
+                        <span>70% Upfront</span>
+                        <span class="amount">₦287,000 <span class="status">Paid</span></span>
+                    </div>
+                    <div class="payment-item">
+                        <span>30% Completion</span>
+                        <span class="amount">₦123,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-details">
+                <h3>Payment Details</h3>
+                <div class="bank-info">
+                    <div class="bank-item">
+                        <span class="label">Bank</span>
+                        <span class="value">Access Bank</span>
+                    </div>
+                    <div class="bank-item">
+                        <span class="label">Account Number</span>
+                        <span class="value">0824064604</span>
+                    </div>
+                    <div class="bank-item">
+                        <span class="label">Account Name</span>
+                        <span class="value">Oghenebrume Egbagba Owen</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Owen Digitals — official@owendigitals.work — Port Harcourt, Nigeria
+        </div>
+    </div>
+</body>
+</html>

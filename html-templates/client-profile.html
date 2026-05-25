@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Profile - Owen Digitals</title>
+    <style>
+        :root {
+            --primary: #b02222;
+            --secondary: #d38787;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: rgba(0,0,0,0.6);
+            --border: rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(176,34,34,0.08) 0%, transparent 50%);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 49px;
+            height: 48px;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .doc-title {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section {
+            padding: 32px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .info-card {
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .info-card.full-width {
+            grid-column: span 2;
+        }
+
+        .info-card h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row .label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .info-row .value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .project-history {
+            width: 100%;
+        }
+
+        .project-history th {
+            text-align: left;
+            padding: 12px 16px;
+            background: rgba(0,0,0,0.03);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .project-history td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+        }
+
+        .status-badge.active {
+            background: rgba(176, 34, 34, 0.2);
+            color: var(--primary);
+        }
+
+        .notes-textarea {
+            width: 100%;
+            background: rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        @media print {
+            body { background: white; color: #1a1a1a; padding: 0; }
+            .container { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <svg class="logo" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24.1299 12.0043C24.1299 8.25957 24.1299 4.51807 24.1107 0.776575C24.1107 0.136456 24.3188 -0.0203727 24.9205 0.00203151C29.0543 0.140814 33.0806 1.35422 36.6026 3.52269C39.2478 5.11428 41.5508 7.21496 43.3783 9.70304C47.3886 15.144 48.8833 21.2892 47.7823 27.9208C46.6237 34.9045 42.9814 40.4032 36.9803 44.2439C31.4081 47.7933 25.3269 48.8015 18.8553 47.3772C13.0527 46.097 8.40219 42.986 4.85273 38.2812C1.94674 34.4417 0.302948 29.7954 0.147859 24.9827C0.109452 24.0225 0.115853 24.0225 1.10804 24.0225H12.1245L12.1053 24.0033C12.1917 27.1303 13.1871 29.8892 15.3603 32.1872C18.0808 35.0678 21.4414 36.348 25.3493 35.9543C28.3961 35.6367 31.2067 34.168 33.2071 31.8482C35.2075 29.5283 36.2469 26.5323 36.113 23.472C35.8313 17.0964 30.4479 11.9403 24.1107 11.9755L24.1299 12.0043Z" fill="#B02222"/>
+                    <path d="M12.0959 12.0203H24.1301L24.1109 12.0011C24.1109 15.7554 24.1109 22.4318 24.1109 23.2671C24.1109 24.1025 24.2357 24.0481 23.4292 24.0321C22.6226 24.0161 15.8694 24.0129 12.0927 24.0097V24.0289V11.9979L12.0959 12.0203Z" fill="#B02222"/>
+                    <path d="M12.1181 11.9979H3.38049C5.51209 8.23716 8.39263 5.49105 12.0957 3.24743V12.0203L12.1181 11.9979Z" fill="#B02222"/>
+                </svg>
+                <span class="brand-name">Owen Digitals</span>
+            </div>
+            <span class="doc-title">Client Profile</span>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Company Information</div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Company Details</h4>
+                    <div class="info-row">
+                        <span class="label">Company Name</span>
+                        <span class="value">[Company Name]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Industry</span>
+                        <span class="value">[Industry]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Website</span>
+                        <span class="value">[URL]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Location</span>
+                        <span class="value">[Location]</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>Contact Person</h4>
+                    <div class="info-row">
+                        <span class="label">Name</span>
+                        <span class="value">[Full Name]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Role/Title</span>
+                        <span class="value">[Role]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Email</span>
+                        <span class="value">[email]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Phone</span>
+                        <span class="value">[phone]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Communication Preferences</div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h4>Contact Preferences</h4>
+                    <div class="info-row">
+                        <span class="label">Preferred Method</span>
+                        <span class="value">[Email / Phone / WhatsApp]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Response Time</span>
+                        <span class="value">[hours/days]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Language</span>
+                        <span class="value">[English/etc]</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>Payment Terms</h4>
+                    <div class="info-row">
+                        <span class="label">Standard/Custom</span>
+                        <span class="value">[Standard 70/30 / Custom]</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Payment Method</span>
+                        <span class="value">[Bank transfer / Other]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Project History</div>
+            <table class="project-history">
+                <thead>
+                    <tr>
+                        <th>Project</th>
+                        <th>Type</th>
+                        <th>Package</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>[Project Name]</td>
+                        <td>[Service Type]</td>
+                        <td>[Package]</td>
+                        <td><span class="status-badge completed">Completed</span></td>
+                        <td>[YYYY-MM]</td>
+                    </tr>
+                    <tr>
+                        <td>[Project Name]</td>
+                        <td>[Service Type]</td>
+                        <td>[Package]</td>
+                        <td><span class="status-badge active">Active</span></td>
+                        <td>[YYYY-MM]</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Notes</div>
+            <textarea class="notes-textarea" placeholder="Additional notes about this client, preferences, communication style, important details..."></textarea>
+        </div>
+
+        <div class="footer">
+            Owen Digitals — official@owendigitals.work — Port Harcourt, Nigeria
+        </div>
+    </div>
+</body>
+</html>

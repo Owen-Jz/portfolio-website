@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI/UX Design Proposal - Owen Digitals</title>
+    <style>
+        :root {
+            --primary: #b02222;
+            --secondary: #d38787;
+            --bg: #f5f5f5;
+            --surface: #ffffff;
+            --text: #1a1a1a;
+            --text-muted: rgba(0,0,0,0.6);
+            --border: rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(176,34,34,0.08) 0%, transparent 50%);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            width: 49px;
+            height: 48px;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .proposal-badge {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero {
+            padding: 60px 40px;
+            text-align: center;
+            background: radial-gradient(ellipse at top, rgba(176,34,34,0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .section-title .number {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .client-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .info-card {
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .info-card h4 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-item .label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .info-item .value {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .scope-items {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .scope-item {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .scope-phase {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .scope-content h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .scope-content p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .deliverables-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .deliverable-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 10px;
+        }
+
+        .deliverable-item .check {
+            width: 20px;
+            height: 20px;
+            background: rgba(34, 197, 94, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #22c55e;
+            font-size: 12px;
+        }
+
+        .deliverable-item .name {
+            font-size: 14px;
+        }
+
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .pricing-table th {
+            text-align: left;
+            padding: 16px;
+            background: rgba(0,0,0,0.03);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .pricing-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .pricing-table .package-name {
+            font-weight: 600;
+        }
+
+        .pricing-table .package-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .pricing-table .package-price small {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .terms {
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .terms ul {
+            list-style: none;
+        }
+
+        .terms li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .terms li:last-child {
+            border-bottom: none;
+        }
+
+        .terms li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .next-steps {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+
+        .step {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            margin: 0 auto 12px;
+        }
+
+        .step-text {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .validity {
+            text-align: right;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 16px;
+        }
+
+        @media print {
+            body { background: white; color: #1a1a1a; padding: 0; }
+            .container { box-shadow: none; border: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-section">
+                <svg class="logo" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24.1299 12.0043C24.1299 8.25957 24.1299 4.51807 24.1107 0.776575C24.1107 0.136456 24.3188 -0.0203727 24.9205 0.00203151C29.0543 0.140814 33.0806 1.35422 36.6026 3.52269C39.2478 5.11428 41.5508 7.21496 43.3783 9.70304C47.3886 15.144 48.8833 21.2892 47.7823 27.9208C46.6237 34.9045 42.9814 40.4032 36.9803 44.2439C31.4081 47.7933 25.3269 48.8015 18.8553 47.3772C13.0527 46.097 8.40219 42.986 4.85273 38.2812C1.94674 34.4417 0.302948 29.7954 0.147859 24.9827C0.109452 24.0225 0.115853 24.0225 1.10804 24.0225H12.1245L12.1053 24.0033C12.1917 27.1303 13.1871 29.8892 15.3603 32.1872C18.0808 35.0678 21.4414 36.348 25.3493 35.9543C28.3961 35.6367 31.2067 34.168 33.2071 31.8482C35.2075 29.5283 36.2469 26.5323 36.113 23.472C35.8313 17.0964 30.4479 11.9403 24.1107 11.9755L24.1299 12.0043Z" fill="#B02222"/>
+                    <path d="M12.0959 12.0203H24.1301L24.1109 12.0011C24.1109 15.7554 24.1109 22.4318 24.1109 23.2671C24.1109 24.1025 24.2357 24.0481 23.4292 24.0321C22.6226 24.0161 15.8694 24.0129 12.0927 24.0097V24.0289V11.9979L12.0959 12.0203Z" fill="#B02222"/>
+                    <path d="M12.1181 11.9979H3.38049C5.51209 8.23716 8.39263 5.49105 12.0957 3.24743V12.0203L12.1181 11.9979Z" fill="#B02222"/>
+                </svg>
+                <span class="brand-name">Owen Digitals</span>
+            </div>
+            <span class="proposal-badge">Proposal</span>
+        </div>
+
+        <div class="hero">
+            <h1>UI/UX Design <span>Proposal</span></h1>
+            <p>Designing intuitive interfaces and experiences for web and mobile applications.</p>
+            <p class="validity">Valid for 30 days from [Date]</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">1</span>
+                Client Information
+            </div>
+            <div class="client-info">
+                <div class="info-card">
+                    <h4>Prepared For</h4>
+                    <div class="info-item">
+                        <span class="label">Client Name</span>
+                        <span class="value">[Client Name]</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Company</span>
+                        <span class="value">[Company Name]</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email</span>
+                        <span class="value">[email@example.com]</span>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>Project Details</h4>
+                    <div class="info-item">
+                        <span class="label">Project Name</span>
+                        <span class="value">[Project Title]</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Service Type</span>
+                        <span class="value">UI/UX Design</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Date</span>
+                        <span class="value">[Date]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">2</span>
+                Scope of Work
+            </div>
+            <div class="scope-items">
+                <div class="scope-item">
+                    <span class="scope-phase">01</span>
+                    <div class="scope-content">
+                        <h4>Discovery</h4>
+                        <p>User research, stakeholder interviews, competitive analysis, user persona development.</p>
+                    </div>
+                </div>
+                <div class="scope-item">
+                    <span class="scope-phase">02</span>
+                    <div class="scope-content">
+                        <h4>Definition</h4>
+                        <p>Information architecture, user journey mapping, feature prioritization, UX strategy document.</p>
+                    </div>
+                </div>
+                <div class="scope-item">
+                    <span class="scope-phase">03</span>
+                    <div class="scope-content">
+                        <h4>Design</h4>
+                        <p>Wireframes, high-fidelity mockups, design system, interactive prototype.</p>
+                    </div>
+                </div>
+                <div class="scope-item">
+                    <span class="scope-phase">04</span>
+                    <div class="scope-content">
+                        <h4>Handoff</h4>
+                        <p>Design specifications, developer documentation, asset export.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">3</span>
+                Deliverables
+            </div>
+            <div class="deliverables-grid">
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Research Report</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">User Personas</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Journey Maps</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Wireframes</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">High-fidelity Mockups</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Design System</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Interactive Prototype</span>
+                </div>
+                <div class="deliverable-item">
+                    <span class="check">✓</span>
+                    <span class="name">Handoff Documentation</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">4</span>
+                Pricing
+            </div>
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Package</th>
+                        <th>Description</th>
+                        <th>Estimate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="package-name">Essential UI</span></td>
+                        <td>Wireframes + basic mockups</td>
+                        <td><span class="package-price">₦XX,XXX</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="package-name">Standard UX</span></td>
+                        <td>Full research + design system</td>
+                        <td><span class="package-price">₦XX,XXX</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="package-name">Premium</span></td>
+                        <td>Research + design + prototype</td>
+                        <td><span class="package-price">₦XX,XXX</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top: 16px;">Final pricing determined after brief review.</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">5</span>
+                Terms
+            </div>
+            <div class="terms">
+                <ul>
+                    <li>70% upfront payment required to begin project</li>
+                    <li>30% upon completion</li>
+                    <li>Revisions included per phase</li>
+                    <li>Timeline assumes timely feedback</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                <span class="number">6</span>
+                Next Steps
+            </div>
+            <div class="next-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Review Proposal</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Complete Brief</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Sign Agreement</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">70% Payment</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-text">Project Begins</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Owen Digitals — official@owendigitals.work — Port Harcourt, Nigeria
+        </div>
+    </div>
+</body>
+</html>

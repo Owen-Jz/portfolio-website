@@ -23,6 +23,7 @@ export default function BlogPostForm({ post, onSuccess }) {
     image: "",
     author: "Owen Digitals",
     published: false,
+    notifySubscribers: false,
     seoTitle: "",
     seoDescription: "",
   });
@@ -44,6 +45,7 @@ export default function BlogPostForm({ post, onSuccess }) {
         image: post.image || "",
         author: post.author || "Owen Digitals",
         published: post.published || false,
+        notifySubscribers: false,
         seoTitle: post.seoTitle || "",
         seoDescription: post.seoDescription || "",
       });
@@ -117,6 +119,15 @@ export default function BlogPostForm({ post, onSuccess }) {
       const result = await response.json();
 
       if (result.success) {
+        // Notify subscribers if checkbox is checked and post is being published
+        if (formData.notifySubscribers && formData.published && result.data?._id) {
+          fetch(`/api/admin/notify-post`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: result.data._id }),
+          }).catch((err) => console.error("Failed to send notifications:", err));
+        }
+
         if (onSuccess) {
           onSuccess();
         } else {
@@ -353,17 +364,33 @@ export default function BlogPostForm({ post, onSuccess }) {
         {/* Publish Settings */}
         <div>
           <h2 className="text-xl font-semibold text-white mb-4">Publish Settings</h2>
-          <label className="flex items-center gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={formData.published}
-              onChange={(e) =>
-                setFormData({ ...formData, published: e.target.checked })
-              }
-              className="w-5 h-5 rounded border-gray-700 bg-gray-800/50 text-[#b02222] focus:ring-2 focus:ring-[#b02222]"
-            />
-            <span className="text-gray-300">Publish this post</span>
-          </label>
+          <div className="space-y-4">
+            <label className="flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.published}
+                onChange={(e) =>
+                  setFormData({ ...formData, published: e.target.checked })
+                }
+                className="w-5 h-5 rounded border-gray-700 bg-gray-800/50 text-[#b02222] focus:ring-2 focus:ring-[#b02222]"
+              />
+              <span className="text-gray-300">Publish this post</span>
+            </label>
+
+            {formData.published && (
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.notifySubscribers}
+                  onChange={(e) =>
+                    setFormData({ ...formData, notifySubscribers: e.target.checked })
+                  }
+                  className="w-5 h-5 rounded border-gray-700 bg-gray-800/50 text-[#b02222] focus:ring-2 focus:ring-[#b02222]"
+                />
+                <span className="text-gray-300">Notify subscribers of this post</span>
+              </label>
+            )}
+          </div>
         </div>
       </div>
 

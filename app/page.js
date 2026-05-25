@@ -11,6 +11,7 @@ import { TestimonialsSection } from "./components/TestimonialsSection";
 import BlogSection from "./components/BlogSection";
 import ContactSection from "./components/ContactSection";
 import FooterSection from "./components/FooterSection";
+import LandingBlogNewsletterPopup from "./components/LandingBlogNewsletterPopup";
 // import { NavbarDemo } from "./components/ui/ResizableNavbar";
 import { NavbarDemo } from "./components/ui/RevampedNavbar";
 import AnimatedSection from "./components/AnimatedSection";
@@ -108,6 +109,7 @@ const HomePage = () => {
             <Component />
           </AnimatedSection>
         ))}
+        <LandingBlogNewsletterPopup />
       </main>
       <FooterSection />
       <SocialSidebar />
