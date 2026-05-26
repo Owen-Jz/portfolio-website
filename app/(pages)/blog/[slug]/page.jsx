@@ -11,6 +11,7 @@ import Link from "next/link";
 import Button from "../../../components/ui/Button";
 import GlassCard from "../../../components/ui/GlassCard";
 import { cn } from "../../../libs/utils";
+import BlogEngagement from "../../../components/ui/BlogEngagement";
 
 const BlogPostPage = () => {
   const params = useParams();
@@ -21,6 +22,10 @@ const BlogPostPage = () => {
   const [inlineEmail, setInlineEmail] = useState("");
   const [inlineSubscribing, setInlineSubscribing] = useState(false);
   const [inlineMessage, setInlineMessage] = useState(null);
+
+  const [views, setViews] = useState(0);
+  const [likes, setLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
@@ -54,6 +59,58 @@ const BlogPostPage = () => {
       fetchPost();
     }
   }, [params.slug, router]);
+
+  useEffect(() => {
+    if (!post) return;
+
+    setViews(post.views ?? 0);
+    setLikes(post.likes ?? 0);
+
+    const likedPosts = JSON.parse(localStorage.getItem("owen_blog_likes") || "[]");
+    setIsLiked(likedPosts.includes(post.slug));
+
+    const viewKey = `owen_blog_viewed_${post.slug}`;
+    if (!sessionStorage.getItem(viewKey)) {
+      sessionStorage.setItem(viewKey, "true");
+      fetch(`/api/blog/${post.slug}/view`, { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success) setViews(data.views);
+        })
+        .catch(() => {});
+    }
+  }, [post]);
+
+  const handleLike = async () => {
+    const likedPosts = JSON.parse(localStorage.getItem("owen_blog_likes") || "[]");
+    const alreadyLiked = likedPosts.includes(post.slug);
+    const action = alreadyLiked ? "unlike" : "like";
+
+    setIsLiked(!alreadyLiked);
+    setLikes((prev) => prev + (alreadyLiked ? -1 : 1));
+
+    if (alreadyLiked) {
+      localStorage.setItem(
+        "owen_blog_likes",
+        JSON.stringify(likedPosts.filter((s) => s !== post.slug))
+      );
+    } else {
+      localStorage.setItem(
+        "owen_blog_likes",
+        JSON.stringify([...likedPosts, post.slug])
+      );
+    }
+
+    try {
+      const res = await fetch(`/api/blog/${post.slug}/like`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json();
+      if (data.success) setLikes(data.likes);
+    } catch {}
+  };
 
   const handleInlineSubscribe = async (e) => {
     e.preventDefault();
@@ -240,6 +297,13 @@ const BlogPostPage = () => {
                 <span>{post.readTime}</span>
                 <span>•</span>
                 <span>By {post.author}</span>
+                <span>•</span>
+                <BlogEngagement
+                  views={views}
+                  likes={likes}
+                  isLiked={isLiked}
+                  variant="compact"
+                />
               </motion.div>
             </div>
           </div>
@@ -256,6 +320,22 @@ const BlogPostPage = () => {
               className="blog-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
+            {/* Engagement Bar */}
+            <motion.div
+              className="mt-10 py-6 border-t border-b border-gray-600/50 flex flex-wrap items-center justify-between gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <BlogEngagement
+                views={views}
+                likes={likes}
+                isLiked={isLiked}
+                onLike={handleLike}
+                variant="full"
+              />
+            </motion.div>
 
             {/* Back to Blog Link */}
             <motion.div
