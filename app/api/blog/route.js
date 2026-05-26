@@ -34,6 +34,8 @@ export async function GET(request) {
       _id: post._id.toString(),
       isFeatured: post.isFeatured || false,
       order: post.order ?? 999,
+      views: post.views ?? 0,
+      likes: post.likes ?? 0,
     }));
 
     return NextResponse.json({ success: true, data: serializedPosts }, { status: 200 });
