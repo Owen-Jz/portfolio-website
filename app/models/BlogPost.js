@@ -63,6 +63,16 @@ const BlogPostSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    views: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    likes: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
   },
   {
     timestamps: true,
