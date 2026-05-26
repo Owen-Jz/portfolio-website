@@ -16,6 +16,7 @@ import {
   Zap,
   Tag
 } from "lucide-react";
+import BlogEngagement from "../../components/ui/BlogEngagement";
 
 // --- Components ---
 
@@ -100,6 +101,8 @@ const FeaturedHero = ({ post }) => {
                 <span>{post.readTime}</span>
               </div>
 
+              <BlogEngagement views={post.views ?? 0} likes={post.likes ?? 0} variant="compact" />
+
               <div className="ml-auto md:ml-0 flex items-center gap-2 text-white group/btn bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-[#b02222] hover:border-[#b02222] transition-all">
                 <span>Read Article</span>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
@@ -157,6 +160,7 @@ const ModernBlogCard = ({ post, index }) => {
               <Calendar className="w-3.5 h-3.5" />
               {post.date}
             </span>
+            <BlogEngagement views={post.views ?? 0} likes={post.likes ?? 0} variant="compact" />
             <span className="group-hover:text-white transition-colors flex items-center gap-1">
               Read <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </span>
