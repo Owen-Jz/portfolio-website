@@ -5,6 +5,7 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import Button from "./ui/Button";
 import { ArrowUpRight, Calendar, Clock, ChevronRight } from "lucide-react";
+import BlogEngagement from "./ui/BlogEngagement";
 
 // GlassCard Component
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
@@ -61,6 +62,7 @@ const FeaturedPostHero = ({ post }) => {
                   <Clock className="w-3 h-3" />
                   <span>{post.readTime}</span>
                 </div>
+                <BlogEngagement views={post.views ?? 0} likes={post.likes ?? 0} variant="compact" />
               </div>
 
               <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold font-manrope text-white mb-6 group-hover:text-[#b02222] transition-colors leading-tight">
@@ -115,6 +117,8 @@ const BlogCard = ({ post, index }) => {
                 <span>{post.date}</span>
                 <span>•</span>
                 <span>{post.readTime}</span>
+                <span>•</span>
+                <BlogEngagement views={post.views ?? 0} likes={post.likes ?? 0} variant="compact" />
               </div>
 
               <h3 className="text-xl font-bold font-manrope text-white mb-3 group-hover:text-[#b02222] transition-colors line-clamp-2">
