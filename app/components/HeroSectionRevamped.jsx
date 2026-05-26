@@ -149,7 +149,7 @@ export default function HeroSectionRevamped() {
       <div
         className="absolute inset-0 z-[0]"
         style={{
-          backgroundImage: "url('/hero2.webp')",
+          backgroundImage: "url('/hero3.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

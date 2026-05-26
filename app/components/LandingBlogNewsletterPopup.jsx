@@ -16,8 +16,8 @@ const LandingBlogNewsletterPopup = () => {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem(POPUP_STORAGE_KEY);
-    const subscribed = sessionStorage.getItem(POPUP_SUBSCRIBED_KEY);
+    const dismissed = localStorage.getItem(POPUP_STORAGE_KEY);
+    const subscribed = localStorage.getItem(POPUP_SUBSCRIBED_KEY);
     if (dismissed || subscribed) return;
 
     const blogSection = document.getElementById("blog");
@@ -27,7 +27,7 @@ const LandingBlogNewsletterPopup = () => {
       ([entry]) => {
         // When blog section is above the viewport (scrolled past)
         if (entry.boundingClientRect.top < 0 && !isVisible) {
-          sessionStorage.setItem(POPUP_STORAGE_KEY, "true");
+          localStorage.setItem(POPUP_STORAGE_KEY, "true");
           setIsVisible(true);
           observer.disconnect();
         }
@@ -74,12 +74,12 @@ const LandingBlogNewsletterPopup = () => {
   };
 
   const dismiss = () => {
-    sessionStorage.setItem(POPUP_STORAGE_KEY, "true");
+    localStorage.setItem(POPUP_STORAGE_KEY, "true");
     setIsVisible(false);
   };
 
   const handleSubscribeSuccess = () => {
-    sessionStorage.setItem(POPUP_SUBSCRIBED_KEY, "true");
+    localStorage.setItem(POPUP_SUBSCRIBED_KEY, "true");
     setStatus("success");
     setTimeout(() => dismiss(), 2000);
   };
