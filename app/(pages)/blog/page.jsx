@@ -176,6 +176,33 @@ const BlogPage = () => {
   const [featuredPost, setFeaturedPost] = useState(null);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ctaEmail, setCtaEmail] = useState("");
+  const [ctaSubmitting, setCtaSubmitting] = useState(false);
+  const [ctaMessage, setCtaMessage] = useState(null);
+
+  const handleCtaSubscribe = async (e) => {
+    e.preventDefault();
+    setCtaSubmitting(true);
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: ctaEmail }),
+      });
+      const result = await res.json();
+      setCtaMessage({
+        success: result.success,
+        text: result.success
+          ? "You're in! You'll get notified when new posts drop."
+          : result.error || "Failed to subscribe",
+      });
+      if (result.success) setCtaEmail("");
+    } catch {
+      setCtaMessage({ success: false, text: "Failed to subscribe" });
+    } finally {
+      setCtaSubmitting(false);
+    }
+  };
 
   // Fetch Posts
   useEffect(() => {
@@ -376,6 +403,55 @@ const BlogPage = () => {
               </motion.div>
             )}
           </AnimatePresence>
+
+          {/* Newsletter CTA */}
+          {!loading && blogPosts.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mt-20 mb-8 max-w-2xl mx-auto"
+            >
+              <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#111] p-8 md:p-10 text-center">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-[#b02222]/10 rounded-full blur-[80px] pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#b02222]/10 border border-[#b02222]/20 text-[#b02222] text-xs font-bold uppercase tracking-widest mb-4">
+                    <Sparkles className="w-3 h-3" />
+                    Newsletter
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-3">
+                    Never miss a post
+                  </h3>
+                  <p className="text-white/50 text-sm md:text-base mb-6 max-w-md mx-auto">
+                    Get notified whenever I publish new insights on design, business, and creative living.
+                  </p>
+                  <form onSubmit={handleCtaSubscribe} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <input
+                      type="email"
+                      value={ctaEmail}
+                      onChange={(e) => setCtaEmail(e.target.value)}
+                      placeholder="your@email.com"
+                      required
+                      className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:border-[#b02222]/50 transition-all text-sm"
+                    />
+                    <button
+                      type="submit"
+                      disabled={ctaSubmitting}
+                      className="px-6 py-3 bg-[#b02222] text-white rounded-xl font-bold text-sm transition-all hover:bg-[#901a1a] disabled:opacity-50 shadow-lg shadow-[#b02222]/20"
+                    >
+                      {ctaSubmitting ? "..." : "Subscribe"}
+                    </button>
+                  </form>
+                  {ctaMessage && (
+                    <p className={`mt-4 text-sm ${ctaMessage.success ? "text-green-400" : "text-red-400"}`}>
+                      {ctaMessage.text}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </main>
       <FooterSection />
