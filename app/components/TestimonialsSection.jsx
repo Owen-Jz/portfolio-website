@@ -42,7 +42,7 @@ export function TestimonialsSection() {
           renderItem={(item, idx) => (
             <GlassCard
               key={idx}
-              className="w-[500px] md:w-[560px] p-10 min-h-[320px] flex flex-col justify-between"
+              className="w-[480px] md:w-[520px] p-10 min-h-[320px] flex flex-col justify-between"
               hoverEffect={true}
             >
               <div>

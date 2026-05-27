@@ -142,13 +142,13 @@ export const InfiniteMovingCards = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex w-max min-w-full shrink-0 flex-nowrap gap-8 py-4 items-stretch", // Added items-stretch for uniform height
+          "flex w-max min-w-full shrink-0 flex-nowrap gap-6 py-4 items-stretch",
         )}
       >
         {items.map((item, idx) => (
-           <li 
+           <li
              key={`${idx}-${item.name}`}
-             className="w-[350px] md:w-[450px] max-w-full flex-shrink-0 relative"
+             className="flex-shrink-0 relative"
            >
               {renderItem ? renderItem(item, idx) : (
                  <div
