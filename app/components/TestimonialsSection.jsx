@@ -2,18 +2,17 @@
 
 import React from "react";
 import { InfiniteMovingCards } from "./ui/InfiniteMovingCards";
-import { Quote } from "lucide-react";
 
-// GlassCard Component (Local for now, could be shared)
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   return (
     <div
-      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 ${hoverEffect
-          ? "hover:border-white/20 hover:bg-[#151515]/70 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
+      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#0f0f0f]/60 backdrop-blur-xl transition-all duration-500 ${
+        hoverEffect
+          ? "hover:border-white/20 hover:bg-[#0f0f0f]/80 hover:shadow-[0_0_40px_rgba(176,34,34,0.2)] hover:-translate-y-1"
           : ""
-        } ${className}`}
+      } ${className}`}
     >
-      <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/10 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute -left-10 -top-10 w-[200px] h-[200px] bg-[#b02222]/15 rounded-full blur-[80px] pointer-events-none" />
       <div className="relative z-10 h-full">{children}</div>
     </div>
   );
@@ -23,7 +22,7 @@ export function TestimonialsSection() {
   return (
     <div className="py-24 relative overflow-hidden bg-[#0a0a0a]" id="testimonials">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#b02222]/5 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#b02222]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="text-center mb-16 w-full max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <p className="text-[#b02222] text-sm md:text-base font-bold font-manrope uppercase tracking-widest mb-3">
@@ -43,29 +42,41 @@ export function TestimonialsSection() {
           renderItem={(item, idx) => (
             <GlassCard
               key={idx}
-              className="w-[350px] md:w-[450px] p-8 h-full flex flex-col justify-between"
+              className="w-[500px] md:w-[560px] p-10 min-h-[320px] flex flex-col justify-between"
               hoverEffect={true}
             >
               <div>
-                <Quote className="text-[#b02222] w-8 h-8 mb-6 opacity-80" />
-                <p className="text-white/80 text-lg md:text-xl font-manrope leading-relaxed mb-8">
-                  "{item.quote}"
+                {/* Oversized decorative quote mark */}
+                <div
+                  className="text-[#b02222]/60 font-manrope select-none mb-1"
+                  style={{ fontSize: "96px", lineHeight: 1 }}
+                >
+                  &ldquo;
+                </div>
+
+                {/* Star rating */}
+                <div className="text-[#f5a623] text-sm tracking-wide mb-4">
+                  ★★★★★
+                </div>
+
+                <p className="text-white/85 text-xl md:text-2xl font-manrope leading-relaxed mb-8">
+                  {item.quote}
                 </p>
               </div>
 
               <div className="flex items-center gap-4 border-t border-white/5 pt-6">
-                <div className="relative">
+                <div className="relative flex-shrink-0">
                   <img
                     src={item.picture}
                     alt={item.name}
-                    className="w-12 h-12 rounded-full object-cover border border-white/10"
+                    className="w-16 h-16 rounded-full object-cover ring-2 ring-[#b02222]/40 ring-offset-2 ring-offset-[#0f0f0f]"
                     loading="lazy"
                   />
                   <div className="absolute -bottom-1 -right-1 bg-[#151515] rounded-full p-0.5 border border-white/10">
                     <img
                       src={item.nationality}
                       alt="Nationality"
-                      className="w-4 h-3 object-cover rounded-[2px]"
+                      className="w-5 h-3.5 object-cover rounded-[2px]"
                       loading="lazy"
                     />
                   </div>
@@ -115,7 +126,7 @@ const testimonials = [
   },
   {
     quote:
-      "Working with Owen was an amazing experience! He was a true team player throughout our brand project bringing creativity, collaboration, and a strong work ethic. His positive attitude and commitment made a real impact. I’d gladly work with him again!",
+      "Working with Owen was an amazing experience! He was a true team player throughout our brand project bringing creativity, collaboration, and a strong work ethic. His positive attitude and commitment made a real impact. I'd gladly work with him again!",
     name: "Nnene Bright-Victor",
     role: "CEO, NenysTouchs",
     picture: "/profiles/nnene.png",
@@ -123,7 +134,7 @@ const testimonials = [
   },
   {
     quote:
-      "Fantastic job on Carb’s brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
+      "Fantastic job on Carb's brand identity — the visuals are stunning and clearly communicate our vision. Highly recommended!",
     name: "Victor Aghaji",
     role: "CEO, Carb",
     picture: "/profiles/carb.png",
