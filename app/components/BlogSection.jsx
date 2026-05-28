@@ -3,9 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import Button from "./ui/Button";
 import { ArrowUpRight, Calendar, Clock, ChevronRight } from "lucide-react";
 import BlogEngagement from "./ui/BlogEngagement";
+
+// Normalize image src for next/image
+const resolveImageSrc = (src) => {
+  if (!src) return null;
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  if (src.startsWith("/")) return src;
+  return `/${src}`;
+};
 
 // GlassCard Component
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
@@ -35,12 +44,19 @@ const FeaturedPostHero = ({ post }) => {
       <Link href={`/blog/${post.slug}`} className="block group">
         <GlassCard className="min-h-[400px]">
           <div className="grid md:grid-cols-2 gap-0 h-full">
-            {/* Image Side */}
+            {/* Image Side — optimized via next/image */}
             <div className="relative h-[300px] md:h-full overflow-hidden border-b md:border-b-0 md:border-r border-white/5">
-              <motion.div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url(${post.image})` }}
-              />
+              {resolveImageSrc(post.image) ? (
+                <Image
+                  src={resolveImageSrc(post.image)}
+                  alt={post.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[#1a1a1a]" />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-60" />
 
               <div className="absolute top-6 left-6">
@@ -99,10 +115,18 @@ const BlogCard = ({ post, index }) => {
         <GlassCard className="h-full">
           <div className="flex flex-col h-full">
             <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-white/5">
-              <motion.div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url(${post.image})` }}
-              />
+              {resolveImageSrc(post.image) ? (
+                <Image
+                  src={resolveImageSrc(post.image)}
+                  alt={post.title}
+                  fill
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[#1a1a1a]" />
+              )}
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors" />
 
               <div className="absolute top-4 left-4">

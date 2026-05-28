@@ -6,6 +6,15 @@ import { NavbarDemo } from "../../components/ui/RevampedNavbar";
 import FooterSection from "../../components/FooterSection";
 import NewsletterPopupWrapper from "../../components/NewsletterPopupWrapper";
 import Link from "next/link";
+import Image from "next/image";
+
+// Normalize image src so Next/Image accepts both relative public paths and absolute URLs.
+const resolveImageSrc = (src) => {
+  if (!src) return null;
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  if (src.startsWith("/")) return src;
+  return `/${src}`;
+};
 import {
   Calendar,
   Clock,
@@ -51,11 +60,21 @@ const FeaturedHero = ({ post }) => {
       className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-3xl overflow-hidden group mb-16"
     >
       <Link href={`/blog/${post.slug}`} className="block w-full h-full relative cursor-pointer">
-        {/* Image Background with Parallax-like effect on Hover */}
-        <div
-          className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
-          style={{ backgroundImage: `url("${post.image}")` }}
-        />
+        {/* Image Background — optimized via next/image (AVIF/WebP, responsive sizes) */}
+        <div className="absolute inset-0 overflow-hidden">
+          {resolveImageSrc(post.image) ? (
+            <Image
+              src={resolveImageSrc(post.image)}
+              alt={post.title}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1400px) 100vw, 1400px"
+              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-[#1a1a1a]" />
+          )}
+        </div>
 
         {/* Gradient Overlays */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-90" />
@@ -125,12 +144,20 @@ const ModernBlogCard = ({ post, index }) => {
       className="group h-full"
     >
       <Link href={`/blog/${post.slug}`} className="flex flex-col h-full bg-[#111] border border-white/5 rounded-2xl overflow-hidden hover:border-[#b02222]/30 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-        {/* Image Area */}
+        {/* Image Area — optimized via next/image */}
         <div className="relative aspect-[3/2] overflow-hidden">
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-            style={{ backgroundImage: `url("${post.image}")` }}
-          />
+          {resolveImageSrc(post.image) ? (
+            <Image
+              src={resolveImageSrc(post.image)}
+              alt={post.title}
+              fill
+              loading={index < 3 ? "eager" : "lazy"}
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[#1a1a1a]" />
+          )}
           <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300" />
 
           <div className="absolute top-4 left-4">

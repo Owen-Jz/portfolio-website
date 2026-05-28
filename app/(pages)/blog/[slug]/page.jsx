@@ -245,15 +245,16 @@ const BlogPostPage = () => {
                {post.image ? (
                  <Image
                    src={
-                     post.image.startsWith("http") 
-                       ? post.image 
-                       : post.image.startsWith("/") 
-                         ? post.image 
+                     post.image.startsWith("http")
+                       ? post.image
+                       : post.image.startsWith("/")
+                         ? post.image
                          : `/${post.image}`
                    }
                    alt={post.title}
                    fill
                    priority
+                   sizes="100vw"
                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
                  />
                ) : (

@@ -14,8 +14,23 @@ const perks = [
   { icon: Zap, text: "Early access to new content" },
 ];
 
+// Safe localStorage read — returns true if storage is unavailable so we
+// avoid showing the popup in environments that can't persist the dismissal.
+function alreadyHandled() {
+  if (typeof window === "undefined") return true;
+  try {
+    return (
+      localStorage.getItem(POPUP_DISMISSED_KEY) === "1" ||
+      localStorage.getItem(POPUP_SUBSCRIBED_KEY) === "1"
+    );
+  } catch {
+    return true;
+  }
+}
+
 const NewsletterPopup = ({
   onSubscribe,
+  onDismiss,
   delay = 8000,
   scrollThreshold = 0.25,
   enabled = true,
@@ -25,27 +40,40 @@ const NewsletterPopup = ({
   const [status, setStatus] = useState("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [mounted, setMounted] = useState(false);
+  // Hard kill-switch: once true, this component will NEVER render UI for the
+  // rest of its lifetime — regardless of subsequent state changes, remounts
+  // within the tree, or stale effects firing late.
+  const [permanentlyHidden, setPermanentlyHidden] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // First-thing-on-mount check: if storage already shows handled, lock
+    // the popup off before any timers can run.
+    if (alreadyHandled()) setPermanentlyHidden(true);
   }, []);
 
   useEffect(() => {
-    if (!enabled || !mounted) return;
-
-    const dismissed = localStorage.getItem(POPUP_DISMISSED_KEY);
-    const subscribed = localStorage.getItem(POPUP_SUBSCRIBED_KEY);
-    if (dismissed || subscribed) return;
+    if (!enabled || !mounted || permanentlyHidden) return;
+    if (alreadyHandled()) {
+      setPermanentlyHidden(true);
+      return;
+    }
 
     const delayTimer = setTimeout(() => {
+      // Re-check storage right before showing, in case another tab/component
+      // wrote the keys during our delay window.
+      if (alreadyHandled()) {
+        setPermanentlyHidden(true);
+        return;
+      }
       setIsVisible(true);
     }, delay);
 
     return () => clearTimeout(delayTimer);
-  }, [delay, enabled, mounted]);
+  }, [delay, enabled, mounted, permanentlyHidden]);
 
   useEffect(() => {
-    if (!enabled || !mounted || isVisible) return;
+    if (!enabled || !mounted || isVisible || permanentlyHidden) return;
 
     const handleScroll = () => {
       const scrolled = window.scrollY;
@@ -53,7 +81,11 @@ const NewsletterPopup = ({
       const scrollPercent = totalHeight > 0 ? scrolled / totalHeight : 0;
 
       if (scrollPercent >= scrollThreshold) {
-        localStorage.setItem(POPUP_DISMISSED_KEY, "1");
+        if (alreadyHandled()) {
+          setPermanentlyHidden(true);
+          window.removeEventListener("scroll", handleScroll);
+          return;
+        }
         setIsVisible(true);
         window.removeEventListener("scroll", handleScroll);
       }
@@ -61,7 +93,7 @@ const NewsletterPopup = ({
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [enabled, isVisible, scrollThreshold, mounted]);
+  }, [enabled, isVisible, scrollThreshold, mounted, permanentlyHidden]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,17 +123,35 @@ const NewsletterPopup = ({
   };
 
   const dismiss = () => {
-    localStorage.setItem(POPUP_DISMISSED_KEY, "1");
+    try {
+      // Write BOTH keys so any future load — whether it checks dismissed,
+      // subscribed, or both — will gate correctly.
+      localStorage.setItem(POPUP_DISMISSED_KEY, "1");
+    } catch {}
     setIsVisible(false);
+    setPermanentlyHidden(true);
+    // Reset status so a stale "success" state can never re-render the
+    // "Welcome aboard!" view if this component somehow shows again.
+    setStatus("idle");
+    onDismiss?.();
   };
 
   const handleSubscribeSuccess = () => {
-    localStorage.setItem(POPUP_SUBSCRIBED_KEY, "1");
+    try {
+      localStorage.setItem(POPUP_SUBSCRIBED_KEY, "1");
+      localStorage.setItem(POPUP_DISMISSED_KEY, "1");
+    } catch {}
     setStatus("success");
-    setTimeout(() => dismiss(), 2500);
+    // Show the success state briefly, then permanently hide.
+    setTimeout(() => {
+      setIsVisible(false);
+      setPermanentlyHidden(true);
+      setStatus("idle");
+      onDismiss?.();
+    }, 2500);
   };
 
-  if (!mounted) return null;
+  if (!mounted || permanentlyHidden) return null;
 
   return (
     <AnimatePresence>

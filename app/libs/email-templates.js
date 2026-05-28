@@ -2,11 +2,11 @@
 //  Shared helpers
 // ─────────────────────────────────────────────────────────────
 
-const SITE_URL   = "https://owendigitals.com";
+const SITE_URL   = "https://owendigitals.work";
 const FROM_NAME  = "Owen Digitals";
 const YEAR       = new Date().getFullYear();
 
-/** Wraps content in the full dark-themed email shell */
+/** Wraps content in the full email shell with light/dark mode support */
 function shell(content) {
   return `<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
@@ -14,21 +14,59 @@ function shell(content) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="color-scheme" content="dark" />
-  <meta name="supported-color-schemes" content="dark" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-    body { margin:0; padding:0; background-color:#080808; -webkit-text-size-adjust:100%; }
+
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin:0; padding:0; -webkit-text-size-adjust:100%;
+      background-color:#080808;
+    }
+
+    @media (prefers-color-scheme: light) {
+      body { background-color:#f5f5f5; }
+    }
+
     * { box-sizing:border-box; }
     a { color:#b02222; }
     img { border:0; display:block; }
+
+    .shell-bg { background-color:#080808; }
+    @media (prefers-color-scheme: light) {
+      .shell-bg { background-color:#f5f5f5; }
+    }
+
+    .logo-text { color:#ffffff; }
+    @media (prefers-color-scheme: light) {
+      .logo-text { color:#1a1a1a; }
+    }
+
+    .accent-line-light { background-color:#1a1a1a; }
+    @media (prefers-color-scheme: light) {
+      .accent-line-light { background-color:#e0e0e0; }
+    }
+
+    .card-bg { background-color:#111111; border-color:#222222; }
+    @media (prefers-color-scheme: light) {
+      .card-bg { background-color:#ffffff; border-color:#e0e0e0; }
+    }
+
+    .footer-text { color:#333333; }
+    @media (prefers-color-scheme: light) {
+      .footer-text { color:#666666; }
+    }
   </style>
 </head>
-<body style="margin:0;padding:0;background-color:#080808;">
+<body style="margin:0;padding:0;">
   <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0"><tr><td><![endif]-->
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#080808"
-         style="background-color:#080808;width:100%;min-width:100%;">
-    <tr>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+         style="width:100%;min-width:100%;">
+    <tr class="shell-bg" style="background-color:#080808;">
       <td align="center" style="padding:48px 16px 40px;">
 
         <!-- Wrapper -->
@@ -39,8 +77,8 @@ function shell(content) {
           <tr>
             <td align="center" style="padding-bottom:36px;">
               <a href="${SITE_URL}" style="text-decoration:none;">
-                <span style="font-family:'Manrope',Arial,sans-serif;font-size:22px;font-weight:800;
-                             color:#ffffff;letter-spacing:-0.5px;">
+                <span class="logo-text" style="font-family:'Manrope',Arial,sans-serif;font-size:22px;font-weight:800;
+                             letter-spacing:-0.5px;">
                   Owen&nbsp;<span style="color:#b02222;">Digitals</span>
                 </span>
               </a>
@@ -52,9 +90,9 @@ function shell(content) {
             <td>
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td width="33%" style="height:1px;background-color:#1a1a1a;"></td>
+                  <td width="33%" class="accent-line-light" style="height:1px;background-color:#1a1a1a;"></td>
                   <td width="34%" style="height:1px;background-color:#b02222;"></td>
-                  <td width="33%" style="height:1px;background-color:#1a1a1a;"></td>
+                  <td width="33%" class="accent-line-light" style="height:1px;background-color:#1a1a1a;"></td>
                 </tr>
               </table>
             </td>
@@ -62,7 +100,7 @@ function shell(content) {
 
           <!-- ── Main card ── -->
           <tr>
-            <td bgcolor="#111111"
+            <td class="card-bg"
                 style="background-color:#111111;border:1px solid #222222;border-top:none;
                        border-radius:0 0 20px 20px;">
               ${content}
@@ -72,7 +110,7 @@ function shell(content) {
           <!-- ── Footer ── -->
           <tr>
             <td style="padding-top:28px;text-align:center;">
-              <p style="font-family:'Manrope',Arial,sans-serif;color:#333333;font-size:11px;
+              <p class="footer-text" style="font-family:'Manrope',Arial,sans-serif;font-size:11px;
                         margin:0;line-height:1.6;letter-spacing:0.3px;">
                 © ${YEAR} ${FROM_NAME} · All rights reserved
               </p>
@@ -121,7 +159,7 @@ function unsubscribeFooter(unsubscribeUrl) {
   <p style="font-family:'Manrope',Arial,sans-serif;color:#444444;font-size:12px;
             text-align:center;margin:0;line-height:1.7;">
     You're receiving this because you subscribed at
-    <a href="${SITE_URL}" style="color:#555555;text-decoration:none;">owendigitals.com</a>
+    <a href="${SITE_URL}" style="color:#555555;text-decoration:none;">owendigitals.work</a>
     <br />
     <a href="${unsubscribeUrl}"
        style="color:#555555;text-decoration:underline;">Unsubscribe</a>
@@ -416,7 +454,7 @@ Read the full article:
 ${postUrl}
 
 ────────────────────────────
-You're receiving this because you subscribed at owendigitals.com
+You're receiving this because you subscribed at owendigitals.work
 To unsubscribe: ${unsubscribeUrl}
   `.trim();
 }
