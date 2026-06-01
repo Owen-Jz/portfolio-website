@@ -317,6 +317,8 @@ export default function AdminDashboard() {
                     <option value="Design">Design</option>
                     <option value="Business">Business</option>
                     <option value="Personal Life">Personal</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Growth">Growth</option>
                   </select>
               </div>
           </div>

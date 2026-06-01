@@ -24,7 +24,7 @@ const BlogPostSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ["Design", "Business", "Personal Life"],
+      enum: ["Design", "Business", "Personal Life", "Technology", "Growth"],
     },
     date: {
       type: String,

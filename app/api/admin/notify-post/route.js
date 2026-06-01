@@ -3,11 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
 import connectDB from "../../../libs/db";
 import BlogPost from "../../../models/BlogPost";
-import Subscriber from "../../../models/Subscriber";
-import { Resend } from "resend";
-import { generateBlogNotificationHTML, generateBlogNotificationText } from "../../../libs/email-templates";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { notifySubscribers } from "../../../libs/notify-subscribers";
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -47,55 +43,20 @@ export async function POST(request) {
       );
     }
 
-    const subscribers = await Subscriber.find({ status: "active" }).lean();
+    const { notified, failed, total } = await notifySubscribers(post);
 
-    if (subscribers.length === 0) {
+    if (total === 0) {
       return NextResponse.json(
         { success: true, message: "No subscribers to notify", notified: 0 },
         { status: 200 }
       );
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
-
-    const BATCH_SIZE = 10;
-    let notified = 0;
-    let failed = 0;
-
-    for (let i = 0; i < subscribers.length; i += BATCH_SIZE) {
-      const batch = subscribers.slice(i, i + BATCH_SIZE);
-
-      const emailPromises = batch.map((subscriber) =>
-        resend.emails
-          .send({
-            from: "Owen Digitals <official@owendigitals.work>",
-            to: subscriber.email,
-            reply_to: adminEmail,
-            subject: `New Post: ${post.title}`,
-            html: generateBlogNotificationHTML({ post, subscriberEmail: subscriber.email }),
-            text: generateBlogNotificationText({ post, subscriberEmail: subscriber.email }),
-          })
-          .then(() => {
-            notified++;
-          })
-          .catch((err) => {
-            console.error(`Failed to notify ${subscriber.email}:`, err);
-            failed++;
-          })
-      );
-
-      await Promise.allSettled(emailPromises);
-
-      if (i + BATCH_SIZE < subscribers.length) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-    }
-
     return NextResponse.json({
       success: true,
       notified,
       failed,
-      total: subscribers.length,
+      total,
     });
 
   } catch (error) {

@@ -227,6 +227,8 @@ export default function BlogPostForm({ post, onSuccess }) {
                   <option value="Design">Design</option>
                   <option value="Business">Business</option>
                   <option value="Personal Life">Personal Life</option>
+                  <option value="Technology">Technology</option>
+                  <option value="Growth">Growth</option>
                 </select>
               </div>
 
