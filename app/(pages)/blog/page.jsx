@@ -240,7 +240,7 @@ const BlogPage = () => {
     const fetchPosts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/blog");
+        const response = await fetch("/api/blog", { cache: "no-store" });
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -286,7 +286,7 @@ const BlogPage = () => {
     setFilteredPosts(processed);
   }, [activeFilter, searchQuery, blogPosts, featuredPost]);
 
-  const categories = ["All", "Personal Life", "Business", "Design"];
+  const categories = ["All", "Personal Life", "Business", "Design", "Technology", "Growth"];
 
   return (
     <div className="min-h-screen bg-[#050505] font-sans selection:bg-[#b02222] selection:text-white">

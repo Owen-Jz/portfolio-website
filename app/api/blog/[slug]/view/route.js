@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import connectDB from "../../../../libs/db";
 import BlogPost from "../../../../models/BlogPost";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function POST(request, { params }) {
   try {
     await connectDB();
@@ -23,7 +26,7 @@ export async function POST(request, { params }) {
 
     return NextResponse.json(
       { success: true, views: post.views },
-      { status: 200 }
+      { status: 200, headers: { "Cache-Control": "no-store, max-age=0" } }
     );
   } catch (error) {
     console.error("Error recording view:", error);

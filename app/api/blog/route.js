@@ -38,7 +38,10 @@ export async function GET(request) {
       likes: post.likes ?? 0,
     }));
 
-    return NextResponse.json({ success: true, data: serializedPosts }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: serializedPosts },
+      { status: 200, headers: { "Cache-Control": "no-store, max-age=0" } }
+    );
   } catch (error) {
     console.error("Error fetching blog posts:", error);
     return NextResponse.json(

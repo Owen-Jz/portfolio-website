@@ -12,6 +12,7 @@ import Button from "../../../components/ui/Button";
 import GlassCard from "../../../components/ui/GlassCard";
 import { cn } from "../../../libs/utils";
 import BlogEngagement from "../../../components/ui/BlogEngagement";
+import ShareButton from "../../../components/ui/ShareButton";
 
 const BlogPostPage = () => {
   const params = useParams();
@@ -33,7 +34,9 @@ const BlogPostPage = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/blog/${params.slug}`);
+        const response = await fetch(`/api/blog/${params.slug}`, {
+          cache: "no-store",
+        });
         const result = await response.json();
 
         if (result.success && result.data) {
@@ -72,12 +75,18 @@ const BlogPostPage = () => {
     const viewKey = `owen_blog_viewed_${post.slug}`;
     if (!sessionStorage.getItem(viewKey)) {
       sessionStorage.setItem(viewKey, "true");
-      fetch(`/api/blog/${post.slug}/view`, { method: "POST" })
+      fetch(`/api/blog/${post.slug}/view`, {
+        method: "POST",
+        cache: "no-store",
+      })
         .then((res) => res.json())
         .then((data) => {
           if (data.success) setViews(data.views);
         })
-        .catch(() => {});
+        .catch(() => {
+          // If the view failed to record, clear the guard so a retry can happen.
+          sessionStorage.removeItem(viewKey);
+        });
     }
   }, [post]);
 
@@ -380,6 +389,10 @@ const BlogPostPage = () => {
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-white mb-4">Share this post</h3>
                 <div className="flex flex-wrap gap-3">
+                  <ShareButton
+                    url={`https://owendigitals.com/blog/${post.slug}`}
+                    title={post.title}
+                  />
                   <a
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://owendigitals.com/blog/${post.slug}`)}`}
                     target="_blank"
