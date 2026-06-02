@@ -28,12 +28,14 @@ export async function POST(request) {
       );
     }
 
-    // Check if slug already exists
+    // Idempotent: if a post with this slug already exists, return it instead of
+    // failing. This makes the ZEAL "approve" action safely retryable — a re-approve
+    // (or a retry after a partial failure) links the existing draft rather than 400-ing.
     const existingPost = await BlogPost.findOne({ slug: body.slug });
     if (existingPost) {
       return NextResponse.json(
-        { success: false, error: "A post with this slug already exists" },
-        { status: 400 }
+        { success: true, data: { _id: existingPost._id, slug: existingPost.slug } },
+        { status: 200 }
       );
     }
 
