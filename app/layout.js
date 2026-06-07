@@ -27,9 +27,9 @@ export const metadata = {
     images: [
       {
         url: "/new_workspace.jpeg",
-        width: 1200,
-        height: 630,
-        alt: "Owen Digitals Portfolio",
+        width: 1220,
+        height: 1280,
+        alt: "Owen Digitals — design & development workspace",
       },
     ],
   },

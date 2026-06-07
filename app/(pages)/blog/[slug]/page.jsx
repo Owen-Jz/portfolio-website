@@ -390,11 +390,11 @@ const BlogPostPage = () => {
                 <h3 className="text-lg font-semibold text-white mb-4">Share this post</h3>
                 <div className="flex flex-wrap gap-3">
                   <ShareButton
-                    url={`https://owendigitals.com/blog/${post.slug}`}
+                    url={`https://www.owendigitals.work/blog/${post.slug}`}
                     title={post.title}
                   />
                   <a
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://owendigitals.com/blog/${post.slug}`)}`}
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.owendigitals.work/blog/${post.slug}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-all text-sm flex items-center gap-2"
@@ -405,7 +405,7 @@ const BlogPostPage = () => {
                     Twitter/X
                   </a>
                   <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://owendigitals.com/blog/${post.slug}`)}`}
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.owendigitals.work/blog/${post.slug}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-all text-sm flex items-center gap-2"
