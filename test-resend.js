@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const resend = new Resend("re_2AnCqZ45_CK418WkPPAKs4hfej36ivP8v");
+const resend = new Resend("re_TnuNFHqH_LwkXECwAczEKtZUhRJNB5UHG");
 
 async function testContactForm() {
   const visitorEmail = "visitor@example.com";
@@ -9,7 +9,7 @@ async function testContactForm() {
 
   try {
     const result = await resend.emails.send({
-      from: "Contact Form <noreply@owendigitals.work>",
+      from: "Contact Form <official@owendigitals.work>",
       to: "owendigitals@gmail.com",
       reply_to: visitorEmail,
       subject: `New Contact Form Submission from ${visitorName}`,

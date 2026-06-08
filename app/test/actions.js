@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { generateContactNotificationEmail } from "../libs/email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -14,63 +15,26 @@ export async function sendEmail(formData) {
       return { success: false, message: "Please fill out all fields" };
     }
 
+    const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
+    const message = `Subject: ${subject}\n\n${information}`;
+
     await resend.emails.send({
-      from: "Contact Form <noreply@owendigitals.work>",
-      to: "officia@owendigtals.work",
-      reply_to: name,
+      from: "Contact Form <official@owendigitals.work>",
+      to: adminEmail,
       subject: `New Contact Form Submission: ${subject}`,
-      text: `
-        Name: ${name}
-        Subject: ${subject}
-        Message: ${information}
-      `,
-      html: `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Contact Form Submission</title>
-        </head>
-        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f4f4f4;">
-          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border: 1px solid #e0e0e0; margin: 20px auto;">
-            <tr>
-              <td style="background-color: #3b82f6; padding: 20px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 24px;">New Contact Form Submission</h1>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 20px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Name:</strong> ${name}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Subject:</strong> ${subject}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 10px 0; font-size: 16px; color: #333333;">
-                      <strong>Message:</strong>
-                      <p style="margin: 5px 0; color: #555555; line-height: 1.5;">${information}</p>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td style="background-color: #f4f4f4; padding: 15px; text-align: center; font-size: 12px; color: #888888;">
-                <p style="margin: 0;">Sent from Owen Digitals Contact Form</p>
-                <p style="margin: 5px 0;">&copy; ${new Date().getFullYear()} Owen Digitals. All rights reserved.</p>
-              </td>
-            </tr>
-          </table>
-        </body>
-        </html>
-      `,
+      text: `New Contact Form Submission
+
+Name: ${name}
+Subject: ${subject}
+
+Message:
+${information}
+`,
+      html: generateContactNotificationEmail({
+        name,
+        email: adminEmail,
+        message,
+      }),
     });
 
     return { success: true, message: "Email sent successfully" };
