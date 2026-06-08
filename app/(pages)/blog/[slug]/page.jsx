@@ -3,16 +3,25 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import Image from "next/image";
 import { NavbarDemo } from "../../../components/ui/RevampedNavbar";
 import FooterSection from "../../../components/FooterSection";
 import Link from "next/link";
 import Button from "../../../components/ui/Button";
 import GlassCard from "../../../components/ui/GlassCard";
-import { cn } from "../../../libs/utils";
 import BlogEngagement from "../../../components/ui/BlogEngagement";
 import ShareButton from "../../../components/ui/ShareButton";
+import ReadingProgress from "../../../components/ui/ReadingProgress";
+import StickyShareRail from "../../../components/ui/StickyShareRail";
+import RelatedPosts from "../../../components/ui/RelatedPosts";
+
+// Normalize image src so Next/Image accepts both relative public paths and absolute URLs.
+const resolveImageSrc = (src) => {
+  if (!src) return null;
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  if (src.startsWith("/")) return src;
+  return `/${src}`;
+};
 
 const BlogPostPage = () => {
   const params = useParams();
@@ -27,8 +36,6 @@ const BlogPostPage = () => {
   const [views, setViews] = useState(0);
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
-
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 });
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -154,58 +161,40 @@ const BlogPostPage = () => {
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
 
         <div className="flex-grow relative z-10">
-          {/* Hero Skeleton */}
-          <div className="relative w-full">
-            <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden border-b border-gray-600">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-20 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-20 pointer-events-none" />
-              <div className="absolute inset-0 z-0 bg-[#1a1a1a]" />
-
-              <div className="relative z-30 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
-                {/* Category Badge Skeleton */}
-                <div className="mb-4">
-                  <div className="h-8 w-24 bg-gray-700/50 rounded-full animate-pulse" />
-                </div>
-
-                {/* Title Skeleton */}
-                <div className="space-y-3 mb-4">
-                  <div className="h-10 md:h-14 lg:h-16 w-3/4 bg-gray-700/50 rounded-lg animate-pulse" />
-                  <div className="h-10 md:h-14 lg:h-16 w-1/2 bg-gray-700/50 rounded-lg animate-pulse" />
-                </div>
-
-                {/* Meta Skeleton */}
-                <div className="flex items-center gap-4">
-                  <div className="h-4 w-20 bg-gray-700/50 rounded animate-pulse" />
-                  <div className="h-4 w-4 bg-gray-600/50 rounded-full animate-pulse" />
-                  <div className="h-4 w-16 bg-gray-700/50 rounded animate-pulse" />
-                  <div className="h-4 w-4 bg-gray-600/50 rounded-full animate-pulse" />
-                  <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse" />
-                </div>
+          {/* Editorial Header Skeleton */}
+          <div className="pt-28 md:pt-36 pb-10 md:pb-14">
+            <div className="mx-auto px-5 sm:px-6 max-w-3xl flex flex-col items-center text-center">
+              <div className="h-3 w-20 bg-gray-700/50 rounded animate-pulse mb-6" />
+              <div className="space-y-3 mb-6 w-full flex flex-col items-center">
+                <div className="h-9 md:h-12 w-11/12 bg-gray-700/50 rounded-lg animate-pulse" />
+                <div className="h-9 md:h-12 w-2/3 bg-gray-700/50 rounded-lg animate-pulse" />
+              </div>
+              <div className="h-5 w-3/4 bg-gray-800/60 rounded animate-pulse mb-3" />
+              <div className="h-5 w-1/2 bg-gray-800/60 rounded animate-pulse mb-8" />
+              <div className="flex items-center gap-3">
+                <div className="h-4 w-24 bg-gray-700/50 rounded animate-pulse" />
+                <div className="h-1 w-1 bg-gray-600/50 rounded-full" />
+                <div className="h-4 w-20 bg-gray-700/50 rounded animate-pulse" />
+                <div className="h-1 w-1 bg-gray-600/50 rounded-full" />
+                <div className="h-4 w-16 bg-gray-700/50 rounded animate-pulse" />
               </div>
             </div>
           </div>
 
+          {/* Hero Image Skeleton */}
+          <div className="mx-auto px-5 sm:px-6 max-w-5xl mb-14 md:mb-20">
+            <div className="aspect-[16/9] rounded-2xl md:rounded-3xl bg-[#1a1a1a] border border-white/10 animate-pulse" />
+          </div>
+
           {/* Content Skeleton */}
-          <div className="py-12 md:py-16">
-            <div className="mx-auto px-4 sm:px-6 max-w-4xl space-y-4">
+          <div className="pb-16">
+            <div className="mx-auto px-5 sm:px-6 max-w-[720px] space-y-4">
               {[100, 95, 88, 100, 92, 85, 100, 90, 78, 88, 95, 100].map((w, i) => (
-                <div key={i} className="space-y-2">
-                  <div
-                    className="h-4 bg-gray-800/60 rounded animate-pulse"
-                    style={{ width: `${w}%` }}
-                  />
-                </div>
-              ))}
-              <div className="h-4" />
-              <div className="h-4 w-2/3 bg-gray-800/60 rounded animate-pulse" />
-              <div className="h-4" />
-              {[92, 100, 85, 95, 88].map((w, i) => (
-                <div key={i} className="space-y-2">
-                  <div
-                    className="h-4 bg-gray-800/60 rounded animate-pulse"
-                    style={{ width: `${w}%` }}
-                  />
-                </div>
+                <div
+                  key={i}
+                  className="h-4 bg-gray-800/60 rounded animate-pulse"
+                  style={{ width: `${w}%` }}
+                />
               ))}
             </div>
           </div>
@@ -222,121 +211,151 @@ const BlogPostPage = () => {
     );
   }
 
-  const headingVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut",
-      },
-    },
-  };
+  const postUrl = `https://www.owendigitals.work/blog/${post.slug}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#0a0a0a] relative overflow-hidden">
+      {/* Reading progress bar */}
+      <ReadingProgress />
+
       {/* Background Decoration */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-[#b02222]/5 to-transparent rounded-full blur-3xl -z-10" />
 
       <NavbarDemo />
+
+      {/* Sticky desktop share rail */}
+      <StickyShareRail
+        likes={likes}
+        isLiked={isLiked}
+        onLike={handleLike}
+        url={postUrl}
+        title={post.title}
+      />
+
       <main className="flex-grow relative z-10">
-        {/* Hero Section */}
-        <div className="relative w-full">
-          <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden border-b border-gray-600 group">
-            {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-black/40 z-20 pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#b02222]/20 to-transparent z-20 pointer-events-none" />
+        {/* Editorial Header */}
+        <header className="pt-28 md:pt-36 pb-10 md:pb-14">
+          <div className="mx-auto px-5 sm:px-6 max-w-3xl text-center">
+            {/* Back link */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white transition-colors group"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4 transition-transform group-hover:-translate-x-0.5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to journal
+              </Link>
+            </motion.div>
 
-            {/* Background Image using Next/Image */}
-            <div className="absolute inset-0 z-0">
-               {post.image ? (
-                 <Image
-                   src={
-                     post.image.startsWith("http")
-                       ? post.image
-                       : post.image.startsWith("/")
-                         ? post.image
-                         : `/${post.image}`
-                   }
-                   alt={post.title}
-                   fill
-                   priority
-                   sizes="100vw"
-                   className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                 />
-               ) : (
-                 <div className="w-full h-full bg-[#1a1a1a]" />
-               )}
-            </div>
+            {/* Category kicker */}
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.6 }}
+              className="text-xs font-semibold uppercase tracking-[0.25em] text-[#b02222] mb-5"
+            >
+              {post.category}
+            </motion.p>
 
-            {/* Content */}
-            <div className="relative z-30 h-full flex flex-col justify-end p-8 md:p-12 lg:p-16 max-w-[1400px] mx-auto">
-              {/* Category Badge */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+            {/* Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.6 }}
+              className="text-3xl md:text-5xl lg:text-[3.25rem] font-bold text-white font-['Manrope'] leading-[1.1] tracking-tight mb-6 text-balance"
+            >
+              {post.title}
+            </motion.h1>
+
+            {/* Deck / excerpt */}
+            {post.excerpt && (
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="mb-4"
+                className="text-lg md:text-xl text-white/55 leading-relaxed max-w-2xl mx-auto mb-8"
               >
-                <span className="inline-block px-4 py-2 rounded-full text-sm font-semibold text-white bg-[#b02222] backdrop-blur-sm">
-                  {post.category}
-                </span>
-              </motion.div>
+                {post.excerpt}
+              </motion.p>
+            )}
 
-              {/* Title */}
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-3xl md:text-5xl lg:text-6xl font-bold text-white font-['Manrope'] leading-tight mb-4"
-              >
-                {post.title}
-              </motion.h1>
-
-              {/* Meta Info */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="flex flex-wrap items-center gap-4 text-sm md:text-base text-gray-300"
-              >
-                <span>{post.date}</span>
-                <span>•</span>
-                <span>{post.readTime}</span>
-                <span>•</span>
-                <span>By {post.author}</span>
-                <span>•</span>
-                <BlogEngagement
-                  views={views}
-                  likes={likes}
-                  isLiked={isLiked}
-                  variant="compact"
-                />
-              </motion.div>
-            </div>
+            {/* Meta row */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25, duration: 0.6 }}
+              className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm text-white/45"
+            >
+              <span className="text-white/70 font-medium">By {post.author}</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span>{post.date}</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <span>{post.readTime}</span>
+              <span className="w-1 h-1 rounded-full bg-white/20" />
+              <BlogEngagement
+                views={views}
+                likes={likes}
+                isLiked={isLiked}
+                variant="compact"
+              />
+            </motion.div>
           </div>
-        </div>
+        </header>
+
+        {/* Hero Image */}
+        {post.image && (
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+            className="mx-auto px-5 sm:px-6 max-w-5xl mb-14 md:mb-20"
+          >
+            <div className="relative aspect-[16/9] rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] group">
+              <Image
+                src={resolveImageSrc(post.image)}
+                alt={post.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 1024px"
+                className="object-cover transition-transform duration-[1200ms] group-hover:scale-105"
+              />
+              <div className="absolute inset-0 rounded-2xl md:rounded-3xl ring-1 ring-inset ring-white/5 pointer-events-none" />
+            </div>
+          </motion.div>
+        )}
 
         {/* Article Content */}
-        <article className="py-12 md:py-16">
-          <div className="mx-auto px-4 sm:px-6 max-w-4xl">
+        <article className="pb-16 md:pb-24">
+          <div className="mx-auto px-5 sm:px-6 max-w-[720px]">
             <motion.div
-              ref={ref}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-              variants={headingVariants}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
               className="blog-content"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
             {/* Engagement Bar */}
             <motion.div
-              className="mt-10 py-6 border-t border-b border-gray-600/50 flex flex-wrap items-center justify-between gap-4"
+              className="mt-12 py-6 border-t border-b border-white/10 flex flex-wrap items-center justify-between gap-4"
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6 }}
             >
               <BlogEngagement
                 views={views}
@@ -347,54 +366,21 @@ const BlogPostPage = () => {
               />
             </motion.div>
 
-            {/* Back to Blog Link */}
-            <motion.div
-              className="mt-12 pt-8 border-t border-gray-600"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <Button
-                href="/blog"
-                variant="primary"
-                className="font-semibold flex items-center gap-2"
-                withMotion={true}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-                <span>Back to Blog</span>
-              </Button>
-            </motion.div>
-
             {/* Social Sharing and Subscribe Section */}
             <motion.div
-              className="mt-12 pt-8 border-t border-gray-600"
+              className="mt-12 pt-8 border-t border-white/10"
               initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.6 }}
             >
               {/* Share Section */}
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-white mb-4">Share this post</h3>
                 <div className="flex flex-wrap gap-3">
-                  <ShareButton
-                    url={`https://www.owendigitals.work/blog/${post.slug}`}
-                    title={post.title}
-                  />
+                  <ShareButton url={postUrl} title={post.title} />
                   <a
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(`https://www.owendigitals.work/blog/${post.slug}`)}`}
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-all text-sm flex items-center gap-2"
@@ -405,7 +391,7 @@ const BlogPostPage = () => {
                     Twitter/X
                   </a>
                   <a
-                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://www.owendigitals.work/blog/${post.slug}`)}`}
+                    href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-gray-300 hover:text-white hover:border-gray-500 transition-all text-sm flex items-center gap-2"
@@ -449,6 +435,9 @@ const BlogPostPage = () => {
                 )}
               </GlassCard>
             </motion.div>
+
+            {/* Related posts */}
+            <RelatedPosts currentSlug={post.slug} category={post.category} />
           </div>
         </article>
       </main>
