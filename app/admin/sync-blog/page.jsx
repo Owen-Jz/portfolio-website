@@ -2,7 +2,81 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  Wrench,
+  RefreshCw,
+  ListOrdered,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ArrowUpRight,
+} from "lucide-react";
+
+// Small status pill for a utility action
+function StatusPill({ status }) {
+  if (status === "loading") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-xs text-white/40">
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        Running
+      </span>
+    );
+  }
+  if (status === "success") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-xs text-green-400">
+        <CheckCircle2 className="w-3.5 h-3.5" />
+        Done
+      </span>
+    );
+  }
+  if (status === "error") {
+    return (
+      <span className="inline-flex items-center gap-1.5 text-xs text-red-400">
+        <AlertCircle className="w-3.5 h-3.5" />
+        Failed
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 text-xs text-white/30">
+      <span className="h-1.5 w-1.5 rounded-full bg-white/20" />
+      Idle
+    </span>
+  );
+}
+
+function ResultPanel({ result, status }) {
+  if (!result) return null;
+  return (
+    <div
+      className={`mt-4 rounded-xl border p-4 ${
+        status === "success"
+          ? "bg-green-500/[0.06] border-green-500/20"
+          : "bg-red-500/[0.06] border-red-500/20"
+      }`}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        {status === "success" ? (
+          <CheckCircle2 className="w-4 h-4 text-green-400" />
+        ) : (
+          <AlertCircle className="w-4 h-4 text-red-400" />
+        )}
+        <span
+          className={`text-xs font-medium ${
+            status === "success" ? "text-green-400" : "text-red-400"
+          }`}
+        >
+          {status === "success" ? "Completed successfully" : "Something went wrong"}
+        </span>
+      </div>
+      <pre className="text-xs text-white/60 whitespace-pre-wrap font-mono leading-relaxed overflow-x-auto">
+        {JSON.stringify(result, null, 2)}
+      </pre>
+    </div>
+  );
+}
 
 export default function SyncBlogPage() {
   const [syncStatus, setSyncStatus] = useState("idle");
@@ -41,88 +115,138 @@ export default function SyncBlogPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-8">
-      <div className="bg-[#151515] border border-white/10 rounded-2xl p-8 max-w-lg w-full">
-        <div className="flex items-center gap-3 mb-6">
-          <Link
-            href="/admin"
-            className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-white/60" />
-          </Link>
-          <h1 className="text-2xl font-bold text-white">Blog Maintenance</h1>
-        </div>
+    <div className="max-w-2xl mx-auto">
+      {/* Page header */}
+      <div className="mb-8">
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors mb-5"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to dashboard
+        </Link>
 
+        <div className="flex items-center gap-4">
+          <div className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-white/70">
+            <Wrench className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="block text-[11px] font-mono uppercase tracking-[0.18em] text-[#b02222]/80 mb-0.5">
+              Utilities
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+              Blog maintenance
+            </h1>
+            <p className="text-sm text-white/40 mt-1">
+              One-off tools to keep blog data consistent.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-5">
         {/* Sync Section */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-white mb-2">Sync Blog Posts</h2>
-          <p className="text-white/60 text-sm mb-4">
-            Update all blog posts with content from the local data file. This updates titles, content, and images.
-          </p>
+        <section className="bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-8">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 p-2 rounded-xl bg-white/5 border border-white/5 text-white/70">
+                <RefreshCw className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-white">
+                  Sync blog posts
+                </h2>
+                <p className="text-sm text-white/40 mt-1 max-w-md">
+                  Update every post with content from the local data file —
+                  refreshes titles, content and images.
+                </p>
+              </div>
+            </div>
+            <StatusPill status={syncStatus} />
+          </div>
 
           <button
             onClick={syncPosts}
             disabled={syncStatus === "loading"}
-            className="w-full py-3 px-6 bg-[#b02222] text-white font-semibold rounded-lg hover:bg-[#8a1b1b] transition-colors disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#b02222] py-3 px-6 font-medium text-white transition-all hover:bg-[#c92e2e] enabled:shadow-[0_0_20px_rgba(176,34,34,0.3)] enabled:hover:shadow-[0_0_30px_rgba(176,34,34,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {syncStatus === "loading" ? "Syncing..." : "Sync Blog Posts"}
+            {syncStatus === "loading" ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Syncing…
+              </>
+            ) : (
+              <>
+                <RefreshCw className="w-4 h-4" />
+                Sync blog posts
+              </>
+            )}
           </button>
 
-          {syncResult && (
-            <div
-              className={`mt-4 p-4 rounded-lg ${
-                syncStatus === "success"
-                  ? "bg-green-500/10 border border-green-500/30"
-                  : "bg-red-500/10 border border-red-500/30"
-              }`}
-            >
-              <pre className="text-sm text-white/80 whitespace-pre-wrap">
-                {JSON.stringify(syncResult, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
+          <ResultPanel result={syncResult} status={syncStatus} />
+        </section>
 
-        <div className="border-t border-white/10 pt-6">
-          {/* Fix Order Section */}
-          <h2 className="text-lg font-semibold text-white mb-2">Fix Post Order</h2>
-          <p className="text-white/60 text-sm mb-4">
-            Initialize order and featured fields for posts that don't have them. 
-            Run this if drag-and-drop ordering isn't working.
-          </p>
+        {/* Fix Order Section */}
+        <section className="bg-[#121212] border border-white/5 rounded-2xl p-6 sm:p-8">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5 p-2 rounded-xl bg-white/5 border border-white/5 text-white/70">
+                <ListOrdered className="w-4 h-4" />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold text-white">
+                  Fix post order
+                </h2>
+                <p className="text-sm text-white/40 mt-1 max-w-md">
+                  Initialise the order and featured fields for posts that are
+                  missing them. Run this if drag-and-drop ordering isn&apos;t working.
+                </p>
+              </div>
+            </div>
+            <StatusPill status={fixStatus} />
+          </div>
 
           <button
             onClick={fixOrder}
             disabled={fixStatus === "loading"}
-            className="w-full py-3 px-6 bg-white/10 border border-white/20 text-white font-semibold rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 py-3 px-6 font-medium text-white transition-colors hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {fixStatus === "loading" ? "Fixing..." : "Fix Post Order Fields"}
+            {fixStatus === "loading" ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Fixing…
+              </>
+            ) : (
+              <>
+                <ListOrdered className="w-4 h-4" />
+                Fix post order fields
+              </>
+            )}
           </button>
 
-          {fixResult && (
-            <div
-              className={`mt-4 p-4 rounded-lg ${
-                fixStatus === "success"
-                  ? "bg-green-500/10 border border-green-500/30"
-                  : "bg-red-500/10 border border-red-500/30"
-              }`}
-            >
-              <pre className="text-sm text-white/80 whitespace-pre-wrap">
-                {JSON.stringify(fixResult, null, 2)}
-              </pre>
-            </div>
-          )}
-        </div>
+          <ResultPanel result={fixResult} status={fixStatus} />
+        </section>
 
         {/* Link to blog order page */}
-        <div className="mt-8 pt-6 border-t border-white/10">
-          <Link
-            href="/admin/blog-order"
-            className="block w-full py-3 px-6 bg-blue-600/20 border border-blue-500/30 text-blue-400 font-semibold rounded-lg hover:bg-blue-600/30 transition-colors text-center"
-          >
-            Go to Blog Order Management →
-          </Link>
-        </div>
+        <Link
+          href="/admin/blog-order"
+          className="group flex items-center justify-between gap-4 rounded-2xl border border-white/5 bg-[#121212] p-5 transition-colors hover:border-white/10 hover:bg-white/[0.02]"
+        >
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-white/5 border border-white/5 text-white/70">
+              <ListOrdered className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-white">
+                Manage post order
+              </p>
+              <p className="text-xs text-white/40">
+                Drag to reorder and choose a featured post.
+              </p>
+            </div>
+          </div>
+          <ArrowUpRight className="w-5 h-5 text-white/30 group-hover:text-white transition-colors" />
+        </Link>
       </div>
     </div>
   );

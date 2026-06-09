@@ -162,25 +162,43 @@ export default function BlogOrderPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <div className="flex items-center gap-3 mb-2">
-            <Link
-              href="/admin"
-              className="p-2 hover:bg-white/5 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 text-white/60" />
-            </Link>
-            <h1 className="text-2xl font-bold text-white">Blog Post Order</h1>
-          </div>
-          <p className="text-white/50 text-sm pl-10">
-            Drag posts to reorder. Click the star to set as featured.
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors mb-4"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to dashboard
+          </Link>
+          <span className="block text-[11px] font-mono uppercase tracking-[0.18em] text-[#b02222]/80 mb-1">
+            Arrangement
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+            Post order
+          </h1>
+          <p className="text-white/40 text-sm mt-1">
+            Drag posts to reorder them, or star one to feature it at the top.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
+          <AnimatePresence>
+            {hasChanges && (
+              <motion.span
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="hidden sm:inline-flex items-center gap-2 text-xs text-yellow-500"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
+                Unsaved changes
+              </motion.span>
+            )}
+          </AnimatePresence>
           {hasChanges && (
             <button
               onClick={handleReset}
-              className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 transition-colors text-sm"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 text-white/70 rounded-xl hover:bg-white/10 hover:text-white transition-colors text-sm"
             >
               <RefreshCw className="w-4 h-4" />
               Reset
@@ -189,14 +207,14 @@ export default function BlogOrderPage() {
           <button
             onClick={handleSave}
             disabled={!hasChanges || saving}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#b02222] text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c92e2e] shadow-[0_0_20px_rgba(176,34,34,0.3)]"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#b02222] text-white rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c92e2e] enabled:shadow-[0_0_20px_rgba(176,34,34,0.3)] enabled:hover:shadow-[0_0_30px_rgba(176,34,34,0.5)]"
           >
             {saving ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Save className="w-4 h-4" />
             )}
-            {saving ? "Saving..." : "Save Order"}
+            {saving ? "Saving…" : "Save order"}
           </button>
         </div>
       </div>
@@ -206,15 +224,13 @@ export default function BlogOrderPage() {
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="flex flex-col items-center gap-4">
-              <div className="w-8 h-8 border-2 border-[#b02222] border-t-transparent rounded-full animate-spin" />
-              <span className="text-white/40 text-xs font-mono">
-                LOADING POSTS...
-              </span>
+              <Loader2 className="w-7 h-7 text-[#b02222] animate-spin" />
+              <span className="text-white/40 text-sm">Loading posts…</span>
             </div>
           </div>
         ) : posts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <p className="text-white/40">No blog posts found</p>
+            <p className="text-white/40">No blog posts yet.</p>
           </div>
         ) : (
           <Reorder.Group
@@ -228,25 +244,36 @@ export default function BlogOrderPage() {
                 key={post._id}
                 value={post}
                 className="relative"
+                whileDrag={{
+                  scale: 1.01,
+                  backgroundColor: "rgba(255,255,255,0.03)",
+                  boxShadow: "0 18px 40px -12px rgba(0,0,0,0.6)",
+                  zIndex: 30,
+                }}
               >
                 <motion.div
                   layout
-                  className={`flex items-center gap-4 p-4 cursor-grab active:cursor-grabbing transition-colors ${
+                  className={`group flex items-center gap-4 p-4 transition-colors ${
                     post.isFeatured
                       ? "bg-[#b02222]/10 border-l-2 border-l-[#b02222]"
                       : "hover:bg-white/[0.02]"
                   }`}
                 >
                   {/* Drag Handle */}
-                  <div className="flex items-center gap-3 text-white/30">
-                    <GripVertical className="w-5 h-5" />
-                    <span className="text-xs font-mono w-6 text-center">
-                      {index + 1}
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="cursor-grab active:cursor-grabbing text-white/25 group-hover:text-white/50 transition-colors"
+                      aria-hidden="true"
+                    >
+                      <GripVertical className="w-5 h-5" />
+                    </span>
+                    <span className="text-xs font-mono w-6 text-center text-white/30">
+                      {String(index + 1).padStart(2, "0")}
                     </span>
                   </div>
 
                   {/* Post Image */}
-                  <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-white/5 flex-shrink-0">
+                  <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-white/5 ring-1 ring-white/5 flex-shrink-0">
                     {post.image ? (
                       <img
                         src={post.image}
@@ -254,8 +281,8 @@ export default function BlogOrderPage() {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white/20 text-xs">
-                        No Image
+                      <div className="w-full h-full flex items-center justify-center text-white/20 text-[10px]">
+                        No image
                       </div>
                     )}
                   </div>
@@ -267,13 +294,15 @@ export default function BlogOrderPage() {
                         {post.title}
                       </h3>
                       {post.isFeatured && (
-                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-[#b02222] text-white rounded">
+                        <span className="shrink-0 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider bg-[#b02222] text-white rounded-md">
                           Featured
                         </span>
                       )}
                     </div>
                     <p className="text-white/40 text-sm truncate">
-                      {post.category} • /{post.slug}
+                      <span>{post.category}</span>
+                      <span className="text-white/20"> · </span>
+                      <span className="font-mono text-white/30">/{post.slug}</span>
                     </p>
                   </div>
 
@@ -283,12 +312,16 @@ export default function BlogOrderPage() {
                       e.stopPropagation();
                       handleSetFeatured(post._id);
                     }}
+                    aria-pressed={post.isFeatured}
+                    aria-label={
+                      post.isFeatured ? "Featured post" : "Set as featured"
+                    }
                     className={`p-2.5 rounded-xl transition-all ${
                       post.isFeatured
                         ? "bg-[#b02222] text-white shadow-[0_0_15px_rgba(176,34,34,0.4)]"
                         : "bg-white/5 text-white/40 hover:text-[#b02222] hover:bg-[#b02222]/10"
                     }`}
-                    title={post.isFeatured ? "Featured Post" : "Set as Featured"}
+                    title={post.isFeatured ? "Featured post" : "Set as featured"}
                   >
                     {post.isFeatured ? (
                       <Star className="w-5 h-5 fill-current" />
@@ -304,21 +337,30 @@ export default function BlogOrderPage() {
       </div>
 
       {/* Help Text */}
-      <div className="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-        <h4 className="text-white/70 font-medium text-sm mb-2">Instructions</h4>
-        <ul className="text-white/40 text-sm space-y-1">
-          <li>• <strong>Drag</strong> posts up or down to change their display order</li>
-          <li>• <strong>Click the star</strong> to set a post as the featured post (shown larger on the blog page)</li>
-          <li>• <strong>Save</strong> your changes when you're done</li>
-          <li>• The featured post will automatically move to the top</li>
+      <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-5">
+        <h4 className="text-white/70 font-medium text-sm mb-3">How it works</h4>
+        <ul className="text-white/40 text-sm space-y-2">
+          <li className="flex gap-2">
+            <span className="text-[#b02222]">·</span>
+            <span><strong className="text-white/60 font-medium">Drag</strong> posts up or down to change their display order.</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-[#b02222]">·</span>
+            <span><strong className="text-white/60 font-medium">Star</strong> a post to feature it — it&apos;s shown larger on the blog page and moves to the top.</span>
+          </li>
+          <li className="flex gap-2">
+            <span className="text-[#b02222]">·</span>
+            <span><strong className="text-white/60 font-medium">Save</strong> your changes when you&apos;re happy with the order.</span>
+          </li>
         </ul>
         <div className="mt-4 pt-4 border-t border-white/5">
-          <a 
-            href="/api/blog/debug" 
-            target="_blank" 
-            className="text-xs text-blue-400 hover:text-blue-300"
+          <a
+            href="/api/blog/debug"
+            target="_blank"
+            className="inline-flex items-center gap-1.5 text-xs font-mono text-white/40 hover:text-white/70 transition-colors"
           >
-            Debug: View raw database values →
+            View raw database values
+            <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>

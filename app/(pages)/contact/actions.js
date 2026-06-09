@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { generateContactNotificationEmail } from "../../libs/email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -24,28 +25,19 @@ export async function sendEmail(formData) {
 
   try {
     await resend.emails.send({
-      from: "Contact Form <noreply@owendigitals.work>",
-      to: "officia@owendigtals.work",
+      from: "Contact Form <official@owendigitals.work>",
+      to: process.env.ADMIN_EMAIL || "owendigitals@gmail.com",
       reply_to: email,
       subject: `New Contact Form Submission from ${name}`,
-      text: `
+      text: `New Contact Form Submission
+
 Name: ${name}
 Email: ${email}
-Message: ${message}
-      `,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background-color: #b02222; padding: 20px; border-radius: 8px 8px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 24px;">New Contact Form Submission</h1>
-          </div>
-          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0;">
-            <p style="margin: 0 0 15px 0;"><strong>Name:</strong> ${name}</p>
-            <p style="margin: 0 0 15px 0;"><strong>Email:</strong> ${email}</p>
-            <p style="margin: 0 0 15px 0;"><strong>Message:</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${message}</p>
-          </div>
-        </div>
-      `,
+
+Message:
+${message}
+`,
+      html: generateContactNotificationEmail({ name, email, message }),
     });
 
     return {

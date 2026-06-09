@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { Resend } from "resend";
 import ProjectBrief from "../../models/ProjectBrief";
+import { generateBriefNotificationEmail } from "../../libs/email-templates";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,65 +11,6 @@ async function connectDB() {
     return;
   }
   await mongoose.connect(process.env.MONGODB_URI);
-}
-
-function generateBriefEmailHTML(brief, type) {
-  const typeLabels = {
-    website: "Website Design",
-    branding: "Branding",
-    "ui-ux": "UI/UX Design",
-  };
-
-  let fields = `
-    <p><strong>Name:</strong> ${brief.fullName}</p>
-    <p><strong>Email:</strong> ${brief.email}</p>
-    <p><strong>Company:</strong> ${brief.companyName || "Not provided"}</p>
-    <p><strong>Project Type:</strong> ${typeLabels[type]}</p>
-    <hr style="border: 0; border-top: 1px solid #e0e0e0; margin: 20px 0;" />
-  `;
-
-  const fieldMappings = [
-    ["businessDescription", "Business Description"],
-    ["projectPurpose", "Project Purpose"],
-    ["targetAudience", "Target Audience"],
-    ["style", "Preferred Style"],
-    ["websitesLiked", "Websites Liked"],
-    ["brandPerception", "Brand Perception"],
-    ["voicePersonality", "Voice/Personality"],
-    ["existingAssets", "Existing Assets"],
-    ["brandGuidelines", "Brand Guidelines"],
-    ["creativeFreedom", "Creative Freedom"],
-    ["pagesNeeded", "Pages Needed"],
-    ["features", "Features Required"],
-    ["contentReady", "Content Ready"],
-    ["mediaReady", "Media Ready"],
-    ["animations", "Animations"],
-    ["domainOwned", "Domain Owned"],
-    ["domainDetails", "Domain Details"],
-    ["timeline", "Timeline"],
-    ["budget", "Budget"],
-    ["additionalNotes", "Additional Notes"],
-  ];
-
-  fieldMappings.forEach(([key, label]) => {
-    if (brief[key]) {
-      fields += `<p><strong>${label}:</strong> ${brief[key]}</p>`;
-    }
-  });
-
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f9f9f9;">
-      <div style="background-color: #b02222; padding: 20px; border-radius: 8px 8px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 24px;">New ${typeLabels[type]} Brief Submission</h1>
-      </div>
-      <div style="background-color: #ffffff; padding: 20px; border-radius: 0 0 8px 8px; border: 1px solid #e0e0e0;">
-        ${fields}
-      </div>
-      <div style="text-align: center; padding: 20px; color: #888888; font-size: 12px;">
-        <p style="margin: 0;">From Owen Digitals Portfolio Website</p>
-      </div>
-    </div>
-  `;
 }
 
 export async function POST(request) {
@@ -152,11 +94,11 @@ export async function POST(request) {
     const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
     
     await resend.emails.send({
-      from: "Project Briefs <noreply@owendigitals.work>",
+      from: "Project Briefs <official@owendigitals.work>",
       to: adminEmail,
       reply_to: email,
       subject: `New ${typeLabels[type]} Brief - ${fullName}`,
-      html: generateBriefEmailHTML(brief, type),
+      html: generateBriefNotificationEmail({ brief, type }),
     });
 
     return NextResponse.json(
