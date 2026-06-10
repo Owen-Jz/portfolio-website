@@ -18,6 +18,10 @@ import AnimatedSection from "./components/AnimatedSection";
 import SocialSidebar from "./components/SocialSidebar";
 import Lenis from "lenis";
 import { useEffect } from "react";
+import { gsap, ScrollTrigger } from "./libs/gsap";
+import CustomCursor from "./components/gsap/CustomCursor";
+import MarqueeBand from "./components/gsap/MarqueeBand";
+import ScrollProgress from "./components/gsap/ScrollProgress";
 
 import { AnimatePresence } from "framer-motion";
 import IntroOverlay from "./components/IntroOverlay";
@@ -53,15 +57,14 @@ const HomePage = () => {
         smoothWheel: true,
       });
 
-      let rafId;
-      const raf = (time) => {
-        lenis.raf(time);
-        rafId = requestAnimationFrame(raf);
-      };
-      rafId = requestAnimationFrame(raf);
+      // Keep GSAP ScrollTrigger in lockstep with Lenis smooth scroll
+      lenis.on("scroll", ScrollTrigger.update);
+      const tick = (time) => lenis.raf(time * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
 
       return () => {
-        if (rafId) cancelAnimationFrame(rafId);
+        gsap.ticker.remove(tick);
         lenis.destroy();
       };
     }
@@ -72,14 +75,13 @@ const HomePage = () => {
     sessionStorage.setItem("introShown", "true");
   };
 
-  const sections = [
+  // Testimonials renders outside AnimatedSection: GSAP pins it with
+  // position:fixed, which breaks inside a transformed ancestor.
+  const preSections = [
     // { id: "hero", Component: HeroSection },
     { id: "about", Component: AboutMe },
     { id: "projects", Component: ProjectSection },
     { id: "experience", Component: ExperienceSection },
-    { id: "testimonials", Component: TestimonialsSection },
-    { id: "blog", Component: BlogSection },
-    { id: "contact", Component: ContactSection },
   ];
 
   // Prevent flash of "true" state by hiding everything until mounted and checked
@@ -93,13 +95,27 @@ const HomePage = () => {
         {showIntro && <IntroOverlay onComplete={handleIntroComplete} />}
       </AnimatePresence>
 
+      <ScrollProgress />
+      <CustomCursor />
+
       <NavbarDemo />
       <main className="flex-grow w-full max-w-full">
         {/* New Revamped Hero Section */}
         <HeroSectionRevamped />
 
+        {/* Editorial marquee — velocity-reactive */}
+        <MarqueeBand
+          items={[
+            "Product Design",
+            "Web Development",
+            "Brand Identity",
+            "Motion & Interaction",
+            "Full-Stack Engineering",
+          ]}
+        />
+
         {/* Other Sections */}
-        {sections.map(({ id, Component }) => (
+        {preSections.map(({ id, Component }) => (
           <AnimatedSection
             key={id}
             id={id}
@@ -109,10 +125,34 @@ const HomePage = () => {
             <Component />
           </AnimatedSection>
         ))}
+
+        {/* GSAP-pinned horizontal gallery — must not live under a transformed wrapper */}
+        <TestimonialsSection />
+
+        <AnimatedSection id="blog" className="w-full max-w-full px-0" threshold={0.15}>
+          <BlogSection />
+        </AnimatedSection>
+
+        {/* High-energy red band leading into the contact CTA */}
+        <MarqueeBand
+          variant="accent"
+          items={[
+            "Let's Work Together",
+            "Available For Projects",
+            "Let's Build Legendary",
+          ]}
+        />
+
+        <AnimatedSection id="contact" className="w-full max-w-full px-0" threshold={0.15}>
+          <ContactSection />
+        </AnimatedSection>
         <LandingBlogNewsletterPopup />
       </main>
       <FooterSection />
       <SocialSidebar />
+
+      {/* Filmic grain over everything — texture, not tint */}
+      <div aria-hidden="true" className="grain-overlay" />
     </div>
   );
 };

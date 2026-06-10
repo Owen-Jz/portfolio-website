@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
 import { motion, useMotionValue, useMotionTemplate, AnimatePresence } from "framer-motion";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "../libs/gsap";
+import { Parallax, WordReveal } from "./gsap/ScrollFX";
 
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   const mouseX = useMotionValue(0);
@@ -137,16 +140,51 @@ const Badge = ({ text, rotate, left, top, delay, constraintsRef }) => (
 
 const AboutMe = () => {
   const constraintsRef = React.useRef(null);
+  const sectionRef = React.useRef(null);
+
+  // Each bento column drifts at its own rate for scroll depth
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(
+        "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          gsap.utils.toArray(".about-col").forEach((col, i) => {
+            const drift = [-30, -80, -50][i % 3];
+            gsap.fromTo(
+              col,
+              { y: -drift * 0.6 },
+              {
+                y: drift,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: sectionRef.current,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+          });
+        }
+      );
+    },
+    { scope: sectionRef }
+  );
 
   return (
-    <div className="py-20 relative">
+    <div ref={sectionRef} className="py-20 relative">
       {/* Background glow for the entire section */}
-      <div className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+      <Parallax
+        speed={0.5}
+        className="absolute right-0 top-1/4 w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none"
+      />
 
       <div className="mx-4 sm:mx-6 lg:mx-auto max-w-[1400px] grid grid-cols-1 lg:grid-cols-12 gap-6">
 
         {/* First Column (Left) */}
-        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+        <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
           {/* Introduction Header */}
           <div className="flex flex-col gap-3 py-4 lg:py-0 justify-center">
             <motion.span
@@ -157,15 +195,11 @@ const AboutMe = () => {
             >
               Beyond Portfolio
             </motion.span>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1, duration: 0.6 }}
-              className="text-white text-4xl lg:text-5xl font-manrope font-semibold leading-tight"
-            >
-              Get to know <br className="hidden lg:block" /> the person behind <br className="hidden lg:block" /> the screen.
-            </motion.h2>
+            <WordReveal
+              text="Get to know the person behind the screen."
+              as="h2"
+              className="text-white text-4xl lg:text-5xl font-manrope font-semibold leading-tight lg:max-w-[360px]"
+            />
           </div>
 
           {/* Workspace Card: Fills remaining space in the tallest column */}
@@ -197,7 +231,7 @@ const AboutMe = () => {
         </div>
 
         {/* Second Column (Middle) */}
-        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+        <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
           {/* My Stack Card: Fixed large height, but lets column stretch */}
           <GlassCard className="p-6 md:p-8 flex flex-col min-h-[480px]">
             <div className="flex items-center gap-3 mb-6">
@@ -261,7 +295,7 @@ const AboutMe = () => {
         </div>
 
         {/* Third Column (Right) */}
-        <div className="lg:col-span-4 flex flex-col gap-6 h-full">
+        <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
           {/* Location Card: Fixed height */}
           <GlassCard className="p-2 h-[280px] group flex-none">
             <div className="w-full h-full rounded-[18px] overflow-hidden relative">

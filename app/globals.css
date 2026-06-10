@@ -30,6 +30,53 @@ body {
   @apply shadow-[0_0_20px_rgba(176,34,34,0.3)];
 }
 
+/* ============================================================
+   Landing-page atmosphere: custom cursor, film grain, scroll cue
+   ============================================================ */
+
+/* Native cursor hidden while the custom blend-mode cursor is mounted */
+html.cursor-custom * {
+  cursor: none !important;
+}
+html.cursor-custom input,
+html.cursor-custom textarea,
+html.cursor-custom select,
+html.cursor-custom [contenteditable="true"] {
+  cursor: auto !important;
+}
+
+/* Animated film grain — oversized fixed layer jittered in steps */
+.grain-overlay {
+  position: fixed;
+  inset: -100%;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-2%, 1%); }
+  50% { transform: translate(1%, -2%); }
+  75% { transform: translate(-1%, 2%); }
+  100% { transform: translate(0, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain-overlay {
+    animation: none;
+  }
+}
+
+/* Hero scroll cue — pulse traveling down a hairline */
+@keyframes scroll-cue {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+.animate-scroll-cue {
+  animation: scroll-cue 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 /* Hide scrollbars while preserving scroll behavior */
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */

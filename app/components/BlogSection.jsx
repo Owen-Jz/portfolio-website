@@ -7,6 +7,8 @@ import Image from "next/image";
 import Button from "./ui/Button";
 import { ArrowUpRight, Calendar, Clock, ChevronRight } from "lucide-react";
 import BlogEngagement from "./ui/BlogEngagement";
+import { Parallax, WordReveal } from "./gsap/ScrollFX";
+import { ScrollTrigger } from "../libs/gsap";
 
 // Normalize image src for next/image
 const resolveImageSrc = (src) => {
@@ -41,7 +43,7 @@ const FeaturedPostHero = ({ post }) => {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="w-full mb-12"
     >
-      <Link href={`/blog/${post.slug}`} className="block group">
+      <Link href={`/blog/${post.slug}`} data-cursor="view" className="block group">
         <GlassCard className="min-h-[400px]">
           <div className="grid md:grid-cols-2 gap-0 h-full">
             {/* Image Side — optimized via next/image */}
@@ -111,7 +113,7 @@ const BlogCard = ({ post, index }) => {
       transition={{ delay: index * 0.1, duration: 0.5 }}
       className="h-full"
     >
-      <Link href={`/blog/${post.slug}`} className="block h-full cursor-pointer group">
+      <Link href={`/blog/${post.slug}`} data-cursor="view" className="block h-full cursor-pointer group">
         <GlassCard className="h-full">
           <div className="flex flex-col h-full">
             <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-white/5">
@@ -195,6 +197,15 @@ const BlogSection = () => {
     fetchPosts();
   }, []);
 
+  // Async content changes the page height — recalculate every
+  // ScrollTrigger position (testimonial pin, reveals) once settled.
+  useEffect(() => {
+    if (!loading) {
+      const id = requestAnimationFrame(() => ScrollTrigger.refresh());
+      return () => cancelAnimationFrame(id);
+    }
+  }, [loading]);
+
   if (loading) {
     return <div className="py-24 bg-[#0a0a0a]" />; // Simple placeholder to avoid layout shift jumpiness or just return null
   }
@@ -204,7 +215,10 @@ const BlogSection = () => {
   return (
     <section className="py-24 relative overflow-hidden bg-[#0a0a0a]" id="blog">
       {/* Background Elements */}
-      <div className="absolute top-1/2 right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
+      <Parallax
+        speed={0.5}
+        className="absolute top-1/2 right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none"
+      />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center mb-16">
@@ -217,9 +231,11 @@ const BlogSection = () => {
             <p className="text-[#b02222] text-sm md:text-base font-bold font-manrope uppercase tracking-widest mb-3">
               Insights & Updates
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold font-manrope text-white mb-6">
-              Latest from the Blog
-            </h2>
+            <WordReveal
+              text="Latest from the Blog"
+              as="h2"
+              className="text-4xl md:text-5xl font-bold font-manrope text-white mb-6"
+            />
           </motion.div>
         </div>
 

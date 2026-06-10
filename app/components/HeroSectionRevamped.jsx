@@ -4,6 +4,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useMotionTemplate } from "framer-motion";
 import { ArrowRight, Download, Smartphone, Monitor, Code2, Rocket } from "lucide-react";
 import Button from "./ui/Button";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "../libs/gsap";
 
 function Spotlight({ className = "", fill = "white" }) {
   return (
@@ -111,9 +113,70 @@ const MagneticWrapper = ({ children, strength = 0.5 }) => {
 
 export default function HeroSectionRevamped() {
   const containerRef = useRef(null);
+  const bgRef = useRef(null);
+  const contentRef = useRef(null);
+  const cueRef = useRef(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [isMobile, setIsMobile] = useState(false);
+
+  // GSAP scroll parallax: background zooms/drifts while content falls away
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+
+      // Headline cascade — every character rises out of its mask
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap.fromTo(
+          ".hero-char",
+          { yPercent: 130, rotate: 6 },
+          {
+            yPercent: 0,
+            rotate: 0,
+            duration: 1.1,
+            ease: "power4.out",
+            stagger: 0.035,
+            delay: 0.15,
+          }
+        );
+      });
+
+      mm.add(
+        "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          const scrub = {
+            trigger: containerRef.current,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          };
+          gsap.to(bgRef.current, {
+            yPercent: 18,
+            scale: 1.15,
+            ease: "none",
+            scrollTrigger: scrub,
+          });
+          gsap.to(contentRef.current, {
+            yPercent: -14,
+            opacity: 0.25,
+            ease: "none",
+            scrollTrigger: { ...scrub },
+          });
+          gsap.to(cueRef.current, {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: "top top",
+              end: "20% top",
+              scrub: true,
+            },
+          });
+        }
+      );
+    },
+    { scope: containerRef }
+  );
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
@@ -147,7 +210,8 @@ export default function HeroSectionRevamped() {
     >
       {/* Background Image with Overlay */}
       <div
-        className="absolute inset-0 z-[0]"
+        ref={bgRef}
+        className="absolute inset-0 z-[0] will-change-transform"
         style={{
           backgroundImage: "url('/hero3.jpeg')",
           backgroundSize: "cover",
@@ -191,7 +255,7 @@ export default function HeroSectionRevamped() {
       <FloatingIcon icon={Rocket} delay={1.8} className="bottom-1/3 left-[20%] rotate-[6deg]" parallaxY={y4} />
 
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center">
+      <div ref={contentRef} className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center will-change-transform">
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -203,41 +267,35 @@ export default function HeroSectionRevamped() {
           Available for new projects
         </motion.div>
 
-        {/* Main Title - Staggered Animation */}
+        {/* Main Title - GSAP character cascade out of overflow masks */}
         <div className="mb-6 relative overflow-visible">
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-white mb-2 leading-[1.1]">
-            {/* Mobile Line Break Handling is tricky with split text, keeping simple structure for animation */}
             <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
-              {["Hello,", "I", "am"].map((word, i) => (
-                <motion.span
-                  key={i}
-                  initial={{ y: 40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: isMobile ? 0.4 : 0.8,
-                    delay: isMobile ? 0 : i * 0.1,
-                    ease: [0.2, 0.65, 0.3, 0.9],
-                  }}
-                  className="inline-block"
+              {["Hello,", "I", "am"].map((word) => (
+                <span
+                  key={word}
+                  className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]"
                 >
-                  {word}
-                </motion.span>
-              ))}
-              <motion.span
-                initial={{ y: 40, opacity: 0, scale: 0.9 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{
-                  duration: isMobile ? 0.4 : 0.8,
-                  delay: isMobile ? 0 : 0.3,
-                  ease: "backOut"
-                }}
-                className="inline-block relative"
-              >
-                {/* Shimmering Text Gradient */}
-                <span className="text-transparent bg-clip-text bg-[linear-gradient(110deg,#ffffff,45%,#b02222,55%,#ffffff)] bg-[length:250%_100%] animate-text-shimmer">
-                  Owen
+                  <span className="inline-block whitespace-nowrap">
+                    {word.split("").map((ch, ci) => (
+                      <span
+                        key={ci}
+                        className="hero-char inline-block will-change-transform"
+                      >
+                        {ch}
+                      </span>
+                    ))}
+                  </span>
                 </span>
-              </motion.span>
+              ))}
+              <span className="inline-block overflow-hidden align-bottom pb-[0.12em] -mb-[0.12em]">
+                <span className="hero-char inline-block will-change-transform">
+                  {/* Shimmering Text Gradient */}
+                  <span className="text-transparent bg-clip-text bg-[linear-gradient(110deg,#ffffff,45%,#b02222,55%,#ffffff)] bg-[length:250%_100%] animate-text-shimmer">
+                    Owen
+                  </span>
+                </span>
+              </span>
             </div>
           </h1>
         </div>
@@ -272,6 +330,20 @@ export default function HeroSectionRevamped() {
             </Button>
           </MagneticWrapper>
         </motion.div>
+      </div>
+
+      {/* Scroll cue — pulse traveling down a hairline */}
+      <div
+        ref={cueRef}
+        aria-hidden="true"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-3"
+      >
+        <span className="text-white/30 text-[10px] font-mono uppercase tracking-[0.35em]">
+          Scroll
+        </span>
+        <span className="block w-px h-12 bg-white/10 relative overflow-hidden">
+          <span className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-transparent via-[#b02222] to-transparent animate-scroll-cue" />
+        </span>
       </div>
 
       {/* Decorative Gradient at bottom to blend with next section */}

@@ -7,6 +7,9 @@ import { projectsData } from './projectinfo';
 import Link from 'next/link';
 import Button from './ui/Button';
 import { ArrowUpRight } from 'lucide-react';
+import { Parallax, WordReveal } from './gsap/ScrollFX';
+import { useGSAP } from '@gsap/react';
+import { gsap } from '../libs/gsap';
 
 const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   return (
@@ -23,6 +26,8 @@ const GlassCard = ({ children, className = "", hoverEffect = true }) => {
 };
 
 const ProjectCard = ({ project, index }) => {
+  const cardRef = React.useRef(null);
+  const imgRef = React.useRef(null);
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -34,6 +39,35 @@ const ProjectCard = ({ project, index }) => {
     setIsMobile(window.innerWidth < 768);
   }, []);
 
+  // Image drifts inside its frame as the card crosses the viewport
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(
+        "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          gsap.fromTo(
+            imgRef.current,
+            { yPercent: -8, scale: 1.2 },
+            {
+              yPercent: 8,
+              scale: 1.2,
+              ease: "none",
+              scrollTrigger: {
+                trigger: cardRef.current,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
+        }
+      );
+    },
+    { scope: cardRef }
+  );
+
   return (
     <motion.div
       ref={ref}
@@ -42,12 +76,20 @@ const ProjectCard = ({ project, index }) => {
       transition={{ delay: isMobile ? 0 : index * 0.1, duration: isMobile ? 0.3 : 0.5, ease: "easeOut" }}
       className="h-full"
     >
+      <div ref={cardRef} className="h-full">
       <GlassCard className="flex flex-col h-full group">
-        {/* Image Container */}
-        <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-white/5">
+        {/* Image Container — clickable, with internal parallax */}
+        <Link
+          href={project.link}
+          data-cursor="view"
+          target={project.link.startsWith('http') ? '_blank' : undefined}
+          rel={project.link.startsWith('http') ? 'noopener noreferrer' : undefined}
+          className="block relative aspect-[16/10] w-full overflow-hidden border-b border-white/5"
+        >
           <div className="absolute inset-0 bg-gray-900 animate-pulse" /> {/* Placeholder */}
-          <motion.div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+          <div
+            ref={imgRef}
+            className="absolute inset-0 bg-cover bg-center will-change-transform"
             style={{ backgroundImage: `url(${project.image})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#151515] via-transparent to-transparent opacity-60" />
@@ -58,7 +100,7 @@ const ProjectCard = ({ project, index }) => {
               {project.category}
             </span>
           </div>
-        </div>
+        </Link>
 
         {/* Content */}
         <div className="p-6 flex flex-col flex-grow relative">
@@ -98,6 +140,7 @@ const ProjectCard = ({ project, index }) => {
           </div>
         </div>
       </GlassCard>
+      </div>
     </motion.div>
   );
 };
@@ -140,15 +183,23 @@ const ProjectsSection = () => {
   return (
     <section className="py-24 relative overflow-hidden" id="projects">
       {/* Background Elements */}
-      <div className="hidden md:block absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="hidden md:block absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <Parallax
+        speed={0.6}
+        className="hidden md:block absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none"
+      />
+      <Parallax
+        speed={-0.4}
+        className="hidden md:block absolute bottom-[20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"
+      />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl md:text-5xl font-bold font-manrope text-white mb-4">
-              Selected Works
-            </h2>
+            <WordReveal
+              text="Selected Works"
+              as="h2"
+              className="text-4xl md:text-5xl font-bold font-manrope text-white mb-4"
+            />
             <p className="text-white/50 max-w-md">
               A showcase of my recent projects, spanning brand identity, product design, and web development.
             </p>

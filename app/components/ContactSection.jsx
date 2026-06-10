@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Linkedin, Twitter, Github } from "lucide-react";
+import { Parallax, LineReveal } from "./gsap/ScrollFX";
 
 const ContactItem = ({ icon: Icon, label, value, href }) => (
   <a
@@ -32,8 +33,14 @@ const ContactSection = () => {
   return (
     <section ref={ref} className="py-24 md:py-32 relative overflow-hidden bg-[#0a0a0a]" id="contact">
       {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 rounded-full blur-[100px] pointer-events-none" />
+      <Parallax
+        speed={0.55}
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none"
+      />
+      <Parallax
+        speed={-0.4}
+        className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 rounded-full blur-[100px] pointer-events-none"
+      />
 
       <div className="mx-auto px-6 max-w-7xl relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-start">
@@ -54,9 +61,13 @@ const ContactSection = () => {
               </div>
 
               <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold font-manrope text-white mb-8 leading-[0.95] tracking-tight">
-                Let's build <br />
-                <span className="text-white/20">something</span> <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#b02222] to-orange-600">legendary.</span>
+                <LineReveal stagger={0.14}>
+                  <span>Let's build</span>
+                  <span className="text-white/20">something</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#b02222] to-orange-600 pb-[0.12em]">
+                    legendary.
+                  </span>
+                </LineReveal>
               </h2>
 
               <p className="text-white/50 text-lg md:text-xl font-manrope max-w-lg mb-12 leading-relaxed">

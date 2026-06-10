@@ -2,6 +2,7 @@
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { Briefcase, Calendar } from "lucide-react";
+import { Parallax, WordReveal } from "./gsap/ScrollFX";
 
 const experiences = [
   {
@@ -178,8 +179,14 @@ const ExperienceSection = () => {
       className="py-32 relative overflow-hidden bg-[#0a0a0a]"
       id="experience"
     >
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 rounded-full blur-[100px] pointer-events-none" />
+      <Parallax
+        speed={0.5}
+        className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b02222]/5 rounded-full blur-[120px] pointer-events-none"
+      />
+      <Parallax
+        speed={-0.35}
+        className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 rounded-full blur-[100px] pointer-events-none"
+      />
 
       <div className="max-w-5xl mx-auto px-6 relative z-10">
         <div className="flex flex-col items-center text-center mb-20">
@@ -193,9 +200,12 @@ const ExperienceSection = () => {
               <Briefcase size={16} />
               <span className="uppercase tracking-widest">Career Path</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold font-manrope text-white mb-6">
-              Professional <span className="text-[#b02222]">Journey</span>
-            </h2>
+            <WordReveal
+              text="Professional Journey"
+              highlight="Journey"
+              as="h2"
+              className="text-4xl md:text-6xl font-bold font-manrope text-white mb-6"
+            />
             <p className="text-white/50 max-w-2xl mx-auto text-lg leading-relaxed">
               A curated timeline of my professional career, highlighting key
               roles, impactful projects, and technical milestones.
