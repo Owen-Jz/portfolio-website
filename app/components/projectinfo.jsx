@@ -95,6 +95,16 @@ export const projectsData = {
   ],
   brandDesign: [
     {
+      id: 13,
+      title: "Mariko: Luxury Fashion Brand Identity",
+      category: "Brand Design",
+      image: "/projects/mariko-case-study/cover.png",
+      color: "#C9A96E",
+      description: "Complete luxury fashion brand identity and e-commerce storefront for a San Francisco entrepreneur — turning Instagram demand into revenue.",
+      tags: ["Brand Identity", "E-Commerce", "Luxury Fashion"],
+      link: "/projects/mariko-case-study",
+    },
+    {
       id: 1,
       title: "Organ Station: Identity for Scale",
       category: "Brand Design",
