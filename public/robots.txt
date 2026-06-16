@@ -1,17 +1,11 @@
-# https://www.robotstxt.org/robotstxt.html
+# *
 User-agent: *
 Allow: /
-
-# Block admin, test, and internal routes
 Disallow: /admin
 Disallow: /admin/*
-Disallow: /test/
-Disallow: /test/*
-Disallow: /abeg/
 
 # Host
 Host: https://www.owendigitals.work
 
 # Sitemaps
 Sitemap: https://www.owendigitals.work/sitemap.xml
-Sitemap: https://www.owendigitals.work/sitemap-0.xml
