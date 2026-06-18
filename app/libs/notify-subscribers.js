@@ -44,8 +44,15 @@ export async function notifySubscribers(post) {
           html: generateBlogNotificationHTML({ post, subscriberEmail: subscriber.email }),
           text: generateBlogNotificationText({ post, subscriberEmail: subscriber.email }),
         })
-        .then(() => {
-          notified++;
+        .then((result) => {
+          // Resend resolves with { data, error } on API failures instead of throwing,
+          // so a falsy data / populated error means the email did NOT go out.
+          if (result?.error || !result?.data) {
+            console.error(`Failed to notify ${subscriber.email}:`, result?.error ?? "no data returned");
+            failed++;
+          } else {
+            notified++;
+          }
         })
         .catch((err) => {
           console.error(`Failed to notify ${subscriber.email}:`, err);
