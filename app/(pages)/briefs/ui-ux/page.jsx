@@ -2,8 +2,9 @@ import BriefForm from "../../../components/BriefForm";
 import { Smartphone, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 
 export const metadata = {
-  title: "UI/UX Design Brief | Owen Digitals",
+  title: "UI/UX Design Brief",
   description: "Tell us about your UI/UX project. Help us create exceptional user experiences.",
+  alternates: { canonical: "/briefs/ui-ux" },
 };
 
 export default function UIBriefPage() {

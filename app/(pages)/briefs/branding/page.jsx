@@ -2,8 +2,9 @@ import BriefForm from "../../../components/BriefForm";
 import { Palette, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 
 export const metadata = {
-  title: "Branding Brief | Owen Digitals",
+  title: "Branding Brief",
   description: "Tell us about your branding project. Help us understand your brand identity and vision.",
+  alternates: { canonical: "/briefs/branding" },
 };
 
 export default function BrandingBriefPage() {

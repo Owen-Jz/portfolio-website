@@ -5,12 +5,12 @@
 const SITE_URL = "https://www.owendigitals.work";
 
 export const metadata = {
-  title: "Owen Digitals — All My Links",
+  title: "Links",
   description:
     "Everything Owen in one place: portfolio, blog, the AI builders community, and Flogsboard — the app in the works.",
   alternates: { canonical: "/links" },
   openGraph: {
-    title: "Owen Digitals — All My Links",
+    title: "Links — Owen Digitals",
     description:
       "Portfolio, blog, AI community, and Flogsboard — every way to connect with Owen Digitals.",
     url: `${SITE_URL}/links`,
@@ -21,7 +21,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Owen Digitals — All My Links",
+    title: "Links — Owen Digitals",
     description:
       "Portfolio, blog, AI community, and Flogsboard — every way to connect with Owen Digitals.",
     images: ["/profile.jpg"],

@@ -2,8 +2,9 @@ import BriefForm from "../../../components/BriefForm";
 import { Globe, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
 
 export const metadata = {
-  title: "Website Design Brief | Owen Digitals",
+  title: "Website Design Brief",
   description: "Tell us about your website project. Help us understand your goals, audience, and design preferences.",
+  alternates: { canonical: "/briefs/website" },
 };
 
 export default function WebsiteBriefPage() {

@@ -9,9 +9,17 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Owen Digitals - Projects",
+  title: "Projects",
   description:
-    "Explore a curated list of my designs and development projects.",
+    "A curated portfolio of UI/UX case studies, brand identity work, and full-stack builds — from healthcare branding and streetwear to DeFi trading dashboards.",
+  alternates: { canonical: "/projects" },
+  openGraph: {
+    title: "Projects — Owen Digitals",
+    description:
+      "A curated portfolio of UI/UX case studies, brand identity work, and full-stack builds — from healthcare branding and streetwear to DeFi trading dashboards.",
+    url: "/projects",
+    type: "website",
+  },
 };
 
 export default function ProjectsLayout({ children }) {

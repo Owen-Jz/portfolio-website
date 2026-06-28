@@ -11,7 +11,7 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Owen Digitals - Contact",
+  title: "Contact",
   description:
     "Modern UI/UX, full-stack Next.js development, and digital branding — all in one portfolio by Owen.",
   robots: "index, follow",
@@ -20,7 +20,7 @@ export const metadata = {
     canonical: "/contact",
   },
   openGraph: {
-    title: "Owen Digitals - Contact",
+    title: "Contact — Owen Digitals",
     description:
       "UI/UX design and development by Owen. Explore projects that I've worked on.",
     url: "https://www.owendigitals.work/contact",

@@ -32,8 +32,9 @@ export async function generateMetadata({ params }) {
 
     if (!post) {
       return {
-        title: "Post not found | Owen Digitals",
+        title: "Post not found",
         description: "This blog post could not be found.",
+        robots: { index: false },
       };
     }
 
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }) {
       : undefined;
 
     return {
-      title: `${post.title} | Owen Digitals`,
+      title: post.title,
       description,
       alternates: { canonical: `/blog/${slug}` },
       openGraph: {
@@ -69,13 +70,69 @@ export async function generateMetadata({ params }) {
     console.error("Failed to generate blog post metadata:", error);
     // Never let metadata generation break the page — fall back to a sane default.
     return {
-      title: "Blog | Owen Digitals",
+      title: "Blog",
       description:
         "Insights on design, development, business, and growth from Owen Digitals.",
     };
   }
 }
 
-export default function BlogPostLayout({ children }) {
-  return children;
+export default async function BlogPostLayout({ children, params }) {
+  const { slug } = await params;
+
+  let articleSchema = null;
+  try {
+    await connectDB();
+    const post = await BlogPost.findOne({ slug, published: true })
+      .select("title excerpt image author createdAt updatedAt")
+      .lean();
+
+    if (post) {
+      const image = resolveImage(post.image);
+      const url = `${SITE_URL}/blog/${slug}`;
+      articleSchema = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt,
+        image: image
+          ? image.startsWith("http")
+            ? image
+            : `${SITE_URL}${image}`
+          : undefined,
+        datePublished: post.createdAt
+          ? new Date(post.createdAt).toISOString()
+          : undefined,
+        dateModified: post.updatedAt
+          ? new Date(post.updatedAt).toISOString()
+          : undefined,
+        author: {
+          "@type": "Person",
+          name: "Owen",
+          url: `${SITE_URL}/about`,
+        },
+        publisher: {
+          "@type": "Organization",
+          name: "Owen Digitals",
+          url: SITE_URL,
+        },
+        mainEntityOfPage: { "@type": "WebPage", "@id": url },
+      };
+    }
+  } catch (error) {
+    // JSON-LD is an enhancement — never let it break the page.
+    console.error("Failed to build blog post JSON-LD:", error);
+  }
+
+  return (
+    <>
+      {articleSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+        />
+      )}
+      {children}
+    </>
+  );
 }

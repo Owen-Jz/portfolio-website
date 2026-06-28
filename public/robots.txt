@@ -14,4 +14,3 @@ Host: https://www.owendigitals.work
 
 # Sitemaps
 Sitemap: https://www.owendigitals.work/sitemap.xml
-Sitemap: https://www.owendigitals.work/sitemap-0.xml
