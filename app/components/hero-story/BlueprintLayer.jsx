@@ -31,7 +31,9 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
       const rootEl = stage.closest("[data-hero-root]");
       if (!rootEl) return;
       const stageBox = rootEl.getBoundingClientRect();
-      const keys = ["headline", "subline", "badge", "ctas"];
+      // no frame around the badge: the pill has its own border, and a dashed
+      // frame there collided with the headline's spec label
+      const keys = ["headline", "subline", "ctas"];
       setFrames(
         keys
           .map((key) => {
@@ -90,7 +92,7 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
             )
           )}
           {f.key === "headline" && specs.h1 && (
-            <span className="bp-spec hero-annotation absolute -top-6 left-0 whitespace-nowrap">
+            <span className="bp-spec hero-annotation absolute -top-4 left-0 whitespace-nowrap">
               {specs.h1}
             </span>
           )}

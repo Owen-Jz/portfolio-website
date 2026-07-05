@@ -28,10 +28,11 @@ export function buildTargets({ count, rects, viewport, seed = 1 }) {
   const halfH = viewport.h / 2;
 
   for (let i = 0; i < count; i++) {
-    // --- scattered: shallow noise volume, slightly wider than the viewport
+    // --- scattered: deep starfield volume, slightly wider than the viewport;
+    // the z spread gives the Ch.1 mouse parallax real depth to play with
     scattered[i * 3] = (rand() * 2 - 1) * halfW * 1.15;
     scattered[i * 3 + 1] = (rand() * 2 - 1) * halfH * 1.15;
-    scattered[i * 3 + 2] = (rand() * 2 - 1) * 160;
+    scattered[i * 3 + 2] = (rand() * 2 - 1) * 420;
 
     // --- exploded: pick a rect (weighted by perimeter), pick a point on it
     const rect = pickByPerimeter(rects, rand());

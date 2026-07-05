@@ -93,11 +93,16 @@ const HeroStage = forwardRef(function HeroStage(props, ref) {
         data-hero="ctas"
         className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6"
       >
+        {/* The --cta-* properties MUST be initialized inline: the master
+            timeline tweens them, and GSAP reads an undefined custom property
+            as 0 on its first scrub render — which made the buttons invisible
+            through Ch.1/2. Inline values give the tweens true start points. */}
         <Link
           href="/contact"
           data-hero="cta-primary"
           data-magnetic
           className="hero-cta inline-flex items-center justify-center h-12 px-6 text-sm md:text-base rounded-sm will-change-transform"
+          style={{ "--cta-border-alpha": 0.35, "--cta-bg-alpha": 0, "--cta-text-alpha": 0.55 }}
         >
           Start a Project <ArrowRight className="ml-2 w-4 h-4" />
         </Link>
@@ -106,6 +111,7 @@ const HeroStage = forwardRef(function HeroStage(props, ref) {
           data-hero="cta-secondary"
           data-magnetic
           className="hero-cta inline-flex items-center justify-center h-12 px-6 text-sm md:text-base rounded-sm will-change-transform"
+          style={{ "--cta-border-alpha": 0.35, "--cta-bg-alpha": 0, "--cta-text-alpha": 0.55 }}
         >
           Download CV <Download className="ml-2 w-4 h-4" />
         </Link>

@@ -14,8 +14,9 @@ const VERT = /* glsl */ `
   uniform float uMorph1;   // scattered -> exploded
   uniform float uMorph2;   // exploded -> settled
   uniform float uTime;
-  uniform vec2 uMouse;     // world-space px
+  uniform vec2 uMouse;     // world-space px (smoothed in JS)
   uniform float uMouseActive;
+  varying float vAlpha;
 
   // Per-particle staggered, overshooting progress: each particle starts at a
   // slightly different time and pops past its target before settling.
@@ -32,19 +33,38 @@ const VERT = /* glsl */ `
     vec3 pos = mix(aScattered, aExploded, p1);
     pos = mix(pos, aSettled, p2);
 
-    // ambient drift so the cloud is never a still
-    pos.x += sin(uTime * 0.25 + aRand * 6.2831) * 6.0;
-    pos.y += cos(uTime * 0.21 + aRand * 12.566) * 6.0;
+    // ambient drift so the sky is never a still
+    pos.x += sin(uTime * 0.22 + aRand * 6.2831) * 7.0;
+    pos.y += cos(uTime * 0.19 + aRand * 12.566) * 7.0;
 
-    // local mouse repulsion
+    float free = 1.0 - p1; // 1 while scattered (Ch.1), 0 once assembled
+
+    // galaxy parallax: deeper stars shift more with the pointer, so moving
+    // the mouse feels like drifting through the field. Off once assembled
+    // (the wireframe must stay registered to the DOM).
+    pos.xy += uMouse * (pos.z * 0.00022) * free * uMouseActive;
+
+    // local pointer interaction: nearby stars part around the cursor
     vec2 d = pos.xy - uMouse;
     float dist = length(d);
-    float push = smoothstep(140.0, 0.0, dist) * 46.0 * uMouseActive;
-    pos.xy += normalize(d + 0.0001) * push;
+    float push = smoothstep(220.0, 0.0, dist) * 60.0 * uMouseActive;
+    pos.xy += normalize(d + 0.0001) * push * (0.35 + 0.65 * free);
+
+    // stars near the pointer brighten softly
+    float glow = smoothstep(260.0, 0.0, dist) * uMouseActive;
+
+    // ~18% of particles are Ch.1 stars; the rest are hidden dust that
+    // materializes as the wireframe assembles in Ch.2
+    float isStar = step(0.82, aRand);
+    float twinkle = 0.5 + 0.5 * sin(uTime * (0.6 + fract(aRand * 3.7) * 1.8) + aRand * 40.0);
+    float starAlpha = isStar * (0.3 + 0.45 * twinkle);
+    vAlpha = min(mix(starAlpha, 0.55, p1) + glow * 0.35 * free, 0.9);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = (1.6 + aRand * 1.8) * (600.0 / -mv.z);
+    float starSize = 1.0 + fract(aRand * 5.3) * 2.6;
+    float meshSize = 1.6 + aRand * 1.8;
+    gl_PointSize = mix(starSize, meshSize, p1) * (600.0 / -mv.z);
   }
 `;
 
@@ -52,6 +72,7 @@ const FRAG = /* glsl */ `
   precision mediump float;
   uniform float uAccent; // 0 = white dust, 1 = red-tinted ship state
   uniform vec2 uResolution;
+  varying float vAlpha;
 
   // Interleaved gradient noise — cheap dithering to prevent banding on the
   // dark canvas (spec: dark-on-dark over #0a0a0a bands without it).
@@ -63,7 +84,7 @@ const FRAG = /* glsl */ `
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
     if (d > 0.5) discard;
-    float alpha = smoothstep(0.5, 0.1, d) * 0.55;
+    float alpha = smoothstep(0.5, 0.12, d) * vAlpha;
     alpha -= ign(gl_FragCoord.xy) * 0.04; // dither
     vec3 white = vec3(0.92);
     vec3 red = vec3(0.69, 0.13, 0.13);
@@ -158,17 +179,25 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     const points = new THREE.Points(geo, mat);
     scene.add(points);
 
-    // mouse -> world px (same mapping as pointTargets)
+    // mouse -> world px (same mapping as pointTargets). The uniform eases
+    // toward this target each frame so the field glides instead of snapping.
+    const mouseTarget = new THREE.Vector2(9999, 9999);
+    let mouseActiveTarget = 0;
     const onPointer = (e) => {
       const r = parent.getBoundingClientRect();
-      mat.uniforms.uMouse.value.set(
+      mouseTarget.set(
         e.clientX - r.left - parent.clientWidth / 2,
         -(e.clientY - r.top - parent.clientHeight / 2)
       );
-      mat.uniforms.uMouseActive.value = 1;
+      // first movement: jump straight there so the field doesn't sweep in
+      // from the (9999, 9999) parking position
+      if (mat.uniforms.uMouse.value.x > 8000) {
+        mat.uniforms.uMouse.value.copy(mouseTarget);
+      }
+      mouseActiveTarget = 1;
     };
     const onPointerLeave = () => {
-      mat.uniforms.uMouseActive.value = 0;
+      mouseActiveTarget = 0;
     };
     parent.addEventListener("pointermove", onPointer, { passive: true });
     parent.addEventListener("pointerleave", onPointerLeave);
@@ -190,6 +219,10 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       mat.uniforms.uMorph2.value = s.morph2;
       mat.uniforms.uAccent.value = s.accent;
       mat.uniforms.uTime.value = clock.getElapsedTime();
+      // ease the pointer uniforms — glide, don't snap
+      mat.uniforms.uMouse.value.lerp(mouseTarget, 0.08);
+      mat.uniforms.uMouseActive.value +=
+        (mouseActiveTarget - mat.uniforms.uMouseActive.value) * 0.06;
       renderer.render(scene, camera);
     };
     loop();
