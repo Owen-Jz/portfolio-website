@@ -12,6 +12,8 @@ export function useLiveSpecs(refsMap) {
   const [specs, setSpecs] = useState({});
 
   useEffect(() => {
+    let cancelled = false;
+
     const measure = () => {
       const next = {};
       for (const [key, ref] of Object.entries(refsMap)) {
@@ -33,9 +35,12 @@ export function useLiveSpecs(refsMap) {
     };
 
     measure();
-    document.fonts?.ready?.then(measure);
+    document.fonts?.ready?.then(() => { if (!cancelled) measure(); });
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", measure);
+    };
     // refsMap is expected to be a stable object created once by the caller
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
