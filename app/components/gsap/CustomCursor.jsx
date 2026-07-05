@@ -70,10 +70,11 @@ export default function CustomCursor() {
           };
 
           const applyHeroVisuals = () => {
-            gsap.to(coordsRef.current, { opacity: heroMode === "crosshair" ? 1 : 0, duration: 0.2 });
-            gsap.to(caretRef.current, { opacity: heroMode === "caret" ? 1 : 0, duration: 0.2 });
+            gsap.to(coordsRef.current, { autoAlpha: heroMode === "crosshair" ? 1 : 0, duration: 0.2 });
+            gsap.to(caretRef.current, { autoAlpha: heroMode === "caret" ? 1 : 0, duration: 0.2 });
             gsap.to(ring, {
               scale: heroMode === "caret" ? 0 : heroMode === "crosshair" ? 0.5 : 1,
+              backgroundColor: "rgba(255,255,255,0)",
               duration: 0.3,
             });
             gsap.to(dot, { opacity: heroMode === "caret" ? 0 : 1, duration: 0.2 });
@@ -100,7 +101,7 @@ export default function CustomCursor() {
 
           const onLeaveDoc = () => gsap.to([dot, ring, coordsRef.current, caretRef.current], { autoAlpha: 0, duration: 0.2 });
           const onEnterDoc = () => {
-            gsap.to([dot, ring, coordsRef.current, caretRef.current], { autoAlpha: 1, duration: 0.2 });
+            gsap.to([dot, ring], { autoAlpha: 1, duration: 0.2 });
             applyHeroVisuals();
           };
 

@@ -27,6 +27,7 @@ describe("chapter bands", () => {
   it("keeps big events inside narrow windows (<= 10% scroll)", () => {
     expect(bd(EVENTS.assemble)).toBeLessThanOrEqual(0.1);
     expect(bd(EVENTS.weightFill)).toBeLessThanOrEqual(0.1);
+    expect(bd(EVENTS.release)).toBeLessThanOrEqual(0.1);
   });
 
   it("places assemble inside build and weightFill at ship entrance", () => {

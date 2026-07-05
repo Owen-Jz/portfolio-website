@@ -15,13 +15,12 @@ const BEAT_SECONDS = 2.2;
 export default function HeroStoryMobile({ stageRef }) {
   const wrapRef = useRef(null);
   const [beat, setBeat] = useState(0);
-  const tlRef = useRef(null);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(
-        "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+        "(max-width: 767px) and (prefers-reduced-motion: no-preference), (pointer: coarse) and (prefers-reduced-motion: no-preference)",
         () => {
           const stage = stageRef.current;
           const headline = stage.querySelector("[data-hero='headline']");
@@ -41,8 +40,6 @@ export default function HeroStoryMobile({ stageRef }) {
               setBeat(t < BEAT_SECONDS ? 0 : t < BEAT_SECONDS * 2 ? 1 : 2);
             },
           });
-          tlRef.current = tl;
-
           // Beat 1 — the idea (starts from HeroStage's wireframe defaults)
           tl.from(frame, { opacity: 0, scale: 0.97, duration: 0.5 });
           tl.addLabel("build", BEAT_SECONDS);
@@ -70,7 +67,7 @@ export default function HeroStoryMobile({ stageRef }) {
           tl.call(() => ctas.forEach((el) => (el.style.borderStyle = "solid")), [], "ship+=0.3");
 
           const advance = () => {
-            const labels = [0, tl.labels.build, tl.labels.ship];
+            const labels = [tl.labels.build, tl.labels.ship];
             const t = tl.time();
             const next = labels.find((l) => l > t + 0.05);
             if (next !== undefined) tl.play(next);

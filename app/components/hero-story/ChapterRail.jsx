@@ -12,7 +12,7 @@ export default function ChapterRail({ active = 0, onJump }) {
   return (
     <nav
       aria-label="Hero chapters"
-      className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-6"
+      className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-20 hidden md:pointer-fine:flex flex-col gap-6"
     >
       {LABELS.map((label, i) => (
         <button

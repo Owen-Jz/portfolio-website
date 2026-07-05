@@ -19,7 +19,7 @@ const ShipLayer = forwardRef(function ShipLayer(props, ref) {
     <div
       ref={ref}
       aria-hidden="true"
-      className="hidden md:block absolute inset-0 z-[2] pointer-events-none overflow-hidden"
+      className="hidden md:pointer-fine:block absolute inset-0 z-[2] pointer-events-none overflow-hidden"
     >
       {/* Graded backdrop — same treatment as the old hero, now earned */}
       <div

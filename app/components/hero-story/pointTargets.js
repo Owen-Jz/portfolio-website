@@ -42,7 +42,7 @@ export function buildTargets({ count, rects, viewport, seed = 1 }) {
 
     // --- settled: lower-half drift band
     settled[i * 3] = (rand() * 2 - 1) * halfW * 1.1;
-    settled[i * 3 + 1] = -rand() * halfH * 1.2 * 0.5 - 0; // 0..-0.6h
+    settled[i * 3 + 1] = -rand() * halfH * 1.2 * 0.5; // 0..-0.6*halfH (lower-half drift band)
     settled[i * 3 + 2] = (rand() * 2 - 1) * 120;
   }
 

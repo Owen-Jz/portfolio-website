@@ -316,7 +316,7 @@ export default function HeroStory() {
       <div
         ref={cueRef}
         aria-hidden="true"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-3"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:pointer-fine:flex flex-col items-center gap-3"
       >
         <span className="hero-annotation">Scroll</span>
         <span className="block w-px h-12 bg-white/10 relative overflow-hidden">
