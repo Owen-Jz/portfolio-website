@@ -35,7 +35,12 @@ export default function CustomCursor() {
           const ringX = gsap.quickTo(ring, "x", { duration: 0.38, ease: "power3" });
           const ringY = gsap.quickTo(ring, "y", { duration: 0.38, ease: "power3" });
 
+          let heroMode = "default";
+          let lastX = -100, lastY = -100;
+
           const onMove = (e) => {
+            lastX = e.clientX;
+            lastY = e.clientY;
             dotX(e.clientX);
             dotY(e.clientY);
             ringX(e.clientX);
@@ -59,25 +64,29 @@ export default function CustomCursor() {
               gsap.to(label, { opacity: 0, duration: 0.15 });
               gsap.to(dot, { opacity: 1, duration: 0.2 });
             } else {
-              gsap.to(ring, { scale: 1, backgroundColor: "rgba(255,255,255,0)", duration: 0.3 });
               gsap.to(label, { opacity: 0, duration: 0.15 });
-              gsap.to(dot, { opacity: 1, duration: 0.2 });
+              applyHeroVisuals();
             }
           };
 
-          let heroMode = "default";
-          const onHeroCursor = (e) => {
-            heroMode = e.detail?.mode || "default";
-            const coords = coordsRef.current;
-            const caret = caretRef.current;
-            gsap.to(coords, { opacity: heroMode === "crosshair" ? 1 : 0, duration: 0.2 });
-            gsap.to(caret, { opacity: heroMode === "caret" ? 1 : 0, duration: 0.2 });
-            // crosshair: shrink ring to a small plus-like dot; caret: hide ring
+          const applyHeroVisuals = () => {
+            gsap.to(coordsRef.current, { opacity: heroMode === "crosshair" ? 1 : 0, duration: 0.2 });
+            gsap.to(caretRef.current, { opacity: heroMode === "caret" ? 1 : 0, duration: 0.2 });
             gsap.to(ring, {
               scale: heroMode === "caret" ? 0 : heroMode === "crosshair" ? 0.5 : 1,
               duration: 0.3,
             });
             gsap.to(dot, { opacity: heroMode === "caret" ? 0 : 1, duration: 0.2 });
+          };
+
+          const onHeroCursor = (e) => {
+            heroMode = e.detail?.mode || "default";
+            if (coordsRef.current) {
+              coordsRef.current.textContent = `x ${lastX} · y ${lastY}`;
+              gsap.set(coordsRef.current, { x: lastX + 18, y: lastY + 18 });
+            }
+            if (caretRef.current) gsap.set(caretRef.current, { x: lastX + 6, y: lastY - 8 });
+            applyHeroVisuals();
           };
           window.addEventListener("hero-cursor", onHeroCursor);
 
@@ -89,8 +98,11 @@ export default function CustomCursor() {
             else setState("default");
           };
 
-          const onLeaveDoc = () => gsap.to([dot, ring], { autoAlpha: 0, duration: 0.2 });
-          const onEnterDoc = () => gsap.to([dot, ring], { autoAlpha: 1, duration: 0.2 });
+          const onLeaveDoc = () => gsap.to([dot, ring, coordsRef.current, caretRef.current], { autoAlpha: 0, duration: 0.2 });
+          const onEnterDoc = () => {
+            gsap.to([dot, ring, coordsRef.current, caretRef.current], { autoAlpha: 1, duration: 0.2 });
+            applyHeroVisuals();
+          };
 
           window.addEventListener("mousemove", onMove, { passive: true });
           window.addEventListener("mouseover", onOver, { passive: true });
