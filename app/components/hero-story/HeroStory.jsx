@@ -19,7 +19,7 @@
 import React, { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "../../libs/gsap";
+import { gsap } from "../../libs/gsap";
 import { getLenis } from "../../libs/lenis";
 import { CHAPTERS, EVENTS, PIN_END, bd, chapterAt } from "./chapters.js";
 import HeroStage from "./HeroStage.jsx";
@@ -135,6 +135,9 @@ export default function HeroStory() {
           tl.call(() => setCursor("crosshair"), [], 0.001);
           tl.call(() => setCursor("caret"), [], CHAPTERS.build.enter[0]);
           tl.call(() => setCursor("default"), [], CHAPTERS.ship.enter[0]);
+          // restore cursor modes when scrolling back up
+          tl.call(() => setCursor("crosshair"), [], CHAPTERS.build.enter[0] - 0.001);
+          tl.call(() => setCursor("caret"), [], CHAPTERS.ship.enter[0] - 0.001);
 
           // --- Ch.1 exit: blueprint decorations dissolve
           tl.to(
@@ -144,8 +147,8 @@ export default function HeroStory() {
           );
           tl.to(
             cueRef.current,
-            { opacity: 0, duration: 0.05 },
-            0.1
+            { opacity: 0, duration: bd(CHAPTERS.idea.hold) / 3 },
+            CHAPTERS.idea.hold[0]
           );
 
           // --- Ch.2 enter: build layer in, hairlines draw, particles assemble
@@ -265,6 +268,7 @@ export default function HeroStory() {
         const stage = stageRef.current;
         gsap.set(stage.querySelectorAll("[data-hero='headline'], [data-hero='subline']"), {
           "--wght": 900,
+          "--wdth": 100,
         });
         gsap.set(blueprintRef.current, { opacity: 0 });
         gsap.set(buildRef.current, { opacity: 0 });

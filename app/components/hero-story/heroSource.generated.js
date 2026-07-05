@@ -21,7 +21,7 @@ export const heroSourceLines = [
   "import React, { useRef, useState } from \"react\";",
   "import dynamic from \"next/dynamic\";",
   "import { useGSAP } from \"@gsap/react\";",
-  "import { gsap, ScrollTrigger } from \"../../libs/gsap\";",
+  "import { gsap } from \"../../libs/gsap\";",
   "import { getLenis } from \"../../libs/lenis\";",
   "import { CHAPTERS, EVENTS, PIN_END, bd, chapterAt } from \"./chapters.js\";",
   "import HeroStage from \"./HeroStage.jsx\";",
