@@ -64,12 +64,20 @@ describe("buildTargets", () => {
     expect(zs.size).toBe(rects.length);
   });
 
-  it("settled points form a low horizontal band below center", () => {
+  it("settled points disperse outward, reaching past the viewport edges", () => {
+    let maxAbsX = 0;
+    let maxAbsY = 0;
     for (let i = 0; i < count; i++) {
+      const x = t.settled[i * 3];
       const y = t.settled[i * 3 + 1];
-      expect(y).toBeLessThanOrEqual(0); // lower half only
-      expect(y).toBeGreaterThanOrEqual(-viewport.h * 0.6);
+      expect(Math.abs(x)).toBeLessThanOrEqual(viewport.w * 0.85); // 1.7 * halfW
+      expect(Math.abs(y)).toBeLessThanOrEqual(viewport.h * 0.85);
+      maxAbsX = Math.max(maxAbsX, Math.abs(x));
+      maxAbsY = Math.max(maxAbsY, Math.abs(y));
     }
+    // genuinely disperses beyond the visible frame, not just drifts in place
+    expect(maxAbsX).toBeGreaterThan(viewport.w / 2);
+    expect(maxAbsY).toBeGreaterThan(viewport.h / 2);
   });
 
   it("is deterministic for the same seed", () => {

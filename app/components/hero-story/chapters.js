@@ -11,8 +11,10 @@ export const CHAPTERS = {
 };
 
 export const EVENTS = {
-  assemble: [0.4, 0.48], // particle snap into the exploded UI wireframe
-  weightFill: [0.66, 0.74], // type wght 500 -> 900, red floods in
+  // Deliberately wide: the stars condensing into the UI wireframe is the
+  // story's centerpiece — it should be watched, not blinked past.
+  assemble: [0.36, 0.54],
+  weightFill: [0.66, 0.74], // type wght -> 800, red floods in
   release: [0.92, 1.0], // stage eases up into the marquee handoff
 };
 

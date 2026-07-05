@@ -56,7 +56,7 @@ export default function HeroStoryMobile({ stageRef }) {
 
           // Beat 3 — the ship
           tl.call(() => (kicker.textContent = KICKERS[2]), [], "ship");
-          tl.to([headline, subline], { "--wght": 900, duration: 0.7 }, "ship");
+          tl.to([headline, subline], { "--wght": 800, duration: 0.7 }, "ship");
           tl.to(frame, { opacity: 0, duration: 0.6 }, "ship");
           tl.to(
             ctas,

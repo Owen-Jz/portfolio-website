@@ -1,4 +1,4 @@
-import { Manrope, Archivo } from "next/font/google";
+import { Manrope, Bricolage_Grotesque } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -9,11 +9,14 @@ const manrope = Manrope({
   variable: "--font-manrope",
 });
 
-const archivo = Archivo({
+// Hero display face — characterful grotesque with a 200-800 weight axis
+// (the hero animates weight as its "stroke fills in" story) plus optical
+// sizing for crisp display cuts at headline sizes.
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-archivo",
-  axes: ["wdth"],
+  variable: "--font-bricolage",
+  axes: ["opsz", "wdth"],
 });
 
 const SITE_URL = "https://www.owendigitals.work";
@@ -102,7 +105,7 @@ const structuredData = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${manrope.className} ${manrope.variable} ${archivo.variable}`}>
+      <body className={`${manrope.className} ${manrope.variable} ${bricolage.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

@@ -4,7 +4,9 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 
 const SRC = "app/components/hero-story/HeroStory.jsx";
 const OUT = "app/components/hero-story/heroSource.generated.js";
-const LINE_COUNT = 44;
+// Surface level on purpose: just the human-readable header block — enough
+// for a visitor to get the story, not a wall of implementation code.
+const LINE_COUNT = 17;
 
 const lines = existsSync(SRC)
   ? readFileSync(SRC, "utf8").split("\n").slice(0, LINE_COUNT)

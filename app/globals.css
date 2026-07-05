@@ -22,10 +22,11 @@ body {
   font-family: "Manrope", sans-serif;
 }
 
-/* Variable display face for the hero story — weight is animated via --wght */
+/* Variable display face for the hero story — weight is animated via --wght
+   (Bricolage Grotesque: wght 200-800, opsz pinned to its display cut) */
 .font-display {
-  font-family: var(--font-archivo), "Archivo", sans-serif;
-  font-variation-settings: "wght" var(--wght, 900), "wdth" var(--wdth, 100);
+  font-family: var(--font-bricolage), "Bricolage Grotesque", sans-serif;
+  font-variation-settings: "wght" var(--wght, 800), "opsz" 96, "wdth" var(--wdth, 100);
 }
 
 /* --- Hero story stage ------------------------------------------------- */

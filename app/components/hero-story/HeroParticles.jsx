@@ -13,6 +13,7 @@ const VERT = /* glsl */ `
   attribute float aRand;
   uniform float uMorph1;   // scattered -> exploded
   uniform float uMorph2;   // exploded -> settled
+  uniform float uScroll;   // 0..1 master timeline progress (sky parallax)
   uniform float uTime;
   uniform vec2 uMouse;     // world-space px (smoothed in JS)
   uniform float uMouseActive;
@@ -28,16 +29,26 @@ const VERT = /* glsl */ `
   }
 
   void main() {
-    float p1 = staggered(uMorph1, aRand);
+    // Two populations: ~18% are SKY STARS (visible in Ch.1, they thin out
+    // through the build and never join the wireframe), the rest are hidden
+    // DUST that condenses into the UI wireframe during Ch.2.
+    float isStar = step(0.82, aRand);
+    float isMesh = 1.0 - isStar;
+
+    float pMesh = staggered(uMorph1, aRand) * isMesh; // stars never assemble
     float p2 = staggered(uMorph2, fract(aRand * 7.31));
-    vec3 pos = mix(aScattered, aExploded, p1);
-    pos = mix(pos, aSettled, p2);
+    vec3 pos = mix(aScattered, aExploded, pMesh);
+    pos = mix(pos, aSettled, p2); // Ch.3: everything disperses outward
 
     // ambient drift so the sky is never a still
     pos.x += sin(uTime * 0.22 + aRand * 6.2831) * 7.0;
     pos.y += cos(uTime * 0.19 + aRand * 12.566) * 7.0;
 
-    float free = 1.0 - p1; // 1 while scattered (Ch.1), 0 once assembled
+    float free = 1.0 - pMesh; // 1 for sky/unassembled, 0 once in the wireframe
+
+    // scroll parallax: the sky climbs far slower than the pinned foreground,
+    // so the stars read as a distant background layer
+    pos.y += uScroll * (90.0 + 70.0 * fract(aRand * 2.3)) * free;
 
     // galaxy parallax: deeper stars shift more with the pointer, so moving
     // the mouse feels like drifting through the field. Off once assembled
@@ -53,18 +64,24 @@ const VERT = /* glsl */ `
     // stars near the pointer brighten softly
     float glow = smoothstep(260.0, 0.0, dist) * uMouseActive;
 
-    // ~18% of particles are Ch.1 stars; the rest are hidden dust that
-    // materializes as the wireframe assembles in Ch.2
-    float isStar = step(0.82, aRand);
+    // --- visibility -----------------------------------------------------
     float twinkle = 0.5 + 0.5 * sin(uTime * (0.6 + fract(aRand * 3.7) * 1.8) + aRand * 40.0);
-    float starAlpha = isStar * (0.3 + 0.45 * twinkle);
-    vAlpha = min(mix(starAlpha, 0.55, p1) + glow * 0.35 * free, 0.9);
+    // the sky thins through the build: 60% of stars fade hard, the rest dim
+    float fadeGroup = step(0.4, fract(aRand * 9.7));
+    float thin = 1.0 - uMorph1 * (0.35 + 0.5 * fadeGroup);
+    float starAlpha = isStar * (0.3 + 0.45 * twinkle) * thin;
+    // dust becomes visible only as it takes its place in the wireframe
+    float meshAlpha = isMesh * 0.5 * pMesh;
+    float alpha = max(starAlpha, meshAlpha) + glow * 0.35 * free;
+    // Ch.3: the sky disperses and dies away, revealing the backdrop
+    alpha *= 1.0 - p2 * 0.88;
+    vAlpha = min(alpha, 0.9);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float starSize = 1.0 + fract(aRand * 5.3) * 2.6;
     float meshSize = 1.6 + aRand * 1.8;
-    gl_PointSize = mix(starSize, meshSize, p1) * (600.0 / -mv.z);
+    gl_PointSize = mix(starSize, meshSize, pMesh) * (600.0 / -mv.z);
   }
 `;
 
@@ -123,38 +140,52 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     // camera distance such that 1 world unit ~ 1 CSS px at z=0
     camera.position.z = vh / (2 * Math.tan((camera.fov * Math.PI) / 360));
 
-    // Sample the real UI rects for the exploded wireframe
+    // Sample the real UI rects for the wireframe. Shallow z-planes keep the
+    // projected outlines registered to the DOM (deep planes drift toward the
+    // vanishing point), and the 12px pad matches the blueprint frames so the
+    // stars outline the elements instead of sitting on the glyphs.
     const stage = stageRef.current;
-    const parentBox = parent.getBoundingClientRect();
-    const planeZ = { headline: 0, subline: -40, ctas: -90, badge: -140 };
-    const rects = Object.entries(planeZ)
-      .map(([key, z]) => {
-        const el = stage.querySelector(`[data-hero="${key}"]`);
-        if (!el) return null;
-        const r = el.getBoundingClientRect();
-        return {
-          x: r.left - parentBox.left,
-          y: r.top - parentBox.top,
-          width: r.width,
-          height: r.height,
-          z,
-        };
-      })
-      .filter(Boolean);
-
-    const targets = buildTargets({
-      count: COUNT,
-      rects,
-      viewport: { w: vw, h: vh },
-      seed: 20260705,
-    });
+    const FRAME_PAD = 12;
+    const planeZ = { headline: 0, subline: -14, ctas: -28, badge: -42 };
+    const sampleRects = () => {
+      const parentBox = parent.getBoundingClientRect();
+      return Object.entries(planeZ)
+        .map(([key, z]) => {
+          const el = stage.querySelector(`[data-hero="${key}"]`);
+          if (!el) return null;
+          const r = el.getBoundingClientRect();
+          return {
+            x: r.left - parentBox.left - FRAME_PAD,
+            y: r.top - parentBox.top - FRAME_PAD,
+            width: r.width + FRAME_PAD * 2,
+            height: r.height + FRAME_PAD * 2,
+            z,
+          };
+        })
+        .filter(Boolean);
+    };
 
     const geo = new THREE.BufferGeometry();
-    // position attr is required by three but unused (vertex shader computes pos)
-    geo.setAttribute("position", new THREE.BufferAttribute(targets.scattered.slice(), 3));
-    geo.setAttribute("aScattered", new THREE.BufferAttribute(targets.scattered, 3));
-    geo.setAttribute("aExploded", new THREE.BufferAttribute(targets.exploded, 3));
-    geo.setAttribute("aSettled", new THREE.BufferAttribute(targets.settled, 3));
+    const setTargets = () => {
+      const targets = buildTargets({
+        count: COUNT,
+        rects: sampleRects(),
+        viewport: { w: parent.clientWidth, h: parent.clientHeight },
+        seed: 20260705,
+      });
+      // position attr is required by three but unused (vertex shader computes pos)
+      geo.setAttribute("position", new THREE.BufferAttribute(targets.scattered.slice(), 3));
+      geo.setAttribute("aScattered", new THREE.BufferAttribute(targets.scattered, 3));
+      geo.setAttribute("aExploded", new THREE.BufferAttribute(targets.exploded, 3));
+      geo.setAttribute("aSettled", new THREE.BufferAttribute(targets.settled, 3));
+    };
+    setTargets();
+    // the variable font changes the headline metrics when it lands —
+    // re-sample so the star wireframe aligns with the final layout
+    let alive = true;
+    document.fonts?.ready?.then(() => {
+      if (alive) setTargets();
+    });
     const rands = new Float32Array(COUNT);
     for (let i = 0; i < COUNT; i++) rands[i] = Math.random();
     geo.setAttribute("aRand", new THREE.BufferAttribute(rands, 1));
@@ -169,6 +200,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
         uMorph1: { value: 0 },
         uMorph2: { value: 0 },
         uAccent: { value: 0 },
+        uScroll: { value: 0 },
         uTime: { value: 0 },
         uMouse: { value: new THREE.Vector2(9999, 9999) },
         uMouseActive: { value: 0 },
@@ -218,6 +250,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       mat.uniforms.uMorph1.value = s.morph1;
       mat.uniforms.uMorph2.value = s.morph2;
       mat.uniforms.uAccent.value = s.accent;
+      mat.uniforms.uScroll.value = s.scroll ?? 0;
       mat.uniforms.uTime.value = clock.getElapsedTime();
       // ease the pointer uniforms — glide, don't snap
       mat.uniforms.uMouse.value.lerp(mouseTarget, 0.08);
@@ -239,6 +272,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     window.addEventListener("resize", onResize);
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       io.disconnect();
       window.removeEventListener("resize", onResize);

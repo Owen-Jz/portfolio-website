@@ -62,18 +62,19 @@ const HeroStage = forwardRef(function HeroStage(props, ref) {
         Available for new projects
       </div>
 
-      {/* Headline — the LCP element. Weight animates 120 -> 900 via --wght. */}
+      {/* Headline — the LCP element. Weight animates 200 -> 800 via --wght
+          (Bricolage Grotesque's full axis). */}
       <h1
         data-hero="headline"
         className="font-display text-6xl md:text-8xl lg:text-9xl tracking-tight text-white leading-[0.95] mb-4 select-none"
-        style={{ "--wght": 120, "--wdth": 110 }}
+        style={{ "--wght": 200, "--wdth": 100 }}
       >
         OWEN
       </h1>
       <p
         data-hero="subline"
         className="font-display text-lg md:text-2xl text-white/70 tracking-[0.18em] uppercase mb-8"
-        style={{ "--wght": 120 }}
+        style={{ "--wght": 200 }}
       >
         Full Stack Design Engineer
       </p>

@@ -3,7 +3,7 @@
  *   scattered — loose dust in a shallow volume around the stage
  *   exploded  — points on the perimeters of the real UI rects, each rect on
  *               its own z-plane (the "exploded axonometric wireframe")
- *   settled   — a calm horizontal drift band in the lower half
+ *   settled   — Ch.3 dispersal: a wide scatter past the viewport edges
  * DOM -> world: wx = x - w/2, wy = -(y - h/2), 1 CSS px = 1 world unit.
  */
 
@@ -41,10 +41,12 @@ export function buildTargets({ count, rects, viewport, seed = 1 }) {
     exploded[i * 3 + 1] = -(py - halfH);
     exploded[i * 3 + 2] = rect.z;
 
-    // --- settled: lower-half drift band
-    settled[i * 3] = (rand() * 2 - 1) * halfW * 1.1;
-    settled[i * 3 + 1] = -rand() * halfH * 1.2 * 0.5; // 0..-0.6*halfH (lower-half drift band)
-    settled[i * 3 + 2] = (rand() * 2 - 1) * 120;
+    // --- settled: Ch.3 dispersal — the sky scatters outward past the
+    // viewport edges (and fades in the shader), handing the stage to the
+    // shipped backdrop
+    settled[i * 3] = (rand() * 2 - 1) * halfW * 1.7;
+    settled[i * 3 + 1] = (rand() * 2 - 1) * halfH * 1.7;
+    settled[i * 3 + 2] = (rand() * 2 - 1) * 360;
   }
 
   return { scattered, exploded, settled };

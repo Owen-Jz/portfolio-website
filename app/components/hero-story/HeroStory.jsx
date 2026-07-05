@@ -3,17 +3,18 @@
 /**
  * HeroStory — "Blueprint to Reality"
  *
- * You are reading the component you are looking at. This hero pins for
- * 240vh and builds itself in three chapters:
+ * You are reading the component you are looking at. This hero pins
+ * while you scroll and tells its own making in three chapters:
  *
- *   01 THE IDEA   outlined type, live spec annotations, drifting dust
- *   02 THE BUILD  hairlines draw, particles assemble the UI wireframe,
- *                 and this very file renders in the source panel
- *   03 THE SHIP   weight floods to 900, color arrives, buttons go live
+ *   01 THE IDEA   a night sky of ideas — thin type, live spec labels
+ *   02 THE BUILD  the stars condense into the interface wireframe
+ *                 while this very file walks you through it
+ *   03 THE SHIP   the sky disperses, weight and color arrive, and
+ *                 the buttons go live
  *
- * One GSAP timeline drives the DOM and the WebGL uniforms so they can
- * never drift apart. The CTAs are real links from frame one — the
- * story never gates the action.
+ * One timeline drives the page and the particles together, so they
+ * can never drift apart. The buttons are real from the first frame —
+ * the story never gates the action.
  */
 
 import React, { useRef, useState } from "react";
@@ -43,7 +44,7 @@ export default function HeroStory() {
   const buildRef = useRef(null);
   const shipRef = useRef(null);
   const cueRef = useRef(null);
-  const glState = useRef({ morph1: 0, morph2: 0, accent: 0 });
+  const glState = useRef({ morph1: 0, morph2: 0, accent: 0, scroll: 0 });
   const stRef = useRef(null);
   const [chapter, setChapter] = useState(0);
   const [particlesOn, setParticlesOn] = useState(false);
@@ -116,6 +117,10 @@ export default function HeroStory() {
             },
           });
 
+          // Sky parallax: the starfield tracks overall progress at its own
+          // (much slower) pace — background layer vs. foreground story
+          tl.to(glState.current, { scroll: 1, duration: 1 }, 0);
+
           // Kicker copy swaps at chapter boundaries (snap, not fade-drag)
           const swapKicker = (text) => () => {
             kicker.textContent = text;
@@ -168,6 +173,19 @@ export default function HeroStory() {
             { morph1: 1, duration: bd(EVENTS.assemble), ease: "power2.inOut" },
             EVENTS.assemble[0]
           );
+          // the two side pins rise as the build begins
+          tl.fromTo(
+            buildRef.current.querySelectorAll(".build-pin"),
+            { y: 48, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.02,
+              duration: bd(CHAPTERS.build.enter),
+              ease: "power1.out",
+            },
+            CHAPTERS.build.enter[0]
+          );
           // type gains working weight through the build
           tl.to(
             [headline, subline],
@@ -183,7 +201,7 @@ export default function HeroStory() {
           );
           tl.to(
             [headline, subline],
-            { "--wght": 900, duration: bd(EVENTS.weightFill), ease: "power3.inOut" },
+            { "--wght": 800, duration: bd(EVENTS.weightFill), ease: "power3.inOut" },
             EVENTS.weightFill[0]
           );
           tl.to(
@@ -262,7 +280,7 @@ export default function HeroStory() {
       mm.add("(prefers-reduced-motion: reduce)", () => {
         const stage = stageRef.current;
         gsap.set(stage.querySelectorAll("[data-hero='headline'], [data-hero='subline']"), {
-          "--wght": 900,
+          "--wght": 800,
           "--wdth": 100,
         });
         gsap.set(blueprintRef.current, { opacity: 0 });
