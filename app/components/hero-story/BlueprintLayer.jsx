@@ -60,7 +60,7 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
     <div
       ref={ref}
       aria-hidden="true"
-      className="absolute inset-0 z-[5] pointer-events-none overflow-hidden"
+      className="hidden md:block absolute inset-0 z-[5] pointer-events-none overflow-hidden"
     >
       {/* Fine blueprint grid */}
       <div

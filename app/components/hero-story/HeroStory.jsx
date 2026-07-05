@@ -21,22 +21,17 @@ import dynamic from "next/dynamic";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "../../libs/gsap";
 import { getLenis } from "../../libs/lenis";
-import { CHAPTERS, EVENTS, PIN_END, bd, chapterAt } from "./chapters.js";
+import { CHAPTERS, EVENTS, PIN_END, bd, chapterAt, KICKERS } from "./chapters.js";
 import HeroStage from "./HeroStage.jsx";
 import BlueprintLayer from "./BlueprintLayer.jsx";
 import BuildLayer from "./BuildLayer.jsx";
 import ShipLayer from "./ShipLayer.jsx";
 import ChapterRail from "./ChapterRail.jsx";
+import HeroStoryMobile from "./HeroStoryMobile.jsx";
 
 const HeroParticles = dynamic(() => import("./HeroParticles.jsx"), {
   ssr: false,
 });
-
-const KICKERS = [
-  "Every product starts as a sketch.",
-  "Then it gets engineered.",
-  "And shipped. I'm Owen — I do all three.",
-];
 
 const setCursor = (mode) =>
   window.dispatchEvent(new CustomEvent("hero-cursor", { detail: { mode } }));
@@ -315,6 +310,7 @@ export default function HeroStory() {
       <BuildLayer ref={buildRef} />
       <HeroStage ref={stageRef} />
       <ChapterRail active={chapter} onJump={jumpTo} />
+      <HeroStoryMobile stageRef={stageRef} />
 
       {/* Scroll cue — carried over from the old hero */}
       <div

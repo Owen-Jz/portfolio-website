@@ -27,3 +27,9 @@ export function chapterAt(progress) {
   if (progress < CHAPTERS.ship.enter[0]) return 1;
   return 2;
 }
+
+export const KICKERS = [
+  "Every product starts as a sketch.",
+  "Then it gets engineered.",
+  "And shipped. I'm Owen — I do all three.",
+];

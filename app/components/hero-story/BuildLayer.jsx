@@ -14,7 +14,7 @@ const BuildLayer = forwardRef(function BuildLayer(props, ref) {
     <div
       ref={ref}
       aria-hidden="true"
-      className="absolute inset-0 z-[6] pointer-events-none overflow-hidden"
+      className="hidden md:block absolute inset-0 z-[6] pointer-events-none overflow-hidden"
     >
       {/* Structural hairlines that draw themselves */}
       <svg
