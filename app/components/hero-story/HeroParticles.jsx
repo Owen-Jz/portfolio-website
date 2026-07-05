@@ -17,6 +17,7 @@ const VERT = /* glsl */ `
   uniform float uTime;
   uniform vec2 uMouse;     // world-space px (smoothed in JS)
   uniform float uMouseActive;
+  uniform float uDpr;
   varying float vAlpha;
 
   // Per-particle staggered, overshooting progress: each particle starts at a
@@ -82,9 +83,10 @@ const VERT = /* glsl */ `
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
+    // orthographic camera: sizes are plain CSS pixels (times DPR)
     float starSize = 1.0 + fract(aRand * 5.3) * 2.6;
     float meshSize = 1.1 + aRand * 1.1;
-    gl_PointSize = mix(starSize, meshSize, pMesh) * (600.0 / -mv.z);
+    gl_PointSize = mix(starSize, meshSize, pMesh) * uDpr * 0.8;
   }
 `;
 
@@ -133,33 +135,42 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     }
 
     const parent = canvas.parentElement;
-    const vw = parent.clientWidth;
-    const vh = parent.clientHeight;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    renderer.setSize(vw, vh, false);
+    const dpr = Math.min(window.devicePixelRatio, 1.5);
+    renderer.setPixelRatio(dpr);
+    renderer.setSize(parent.clientWidth, parent.clientHeight, false);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, vw / vh, 1, 5000);
-    // camera distance such that 1 world unit ~ 1 CSS px at z=0
-    camera.position.z = vh / (2 * Math.tan((camera.fov * Math.PI) / 360));
+    // Orthographic, 1 world unit == 1 CSS pixel, origin at canvas center.
+    // Depth (z) can never bend positions, so the wireframe registers to the
+    // DOM exactly — z stays purely a parallax/animation channel.
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -2500, 2500);
+    const fitCamera = () => {
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      camera.left = -w / 2;
+      camera.right = w / 2;
+      camera.top = h / 2;
+      camera.bottom = -h / 2;
+      camera.updateProjectionMatrix();
+    };
+    fitCamera();
 
-    // Sample the real UI rects for the wireframe. Shallow z-planes keep the
-    // projected outlines registered to the DOM (deep planes drift toward the
-    // vanishing point), and the 12px pad matches the blueprint frames so the
-    // stars outline the elements instead of sitting on the glyphs.
+    // Sample the real UI rects for the wireframe, in the canvas's own
+    // coordinate space (one source of truth for offsets AND size). The 12px
+    // pad matches the blueprint frames so the stars outline the elements
+    // instead of sitting on the glyphs.
     const stage = stageRef.current;
     const FRAME_PAD = 12;
     const planeZ = { headline: 0, subline: -14, ctas: -28, badge: -42 };
-    const sampleRects = () => {
-      const parentBox = parent.getBoundingClientRect();
+    const sampleRects = (canvasBox) => {
       return Object.entries(planeZ)
         .map(([key, z]) => {
           const el = stage.querySelector(`[data-hero="${key}"]`);
           if (!el) return null;
           const r = el.getBoundingClientRect();
           return {
-            x: r.left - parentBox.left - FRAME_PAD,
-            y: r.top - parentBox.top - FRAME_PAD,
+            x: r.left - canvasBox.left - FRAME_PAD,
+            y: r.top - canvasBox.top - FRAME_PAD,
             width: r.width + FRAME_PAD * 2,
             height: r.height + FRAME_PAD * 2,
             z,
@@ -170,10 +181,12 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
 
     const geo = new THREE.BufferGeometry();
     const setTargets = () => {
+      const canvasBox = canvas.getBoundingClientRect();
+      if (canvasBox.width === 0) return;
       const targets = buildTargets({
         count: COUNT,
-        rects: sampleRects(),
-        viewport: { w: parent.clientWidth, h: parent.clientHeight },
+        rects: sampleRects(canvasBox),
+        viewport: { w: canvasBox.width, h: canvasBox.height },
         seed: 20260705,
       });
       // position attr is required by three but unused (vertex shader computes pos)
@@ -183,12 +196,18 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       geo.setAttribute("aSettled", new THREE.BufferAttribute(targets.settled, 3));
     };
     setTargets();
-    // the variable font changes the headline metrics when it lands —
-    // re-sample so the star wireframe aligns with the final layout
+    // Layout keeps settling after mount (variable font landing, entrance
+    // animation, late scrollbar) — re-sample a few times so the wireframe
+    // targets always match the final layout.
     let alive = true;
     document.fonts?.ready?.then(() => {
       if (alive) setTargets();
     });
+    const retryIds = [400, 1200, 2800].map((ms) =>
+      setTimeout(() => {
+        if (alive) setTargets();
+      }, ms)
+    );
     const rands = new Float32Array(COUNT);
     for (let i = 0; i < COUNT; i++) rands[i] = Math.random();
     geo.setAttribute("aRand", new THREE.BufferAttribute(rands, 1));
@@ -207,7 +226,8 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
         uTime: { value: 0 },
         uMouse: { value: new THREE.Vector2(9999, 9999) },
         uMouseActive: { value: 0 },
-        uResolution: { value: new THREE.Vector2(vw, vh) },
+        uDpr: { value: dpr },
+        uResolution: { value: new THREE.Vector2(parent.clientWidth, parent.clientHeight) },
       },
     });
 
@@ -267,9 +287,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       const w = parent.clientWidth;
       const h = parent.clientHeight;
       renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.position.z = h / (2 * Math.tan((camera.fov * Math.PI) / 360));
-      camera.updateProjectionMatrix();
+      fitCamera();
       mat.uniforms.uResolution.value.set(w, h);
       // targets are in CSS-pixel coordinates — stale ones misalign the
       // wireframe the moment the viewport changes (resize, DevTools, late
@@ -284,6 +302,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
 
     return () => {
       alive = false;
+      retryIds.forEach(clearTimeout);
       cancelAnimationFrame(raf);
       io.disconnect();
       ro.disconnect();
