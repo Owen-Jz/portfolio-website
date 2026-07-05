@@ -75,9 +75,9 @@ export default function HeroStoryMobile({ stageRef }) {
             const next = labels.find((l) => l > t + 0.05);
             if (next !== undefined) tl.play(next);
           };
-          wrapEl.addEventListener("pointerup", advance);
+          stage.addEventListener("pointerup", advance);
           return () => {
-            wrapEl.removeEventListener("pointerup", advance);
+            stage.removeEventListener("pointerup", advance);
             tl.kill();
           };
         }
