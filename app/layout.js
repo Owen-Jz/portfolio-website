@@ -1,4 +1,4 @@
-import { Manrope } from "next/font/google";
+import { Manrope, Archivo } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "./providers";
 import "./globals.css";
@@ -7,6 +7,13 @@ const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-manrope",
+});
+
+const archivo = Archivo({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-archivo",
+  axes: ["wdth"],
 });
 
 const SITE_URL = "https://www.owendigitals.work";
@@ -95,7 +102,7 @@ const structuredData = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={manrope.className}>
+      <body className={`${manrope.className} ${manrope.variable} ${archivo.variable}`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
