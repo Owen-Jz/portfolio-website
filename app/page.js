@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { HeroSection } from "./components/HeroSection";
-// import HeroSectionGSAP from "./components/HeroSectionGSAP";
-import HeroSectionRevamped from "./components/HeroSectionRevamped";
+import HeroStory from "./components/hero-story/HeroStory.jsx";
 import AboutMe from "./components/AboutMe";
 import ProjectSection from "./components/ProjectSection";
 import ExperienceSection from "./components/ExperienceSection";
@@ -24,30 +22,11 @@ import CustomCursor from "./components/gsap/CustomCursor";
 import MarqueeBand from "./components/gsap/MarqueeBand";
 import ScrollProgress from "./components/gsap/ScrollProgress";
 
-import { AnimatePresence } from "framer-motion";
-import IntroOverlay from "./components/IntroOverlay";
-
 const HomePage = () => {
-  const [showIntro, setShowIntro] = React.useState(true);
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   useEffect(() => {
-    // Check if we've shown the intro in this session or if on mobile
-    try {
-      const hasShown = sessionStorage.getItem("introShown");
-      const isMobile = window.innerWidth < 768;
-
-      if (hasShown || isMobile) {
-        setShowIntro(false);
-        if (isMobile) {
-          sessionStorage.setItem("introShown", "true");
-        }
-      }
-    } catch (e) {
-      console.warn("Session storage not available:", e);
-    } finally {
-      setIsLoaded(true);
-    }
+    setIsLoaded(true);
 
     // Only enable smooth scrolling on desktop for better mobile performance
     const isMobile = window.innerWidth < 768;
@@ -73,11 +52,6 @@ const HomePage = () => {
     }
   }, []);
 
-  const handleIntroComplete = () => {
-    setShowIntro(false);
-    sessionStorage.setItem("introShown", "true");
-  };
-
   // Testimonials renders outside AnimatedSection: GSAP pins it with
   // position:fixed, which breaks inside a transformed ancestor.
   const preSections = [
@@ -94,17 +68,13 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
-      <AnimatePresence>
-        {showIntro && <IntroOverlay onComplete={handleIntroComplete} />}
-      </AnimatePresence>
-
       <ScrollProgress />
       <CustomCursor />
 
       <NavbarDemo />
       <main className="flex-grow w-full max-w-full">
-        {/* New Revamped Hero Section */}
-        <HeroSectionRevamped />
+        {/* Blueprint to Reality scrollytelling story */}
+        <HeroStory />
 
         {/* Editorial marquee — velocity-reactive */}
         <MarqueeBand
