@@ -63,13 +63,26 @@ const HeroStage = forwardRef(function HeroStage(props, ref) {
       </div>
 
       {/* Headline — the LCP element. Weight animates 200 -> 800 via --wght
-          (Bricolage Grotesque's full axis). */}
+          (Bricolage Grotesque's full axis). Per-letter spans let the build
+          chapter pull the name apart like an exploded engineering diagram
+          (.hero-letter transforms never affect layout, so the wireframe
+          sampling stays true). */}
       <h1
         data-hero="headline"
+        aria-label="OWEN"
         className="font-display text-6xl md:text-8xl lg:text-9xl tracking-tight text-white leading-[0.95] mb-4 select-none"
         style={{ "--wght": 200, "--wdth": 100 }}
       >
-        OWEN
+        {"OWEN".split("").map((ch, i) => (
+          <span
+            key={i}
+            aria-hidden="true"
+            className="hero-letter inline-block will-change-transform"
+            style={{ outline: "1px dashed transparent", outlineOffset: "6px" }}
+          >
+            {ch}
+          </span>
+        ))}
       </h1>
       <p
         data-hero="subline"

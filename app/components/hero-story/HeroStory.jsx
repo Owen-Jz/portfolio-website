@@ -236,6 +236,62 @@ export default function HeroStory() {
             CHAPTERS.build.enter[0]
           );
 
+          // --- the centerpiece: the name becomes an exploded diagram.
+          // Letters pull apart like components on a workbench, each in its
+          // own dashed part-outline...
+          const letters = headline.querySelectorAll(".hero-letter");
+          const spreadX = [-64, -22, 22, 64];
+          const spreadY = [-22, 14, -16, 20];
+          const spreadR = [-5, 3, -2, 6];
+          tl.fromTo(
+            letters,
+            { x: 0, y: 0, rotate: 0 },
+            {
+              x: (i) => spreadX[i % 4],
+              y: (i) => spreadY[i % 4],
+              rotate: (i) => spreadR[i % 4],
+              duration: bd(CHAPTERS.build.enter) + bd(CHAPTERS.build.hold) / 2,
+              ease: "power1.inOut",
+            },
+            CHAPTERS.build.enter[0]
+          );
+          tl.to(
+            letters,
+            {
+              outlineColor: "rgba(255,255,255,0.28)",
+              duration: bd(CHAPTERS.build.enter),
+            },
+            CHAPTERS.build.enter[0]
+          );
+          // ...and slam back together exactly on the weight-fill beat —
+          // the parts become the product
+          tl.to(
+            letters,
+            {
+              x: 0,
+              y: 0,
+              rotate: 0,
+              outlineColor: "rgba(255,255,255,0)",
+              duration: bd(EVENTS.weightFill),
+              ease: "power3.inOut",
+            },
+            EVENTS.weightFill[0]
+          );
+
+          // the subline decodes like it's being compiled
+          tl.to(
+            subline,
+            {
+              scrambleText: {
+                text: "Full Stack Design Engineer",
+                chars: "<>/{}[]=+*#",
+                speed: 0.4,
+              },
+              duration: bd(CHAPTERS.build.enter) + bd(CHAPTERS.build.hold) / 3,
+            },
+            CHAPTERS.build.enter[0]
+          );
+
           // --- Ch.2 exit / Ch.3 enter: THE weight-fill event
           tl.to(
             buildRef.current,
