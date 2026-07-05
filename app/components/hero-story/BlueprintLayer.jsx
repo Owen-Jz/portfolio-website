@@ -24,6 +24,7 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
 
   // Frame the real elements — re-measured on resize and after fonts load.
   useEffect(() => {
+    let active = true;
     const measure = () => {
       const stage = stageRef.current;
       if (!stage) return;
@@ -49,9 +50,9 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
       );
     };
     measure();
-    document.fonts?.ready?.then(measure);
+    document.fonts?.ready?.then(() => { if (active) measure(); });
     window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
+    return () => { active = false; window.removeEventListener("resize", measure); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
