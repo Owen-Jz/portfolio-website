@@ -55,7 +55,6 @@ const HomePage = () => {
   // Testimonials renders outside AnimatedSection: GSAP pins it with
   // position:fixed, which breaks inside a transformed ancestor.
   const preSections = [
-    // { id: "hero", Component: HeroSection },
     { id: "about", Component: AboutMe },
     { id: "projects", Component: ProjectSection },
     { id: "experience", Component: ExperienceSection },
