@@ -29,22 +29,25 @@ const VERT = /* glsl */ `
   }
 
   void main() {
-    // Two populations: ~18% are SKY STARS (visible in Ch.1, they thin out
-    // through the build and never join the wireframe), the rest are hidden
-    // DUST that condenses into the UI wireframe during Ch.2.
+    // Three populations: ~18% are SKY STARS (visible in Ch.1, they thin out
+    // through the build and never join the wireframe); ~30% of the rest is
+    // DUST that condenses into the UI wireframe during Ch.2 — a sparse
+    // dotted outline, not a solid band; the remainder stays dark.
     float isStar = step(0.82, aRand);
-    float isMesh = 1.0 - isStar;
+    float isMesh = (1.0 - isStar) * step(0.7, fract(aRand * 7.77));
 
     float pMesh = staggered(uMorph1, aRand) * isMesh; // stars never assemble
     float p2 = staggered(uMorph2, fract(aRand * 7.31));
     vec3 pos = mix(aScattered, aExploded, pMesh);
     pos = mix(pos, aSettled, p2); // Ch.3: everything disperses outward
 
-    // ambient drift so the sky is never a still
-    pos.x += sin(uTime * 0.22 + aRand * 6.2831) * 7.0;
-    pos.y += cos(uTime * 0.19 + aRand * 12.566) * 7.0;
-
     float free = 1.0 - pMesh; // 1 for sky/unassembled, 0 once in the wireframe
+
+    // ambient drift so the sky is never a still — damped hard once a
+    // particle takes its place in the wireframe, so the outlines stay crisp
+    float driftAmp = 7.0 * (0.25 + 0.75 * free);
+    pos.x += sin(uTime * 0.22 + aRand * 6.2831) * driftAmp;
+    pos.y += cos(uTime * 0.19 + aRand * 12.566) * driftAmp;
 
     // scroll parallax: the sky climbs far slower than the pinned foreground,
     // so the stars read as a distant background layer
@@ -71,7 +74,7 @@ const VERT = /* glsl */ `
     float thin = 1.0 - uMorph1 * (0.35 + 0.5 * fadeGroup);
     float starAlpha = isStar * (0.3 + 0.45 * twinkle) * thin;
     // dust becomes visible only as it takes its place in the wireframe
-    float meshAlpha = isMesh * 0.5 * pMesh;
+    float meshAlpha = isMesh * 0.42 * pMesh;
     float alpha = max(starAlpha, meshAlpha) + glow * 0.35 * free;
     // Ch.3: the sky disperses and dies away, revealing the backdrop
     alpha *= 1.0 - p2 * 0.88;
@@ -80,7 +83,7 @@ const VERT = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     float starSize = 1.0 + fract(aRand * 5.3) * 2.6;
-    float meshSize = 1.6 + aRand * 1.8;
+    float meshSize = 1.1 + aRand * 1.1;
     gl_PointSize = mix(starSize, meshSize, pMesh) * (600.0 / -mv.z);
   }
 `;
@@ -268,13 +271,22 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       camera.position.z = h / (2 * Math.tan((camera.fov * Math.PI) / 360));
       camera.updateProjectionMatrix();
       mat.uniforms.uResolution.value.set(w, h);
+      // targets are in CSS-pixel coordinates — stale ones misalign the
+      // wireframe the moment the viewport changes (resize, DevTools, late
+      // scrollbar), so re-sample the real layout every time
+      setTargets();
     };
     window.addEventListener("resize", onResize);
+    // catches size changes window "resize" misses (scrollbar appearing
+    // after ScrollTrigger refresh, zoom, UI chrome)
+    const ro = new ResizeObserver(() => onResize());
+    ro.observe(parent);
 
     return () => {
       alive = false;
       cancelAnimationFrame(raf);
       io.disconnect();
+      ro.disconnect();
       window.removeEventListener("resize", onResize);
       parent.removeEventListener("pointermove", onPointer);
       parent.removeEventListener("pointerleave", onPointerLeave);
