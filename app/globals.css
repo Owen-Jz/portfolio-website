@@ -28,6 +28,28 @@ body {
   font-variation-settings: "wght" var(--wght, 900), "wdth" var(--wdth, 100);
 }
 
+/* --- Hero story stage ------------------------------------------------- */
+/* Wireframe (Ch.1/2) vs shipped (Ch.3) CTA treatment. Both states are the
+   same clickable element; only custom properties change, and the GSAP
+   timeline tweens these properties directly. */
+.hero-cta {
+  border: 1px dashed rgba(255, 255, 255, var(--cta-border-alpha, 0.35));
+  border-style: var(--cta-border-style, dashed);
+  background-color: rgba(176, 34, 34, var(--cta-bg-alpha, 0));
+  color: rgba(255, 255, 255, var(--cta-text-alpha, 0.55));
+  transition: none; /* the timeline owns these transitions */
+}
+.hero-annotation {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+}
+.hero-hairline {
+  background: rgba(255, 255, 255, 0.14);
+}
+
 /* Shared button styles */
 .btn-primary {
   @apply inline-flex items-center justify-center px-6 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-[#b02222] to-[#d38787] transition-colors duration-300;
