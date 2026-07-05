@@ -54,12 +54,12 @@ const BuildLayer = forwardRef(function BuildLayer(props, ref) {
           </div>
           <pre className="p-3 text-[10px] leading-[1.7] font-mono text-white/45 overflow-hidden">
             {heroSourceLines.map((line, i) => (
-              <div key={i} className="whitespace-pre">
+              <span key={i} className="block whitespace-pre">
                 <span className="inline-block w-7 text-right mr-3 text-white/20 select-none">
                   {i + 1}
                 </span>
                 {line}
-              </div>
+              </span>
             ))}
           </pre>
         </div>
