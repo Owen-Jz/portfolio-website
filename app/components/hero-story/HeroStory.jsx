@@ -186,6 +186,49 @@ export default function HeroStory() {
             },
             CHAPTERS.build.enter[0]
           );
+          // render scan sweeps the stage top-to-bottom across the build
+          tl.fromTo(
+            buildRef.current.querySelector(".build-scan"),
+            { top: "-8%" },
+            {
+              top: "105%",
+              duration: CHAPTERS.build.hold[1] - CHAPTERS.build.enter[0],
+            },
+            CHAPTERS.build.enter[0]
+          );
+          // the source panel writes itself, line by line
+          tl.fromTo(
+            buildRef.current.querySelectorAll(".src-line"),
+            { autoAlpha: 0 },
+            {
+              autoAlpha: 1,
+              duration: 0.015,
+              stagger: bd(CHAPTERS.build.hold) / 2 / 17,
+            },
+            CHAPTERS.build.enter[0] + bd(CHAPTERS.build.enter) / 2
+          );
+          // the build log checks off in sequence through the hold
+          tl.fromTo(
+            buildRef.current.querySelectorAll(".step-fill"),
+            { scale: 0 },
+            {
+              scale: 1,
+              duration: 0.02,
+              stagger: bd(CHAPTERS.build.hold) / 4,
+              ease: "back.out(2.5)",
+            },
+            CHAPTERS.build.hold[0]
+          );
+          tl.fromTo(
+            buildRef.current.querySelectorAll(".step-label"),
+            { color: "rgba(255,255,255,0.3)" },
+            {
+              color: "rgba(255,255,255,0.62)",
+              duration: 0.02,
+              stagger: bd(CHAPTERS.build.hold) / 4,
+            },
+            CHAPTERS.build.hold[0]
+          );
           // type gains working weight through the build
           tl.to(
             [headline, subline],

@@ -19,6 +19,7 @@ const VERT = /* glsl */ `
   uniform float uMouseActive;
   uniform float uDpr;
   varying float vAlpha;
+  varying float vHeat; // warm tint while a particle is part of the wireframe
 
   // Per-particle staggered, overshooting progress: each particle starts at a
   // slightly different time and pops past its target before settling.
@@ -80,6 +81,7 @@ const VERT = /* glsl */ `
     // Ch.3: the sky disperses and dies away, revealing the backdrop
     alpha *= 1.0 - p2 * 0.88;
     vAlpha = min(alpha, 0.9);
+    vHeat = pMesh * (1.0 - p2);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
@@ -95,6 +97,7 @@ const FRAG = /* glsl */ `
   uniform float uAccent; // 0 = white dust, 1 = red-tinted ship state
   uniform vec2 uResolution;
   varying float vAlpha;
+  varying float vHeat;
 
   // Interleaved gradient noise — cheap dithering to prevent banding on the
   // dark canvas (spec: dark-on-dark over #0a0a0a bands without it).
@@ -110,7 +113,8 @@ const FRAG = /* glsl */ `
     alpha -= ign(gl_FragCoord.xy) * 0.04; // dither
     vec3 white = vec3(0.92);
     vec3 red = vec3(0.69, 0.13, 0.13);
-    gl_FragColor = vec4(mix(white, red, uAccent * 0.65), max(alpha, 0.0));
+    float tint = max(uAccent * 0.65, vHeat * 0.3);
+    gl_FragColor = vec4(mix(white, red, tint), max(alpha, 0.0));
   }
 `;
 
@@ -162,8 +166,19 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     const stage = stageRef.current;
     const FRAME_PAD = 12;
     const planeZ = { headline: 0, subline: -14, ctas: -28, badge: -42 };
+    // The type holds --wght 500 through the build plateau, and variable-font
+    // weight changes glyph widths — so measure at THAT weight, or the
+    // wireframe outlines a narrower headline than the one on screen.
+    // Set + measure + restore happens in one synchronous tick: no paint,
+    // no flash.
+    const WIREFRAME_WGHT = "500";
     const sampleRects = (canvasBox) => {
-      return Object.entries(planeZ)
+      const variableEls = ["headline", "subline"]
+        .map((key) => stage.querySelector(`[data-hero="${key}"]`))
+        .filter(Boolean);
+      const prevWghts = variableEls.map((el) => el.style.getPropertyValue("--wght"));
+      variableEls.forEach((el) => el.style.setProperty("--wght", WIREFRAME_WGHT));
+      const rects = Object.entries(planeZ)
         .map(([key, z]) => {
           const el = stage.querySelector(`[data-hero="${key}"]`);
           if (!el) return null;
@@ -177,6 +192,11 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
           };
         })
         .filter(Boolean);
+      variableEls.forEach((el, i) => {
+        if (prevWghts[i]) el.style.setProperty("--wght", prevWghts[i]);
+        else el.style.removeProperty("--wght");
+      });
+      return rects;
     };
 
     const geo = new THREE.BufferGeometry();
