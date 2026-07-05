@@ -87,7 +87,7 @@ export default function HeroStoryMobile({ stageRef }) {
   );
 
   return (
-    <div ref={wrapRef} className="absolute inset-0 z-[5] md:hidden" aria-hidden="true">
+    <div ref={wrapRef} className="absolute inset-0 z-[5] md:pointer-fine:hidden" aria-hidden="true">
       {/* dashed viewport frame, beat 1 */}
       <div className="m-frame absolute inset-4 border border-dashed border-white/20 rounded-sm pointer-events-none" />
       {/* draw-in hairlines, beat 2 */}
