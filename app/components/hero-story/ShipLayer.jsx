@@ -21,13 +21,18 @@ const ShipLayer = forwardRef(function ShipLayer(props, ref) {
       aria-hidden="true"
       className="hidden md:pointer-fine:block absolute inset-0 z-[2] pointer-events-none overflow-hidden"
     >
-      {/* Graded backdrop — same treatment as the old hero, now earned */}
+      {/* Graded backdrop — same treatment as the old hero, now earned.
+          backgroundAttachment: fixed anchors the image to the VIEWPORT, so
+          it holds perfectly still while the hero pins, releases, and scrolls
+          away — the page slides over a static image. (Desktop-only layer, so
+          iOS's broken fixed-attachment never applies.) */}
       <div
         className="ship-bg absolute inset-0 opacity-0"
         style={{
           backgroundImage: "url('/hero3.jpeg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="absolute inset-0 bg-[#0a0a0a]/80" />
