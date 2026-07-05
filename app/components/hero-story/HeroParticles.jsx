@@ -86,6 +86,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       return;
     }
     if (!renderer.getContext()) {
+      renderer.dispose();
       onFail?.();
       return;
     }
@@ -103,7 +104,6 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
 
     // Sample the real UI rects for the exploded wireframe
     const stage = stageRef.current;
-    const stageBox = stage.getBoundingClientRect();
     const parentBox = parent.getBoundingClientRect();
     const planeZ = { headline: 0, subline: -40, ctas: -90, badge: -140 };
     const rects = Object.entries(planeZ)
@@ -162,8 +162,8 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
     const onPointer = (e) => {
       const r = parent.getBoundingClientRect();
       mat.uniforms.uMouse.value.set(
-        e.clientX - r.left - vw / 2,
-        -(e.clientY - r.top - vh / 2)
+        e.clientX - r.left - parent.clientWidth / 2,
+        -(e.clientY - r.top - parent.clientHeight / 2)
       );
       mat.uniforms.uMouseActive.value = 1;
     };
@@ -201,6 +201,7 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
       camera.aspect = w / h;
       camera.position.z = h / (2 * Math.tan((camera.fov * Math.PI) / 360));
       camera.updateProjectionMatrix();
+      mat.uniforms.uResolution.value.set(w, h);
     };
     window.addEventListener("resize", onResize);
 
