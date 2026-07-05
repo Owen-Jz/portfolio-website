@@ -19,6 +19,7 @@ import SocialSidebar from "./components/SocialSidebar";
 import Lenis from "lenis";
 import { useEffect } from "react";
 import { gsap, ScrollTrigger } from "./libs/gsap";
+import { setLenis } from "./libs/lenis";
 import CustomCursor from "./components/gsap/CustomCursor";
 import MarqueeBand from "./components/gsap/MarqueeBand";
 import ScrollProgress from "./components/gsap/ScrollProgress";
@@ -56,6 +57,7 @@ const HomePage = () => {
         lerp: 0.1,
         smoothWheel: true,
       });
+      setLenis(lenis);
 
       // Keep GSAP ScrollTrigger in lockstep with Lenis smooth scroll
       lenis.on("scroll", ScrollTrigger.update);
@@ -66,6 +68,7 @@ const HomePage = () => {
       return () => {
         gsap.ticker.remove(tick);
         lenis.destroy();
+        setLenis(null);
       };
     }
   }, []);
