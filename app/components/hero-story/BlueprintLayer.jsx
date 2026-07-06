@@ -14,13 +14,13 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
   // useLiveSpecs skips null refs on its mount pass and re-measures on
   // document.fonts.ready, which picks these up.
   const h1Ref = useRef(null);
-  const subRef = useRef(null);
   useEffect(() => {
     h1Ref.current = stageRef.current?.querySelector("[data-hero='headline']") ?? null;
-    subRef.current = stageRef.current?.querySelector("[data-hero='subline']") ?? null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const specs = useLiveSpecs({ h1: h1Ref, sub: subRef });
+  // only the headline carries a live spec label — the subline's label sat on
+  // top of the kicker copy, so it was dropped
+  const specs = useLiveSpecs({ h1: h1Ref });
 
   // Frame the real elements — re-measured on resize and after fonts load.
   useEffect(() => {
@@ -94,11 +94,6 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
           {f.key === "headline" && specs.h1 && (
             <span className="bp-spec hero-annotation absolute -top-4 left-0 whitespace-nowrap">
               {specs.h1}
-            </span>
-          )}
-          {f.key === "subline" && specs.sub && (
-            <span className="bp-spec hero-annotation absolute -bottom-6 left-0 whitespace-nowrap">
-              {specs.sub}
             </span>
           )}
           {f.key === "ctas" && (
