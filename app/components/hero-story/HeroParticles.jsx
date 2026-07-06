@@ -14,6 +14,7 @@ const VERT = /* glsl */ `
   attribute float aRand;
   uniform float uMorph1;   // build progress — the sky thins
   uniform float uMorph2;   // ship dispersal
+  uniform float uBurst;    // spikes at the letter-slam: the sky flares
   uniform float uScroll;   // 0..1 master timeline progress (sky parallax)
   uniform float uTime;
   uniform vec2 uMouse;     // world-space px (smoothed in JS)
@@ -61,6 +62,8 @@ const VERT = /* glsl */ `
     float fadeGroup = step(0.4, fract(aRand * 9.7));
     float thin = 1.0 - uMorph1 * (0.35 + 0.5 * fadeGroup);
     float alpha = (0.3 + 0.45 * twinkle) * thin + glow * 0.35;
+    // the whole sky flares for a beat when the letters slam together
+    alpha += uBurst * 0.35;
     // Ch.3: the sky disperses and dies away, revealing the backdrop
     alpha *= 1.0 - p2 * 0.88;
     vAlpha = min(alpha, 0.9);
@@ -68,7 +71,7 @@ const VERT = /* glsl */ `
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
     // orthographic camera: sizes are plain CSS pixels (times DPR)
-    gl_PointSize = (1.0 + fract(aRand * 5.3) * 2.6) * uDpr * 0.8;
+    gl_PointSize = (1.0 + fract(aRand * 5.3) * 2.6) * (1.0 + uBurst * 0.5) * uDpr * 0.8;
   }
 `;
 
@@ -166,6 +169,7 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
         uMorph1: { value: 0 },
         uMorph2: { value: 0 },
         uAccent: { value: 0 },
+        uBurst: { value: 0 },
         uScroll: { value: 0 },
         uTime: { value: 0 },
         uMouse: { value: new THREE.Vector2(9999, 9999) },
@@ -217,6 +221,7 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
       mat.uniforms.uMorph1.value = s.morph1;
       mat.uniforms.uMorph2.value = s.morph2;
       mat.uniforms.uAccent.value = s.accent;
+      mat.uniforms.uBurst.value = s.burst ?? 0;
       mat.uniforms.uScroll.value = s.scroll ?? 0;
       mat.uniforms.uTime.value = clock.getElapsedTime();
       // ease the pointer uniforms — glide, don't snap

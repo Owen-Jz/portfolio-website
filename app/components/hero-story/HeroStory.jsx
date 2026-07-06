@@ -44,7 +44,7 @@ export default function HeroStory() {
   const buildRef = useRef(null);
   const shipRef = useRef(null);
   const cueRef = useRef(null);
-  const glState = useRef({ morph1: 0, morph2: 0, accent: 0, scroll: 0 });
+  const glState = useRef({ morph1: 0, morph2: 0, accent: 0, burst: 0, scroll: 0 });
   const stRef = useRef(null);
   const [chapter, setChapter] = useState(0);
   const [particlesOn, setParticlesOn] = useState(false);
@@ -381,6 +381,47 @@ export default function HeroStory() {
             { opacity: 1, stagger: 0.02, duration: bd(CHAPTERS.ship.hold) / 3 },
             CHAPTERS.ship.hold[0]
           );
+
+          // --- the "gone live" sequence -------------------------------
+          // Impact shockwave + sky flare on the exact frame the letters
+          // slam back together
+          const slam = EVENTS.weightFill[1] - bd(EVENTS.weightFill) / 4;
+          tl.fromTo(
+            shipRef.current.querySelector(".ship-shockwave"),
+            { scale: 0.3, opacity: 0.9 },
+            { scale: 3.4, opacity: 0, duration: bd(EVENTS.weightFill), ease: "power2.out" },
+            slam
+          );
+          tl.to(
+            glState.current,
+            { burst: 1, duration: bd(EVENTS.weightFill) / 3, ease: "power2.in" },
+            slam - bd(EVENTS.weightFill) / 4
+          );
+          tl.to(
+            glState.current,
+            { burst: 0, duration: bd(EVENTS.weightFill) / 2, ease: "power2.out" },
+            slam + bd(EVENTS.weightFill) / 12
+          );
+          // deploy card rises: build passed, deployed, live
+          tl.fromTo(
+            shipRef.current.querySelector(".ship-deploy"),
+            { y: 48, opacity: 0 },
+            { y: 0, opacity: 1, duration: bd(CHAPTERS.ship.enter), ease: "power1.out" },
+            CHAPTERS.ship.enter[1] - bd(CHAPTERS.ship.enter) / 2
+          );
+          // proof numbers roll up from zero
+          shipRef.current.querySelectorAll(".stat-num").forEach((el) => {
+            tl.fromTo(
+              el,
+              { innerText: 0 },
+              {
+                innerText: parseInt(el.dataset.target, 10),
+                snap: { innerText: 1 },
+                duration: bd(CHAPTERS.ship.hold) / 3,
+              },
+              CHAPTERS.ship.hold[0]
+            );
+          });
 
           // --- Release: stage eases up so the marquee handoff overlaps
           tl.to(
