@@ -5,7 +5,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "../libs/gsap";
 import { Parallax, WordReveal } from "./gsap/ScrollFX";
 
-const GlassCard = ({ children, className = "", hoverEffect = true }) => {
+// Blueprint spec card — dashed selection frame with crop-mark corners and a
+// mono tag, matching the hero's "Idea" chapter language. Keeps the hover
+// spotlight for life.
+const GlassCard = ({ children, className = "", hoverEffect = true, tag }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -18,13 +21,13 @@ const GlassCard = ({ children, className = "", hoverEffect = true }) => {
   return (
     <div
       onMouseMove={handleMouseMove}
-      className={`relative overflow-hidden rounded-[24px] border border-white/10 bg-[#151515]/50 backdrop-blur-xl transition-all duration-500 group/card ${hoverEffect
-          ? "hover:border-white/20 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
+      className={`relative overflow-hidden rounded-md border border-dashed border-white/15 bg-[#0d0d0d]/60 backdrop-blur-xl transition-all duration-500 group/card ${hoverEffect
+          ? "hover:border-white/30 hover:shadow-[0_0_30px_rgba(176,34,34,0.15)] hover:-translate-y-1"
           : ""
         } ${className}`}
     >
       <motion.div
-        className="pointer-events-none absolute -inset-px rounded-[24px] opacity-0 transition duration-300 group-hover/card:opacity-100"
+        className="pointer-events-none absolute -inset-px rounded-md opacity-0 transition duration-300 group-hover/card:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(
@@ -36,6 +39,24 @@ const GlassCard = ({ children, className = "", hoverEffect = true }) => {
         }}
       />
       <div className="absolute -left-10 -top-10 w-[150px] h-[150px] bg-[#b02222]/20 rounded-full blur-[80px] pointer-events-none" />
+      {/* crop-mark corners */}
+      {[
+        "top-0 left-0 border-t border-l",
+        "top-0 right-0 border-t border-r",
+        "bottom-0 left-0 border-b border-l",
+        "bottom-0 right-0 border-b border-r",
+      ].map((pos) => (
+        <span
+          key={pos}
+          aria-hidden="true"
+          className={`absolute ${pos} w-2.5 h-2.5 border-white/40 z-20 pointer-events-none`}
+        />
+      ))}
+      {tag && (
+        <span className="hero-annotation absolute top-3 right-3 z-20 !text-white/25 pointer-events-none">
+          {tag}
+        </span>
+      )}
       <div className="relative z-10 h-full">{children}</div>
     </div>
   );
@@ -175,6 +196,19 @@ const AboutMe = () => {
 
   return (
     <div ref={sectionRef} className="py-20 relative">
+      {/* Blueprint grid carried over from the hero's Idea chapter */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-60"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px)," +
+            "linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)",
+          backgroundSize: "56px 56px",
+          maskImage: "linear-gradient(to bottom, black 40%, transparent 95%)",
+          WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 95%)",
+        }}
+      />
       {/* Background glow for the entire section */}
       <Parallax
         speed={0.5}
@@ -185,30 +219,33 @@ const AboutMe = () => {
 
         {/* First Column (Left) */}
         <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
-          {/* Introduction Header */}
-          <div className="flex flex-col gap-3 py-4 lg:py-0 justify-center">
+          {/* Introduction Header — spoken in the hero's blueprint voice */}
+          <div
+            className="flex flex-col gap-3 py-4 lg:py-0 justify-center"
+            style={{ "--wght": 280 }}
+          >
             <motion.span
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="text-[#b02222] font-bold font-manrope uppercase tracking-wider text-sm lg:text-base"
+              className="hero-annotation !text-[#b02222]"
             >
-              Beyond Portfolio
+              01 · about — beyond portfolio
             </motion.span>
             <WordReveal
               text="Get to know the person behind the screen."
               as="h2"
-              className="text-white text-4xl lg:text-5xl font-manrope font-semibold leading-tight lg:max-w-[360px]"
+              className="font-display text-white text-4xl lg:text-6xl leading-[1.05] lg:max-w-[420px]"
             />
           </div>
 
           {/* Workspace Card: Fills remaining space in the tallest column */}
-          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[400px] flex-1">
+          <GlassCard tag="frame · 01" className="p-6 md:p-8 flex flex-col min-h-[400px] flex-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 bg-white/5 rounded-lg">
                 <img src="/star.svg" alt="Star" className="w-5 h-5" />
               </div>
-              <h3 className="text-white text-xl font-semibold font-manrope">
+              <h3 className="text-white text-xl font-display" style={{ "--wght": 600 }}>
                 The Setup
               </h3>
             </div>
@@ -233,12 +270,12 @@ const AboutMe = () => {
         {/* Second Column (Middle) */}
         <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
           {/* My Stack Card: Fixed large height, but lets column stretch */}
-          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[480px]">
+          <GlassCard tag="frame · 02" className="p-6 md:p-8 flex flex-col min-h-[480px]">
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
                 <img src="/star.svg" alt="Star" className="w-5 h-5" />
               </div>
-              <h3 className="text-white text-xl font-semibold font-manrope">
+              <h3 className="text-white text-xl font-display" style={{ "--wght": 600 }}>
                 Tech Arsenal
               </h3>
             </div>
@@ -271,12 +308,12 @@ const AboutMe = () => {
           </GlassCard>
 
           {/* Quote Card: Fills remaining space */}
-          <GlassCard className="p-6 md:p-8 flex flex-col min-h-[200px] flex-1" hoverEffect={true}>
+          <GlassCard tag="frame · 03" className="p-6 md:p-8 flex flex-col min-h-[200px] flex-1" hoverEffect={true}>
             <div className="flex items-center gap-3 mb-6">
               <div className="p-2 bg-white/5 rounded-lg">
                 <img src="/star.svg" alt="Star" className="w-5 h-5" />
               </div>
-              <h3 className="text-white text-xl font-semibold font-manrope">
+              <h3 className="text-white text-xl font-display" style={{ "--wght": 600 }}>
                 Favorite Quote
               </h3>
             </div>
@@ -297,7 +334,7 @@ const AboutMe = () => {
         {/* Third Column (Right) */}
         <div className="about-col lg:col-span-4 flex flex-col gap-6 h-full">
           {/* Location Card: Fixed height */}
-          <GlassCard className="p-2 h-[280px] group flex-none">
+          <GlassCard tag="frame · 04" className="p-2 h-[280px] group flex-none">
             <div className="w-full h-full rounded-[18px] overflow-hidden relative">
               <img
                 src="/MyLocation.png"
@@ -313,14 +350,14 @@ const AboutMe = () => {
           </GlassCard>
 
           {/* Persona Card: Fills remaining space */}
-          <GlassCard className="min-h-[400px] relative overflow-hidden flex-1">
+          <GlassCard tag="frame · 05" className="min-h-[400px] relative overflow-hidden flex-1">
             <div ref={constraintsRef} className="absolute inset-0 z-0" /> {/* Constraints container */}
             <div className="p-6 md:p-8 relative z-10 pointer-events-none"> {/* Text content shouldn't block drags, but we need text to separate? actually pointer-events-none on container is safer, text can retain pointer-events-auto if needed. */}
               <div className="flex items-center gap-3 mb-2 pointer-events-auto">
                 <div className="p-2 bg-white/5 rounded-lg">
                   <img src="/star.svg" alt="Star" className="w-5 h-5" />
                 </div>
-                <h3 className="text-white text-xl font-semibold font-manrope">
+                <h3 className="text-white text-xl font-display" style={{ "--wght": 600 }}>
                   Persona
                 </h3>
               </div>

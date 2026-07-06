@@ -22,7 +22,7 @@ export default function MarqueeBand({ items = [], variant = "ghost", className =
         const tween = gsap.to(trackRef.current, {
           xPercent: -50,
           repeat: -1,
-          duration: variant === "accent" ? 22 : 30,
+          duration: variant === "accent" ? 22 : 46,
           ease: "none",
         });
 
@@ -62,7 +62,7 @@ export default function MarqueeBand({ items = [], variant = "ghost", className =
       className={`relative overflow-hidden select-none ${
         isAccent
           ? "bg-[#b02222] py-4 md:py-5 -rotate-[1.2deg] scale-[1.03] my-8 shadow-[0_0_80px_rgba(176,34,34,0.25)]"
-          : "border-y border-white/[0.06] py-5 md:py-7 bg-[#0a0a0a]"
+          : "border-y border-white/[0.05] py-4 md:py-5 bg-[#0a0a0a]"
       } ${className}`}
     >
       <div ref={trackRef} className="flex w-max will-change-transform">
@@ -70,35 +70,31 @@ export default function MarqueeBand({ items = [], variant = "ghost", className =
           <div key={copy} className="flex items-center shrink-0">
             {items.map((item, i) => (
               <span key={`${copy}-${i}`} className="flex items-center shrink-0">
-                <span
-                  className={`px-6 md:px-10 font-manrope font-extrabold uppercase tracking-tight whitespace-nowrap text-2xl md:text-4xl ${
-                    isAccent
-                      ? i % 2 === 0
-                        ? "text-white"
-                        : "text-transparent"
-                      : i % 2 === 0
-                      ? "text-white/80"
-                      : "text-transparent"
-                  }`}
-                  style={
-                    i % 2 === 1
-                      ? {
-                          WebkitTextStroke: isAccent
-                            ? "1.5px rgba(0,0,0,0.55)"
-                            : "1px rgba(255,255,255,0.3)",
-                        }
-                      : undefined
-                  }
-                >
-                  {item}
-                </span>
-                <span
-                  className={`text-lg md:text-2xl ${
-                    isAccent ? "text-black/50" : "text-[#b02222]"
-                  }`}
-                >
-                  ✦
-                </span>
+                {isAccent ? (
+                  <>
+                    <span
+                      className={`px-6 md:px-10 font-manrope font-extrabold uppercase tracking-tight whitespace-nowrap text-2xl md:text-4xl ${
+                        i % 2 === 0 ? "text-white" : "text-transparent"
+                      }`}
+                      style={
+                        i % 2 === 1
+                          ? { WebkitTextStroke: "1.5px rgba(0,0,0,0.55)" }
+                          : undefined
+                      }
+                    >
+                      {item}
+                    </span>
+                    <span className="text-lg md:text-2xl text-black/50">✦</span>
+                  </>
+                ) : (
+                  <>
+                    {/* ghost: one quiet mono line in the hero's blueprint voice */}
+                    <span className="px-8 md:px-14 font-mono uppercase tracking-[0.3em] whitespace-nowrap text-[11px] md:text-sm text-white/35">
+                      {item}
+                    </span>
+                    <span className="inline-block w-1 h-1 rounded-full bg-[#b02222]/50" />
+                  </>
+                )}
               </span>
             ))}
           </div>
