@@ -38,7 +38,9 @@ const ShipLayer = forwardRef(function ShipLayer(props, ref) {
       </div>
 
       {/* Red atmosphere */}
-      <div className="ship-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[640px] bg-[#b02222]/20 rounded-full blur-[130px] opacity-0" />
+      {/* margin-centered (not translate) so GSAP can own its transform
+          for the pointer-parallax sway */}
+      <div className="ship-glow absolute top-1/2 left-1/2 -ml-[320px] -mt-[320px] w-[640px] h-[640px] bg-[#b02222]/20 rounded-full blur-[130px] opacity-0" />
 
       {/* Impact shockwave — bursts from the name the moment the letters
           slam back together (scale/opacity driven by the timeline) */}

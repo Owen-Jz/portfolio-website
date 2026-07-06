@@ -23,9 +23,10 @@ const BuildLayer = forwardRef(function BuildLayer(props, ref) {
       aria-hidden="true"
       className="hidden md:pointer-fine:block absolute inset-0 z-[6] pointer-events-none overflow-hidden"
     >
-      {/* Faint engineering grid — tighter than the blueprint grid */}
+      {/* Faint engineering grid — tighter than the blueprint grid; bleeds
+          past the viewport so its parallax climb never exposes an edge */}
       <div
-        className="absolute inset-0 opacity-50"
+        className="build-grid absolute inset-x-0 -inset-y-52 opacity-50"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)," +
@@ -36,7 +37,7 @@ const BuildLayer = forwardRef(function BuildLayer(props, ref) {
 
       {/* Structural hairlines that draw themselves */}
       <svg
-        className="absolute inset-0 w-full h-full"
+        className="build-lines absolute inset-0 w-full h-full"
         preserveAspectRatio="none"
         viewBox="0 0 100 100"
       >

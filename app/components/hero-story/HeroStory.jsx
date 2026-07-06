@@ -142,6 +142,30 @@ export default function HeroStory() {
           // (much slower) pace — background layer vs. foreground story
           tl.to(glState.current, { scroll: 1, duration: 1 }, 0);
 
+          // ----- Scroll parallax: every DOM plane climbs at its own rate.
+          // The grids (nearest planes) race ahead, the stage drifts gently,
+          // the stars (uScroll, in the shader) hang far behind. The stage
+          // and the blueprint frames share one tween so the frames never
+          // slide off the text they annotate.
+          tl.to([stage, blueprintRef.current], { y: -30, duration: 1 }, 0);
+          tl.to(
+            blueprintRef.current.querySelector(".bp-grid"),
+            { y: -150, duration: 1 },
+            0
+          );
+          tl.fromTo(
+            buildRef.current.querySelector(".build-grid"),
+            { y: 100 },
+            { y: -140, duration: 1, ease: "none" },
+            0
+          );
+          tl.fromTo(
+            buildRef.current.querySelector(".build-lines"),
+            { y: 50 },
+            { y: -60, duration: 1, ease: "none" },
+            0
+          );
+
           // Kicker copy swaps at chapter boundaries (snap, not fade-drag)
           const swapKicker = (text) => () => {
             kicker.textContent = text;
@@ -160,10 +184,17 @@ export default function HeroStory() {
           tl.call(() => setCursor("crosshair"), [], CHAPTERS.build.enter[0] - 0.001);
           tl.call(() => setCursor("caret"), [], CHAPTERS.ship.enter[0] - 0.001);
 
-          // --- Ch.1 exit: blueprint decorations dissolve
+          // --- Ch.1 exit: blueprint decorations dissolve — and the frames
+          // peel upward faster than the grid behind them, so the exit
+          // itself carries depth
           tl.to(
             blueprintRef.current,
             { opacity: 0, duration: bd(CHAPTERS.idea.exit) },
+            CHAPTERS.idea.exit[0]
+          );
+          tl.to(
+            blueprintRef.current.querySelectorAll(".bp-frame"),
+            { y: -60, stagger: 0.012, duration: bd(CHAPTERS.idea.exit) },
             CHAPTERS.idea.exit[0]
           );
           tl.to(
@@ -206,6 +237,13 @@ export default function HeroStory() {
               ease: "power1.out",
             },
             CHAPTERS.build.enter[0]
+          );
+          // ...then keep drifting upward through the hold — a nearer plane
+          // than the engineering grid sliding behind them
+          tl.to(
+            buildRef.current.querySelectorAll(".build-pin"),
+            { y: -32, duration: CHAPTERS.build.exit[1] - CHAPTERS.build.hold[0] },
+            CHAPTERS.build.hold[0]
           );
           // render scan sweeps the stage top-to-bottom across the build
           tl.fromTo(
@@ -376,9 +414,16 @@ export default function HeroStory() {
             { opacity: 1, duration: bd(CHAPTERS.ship.enter) },
             CHAPTERS.ship.enter[0]
           );
-          tl.to(
+          tl.fromTo(
             shipRef.current.querySelectorAll(".ship-proof"),
-            { opacity: 1, stagger: 0.02, duration: bd(CHAPTERS.ship.hold) / 3 },
+            { y: 28 },
+            {
+              y: 0,
+              opacity: 1,
+              stagger: 0.02,
+              duration: bd(CHAPTERS.ship.hold) / 3,
+              ease: "power1.out",
+            },
             CHAPTERS.ship.hold[0]
           );
 
@@ -430,7 +475,46 @@ export default function HeroStory() {
             EVENTS.release[0]
           );
 
+          // ----- Pointer parallax: the DOM planes live in the starfield's
+          // space — far planes sway a little, near planes more (the stars
+          // themselves already answer the pointer in the shader). Sway is
+          // x-only where the scrubbed timeline owns the element's y; the
+          // stage and blueprint move as one so the frames stay on the text.
+          const sway = [
+            { t: [stage, blueprintRef.current], fx: 6 },
+            { t: blueprintRef.current.querySelector(".bp-grid"), fx: 8 },
+            { t: buildRef.current.querySelector(".build-grid"), fx: 12 },
+            { t: buildRef.current.querySelector(".build-lines"), fx: 16 },
+            { t: buildRef.current.querySelectorAll(".build-pin"), fx: 18 },
+            { t: shipRef.current.querySelector(".ship-deploy"), fx: 18 },
+            { t: shipRef.current.querySelector(".ship-glow"), fx: 26, fy: 18 },
+          ].map(({ t, fx, fy }) => ({
+            fx,
+            fy,
+            toX: gsap.quickTo(t, "x", { duration: 0.9, ease: "power3.out" }),
+            toY: fy
+              ? gsap.quickTo(t, "y", { duration: 0.9, ease: "power3.out" })
+              : null,
+          }));
+          const onSway = (e) => {
+            const nx = (e.clientX / window.innerWidth) * 2 - 1;
+            const ny = (e.clientY / window.innerHeight) * 2 - 1;
+            sway.forEach((p) => {
+              p.toX(nx * p.fx);
+              p.toY?.(ny * p.fy);
+            });
+          };
+          const onSwayLeave = () =>
+            sway.forEach((p) => {
+              p.toX(0);
+              p.toY?.(0);
+            });
+          root.addEventListener("pointermove", onSway, { passive: true });
+          root.addEventListener("pointerleave", onSwayLeave);
+
           return () => {
+            root.removeEventListener("pointermove", onSway);
+            root.removeEventListener("pointerleave", onSwayLeave);
             introCleanup?.();
             setCursor("default");
             setParticlesOn(false);

@@ -64,9 +64,10 @@ const BlueprintLayer = forwardRef(function BlueprintLayer({ stageRef }, ref) {
       aria-hidden="true"
       className="hidden md:pointer-fine:block absolute inset-0 z-[5] pointer-events-none overflow-hidden"
     >
-      {/* Fine blueprint grid */}
+      {/* Fine blueprint grid — bleeds past the viewport so it can climb
+          on scroll (parallax plane) without exposing an edge */}
       <div
-        className="bp-grid absolute inset-0 opacity-60"
+        className="bp-grid absolute inset-x-0 -inset-y-52 opacity-60"
         style={{
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px)," +
