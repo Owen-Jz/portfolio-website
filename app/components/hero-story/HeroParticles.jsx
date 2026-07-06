@@ -16,6 +16,7 @@ const VERT = /* glsl */ `
   uniform float uMorph2;   // ship dispersal
   uniform float uBurst;    // spikes at the letter-slam: the sky flares
   uniform float uScroll;   // 0..1 master timeline progress (sky parallax)
+  uniform float uWarp;     // signed scroll velocity — the sky streaks
   uniform float uTime;
   uniform vec2 uMouse;     // world-space px (smoothed in JS)
   uniform float uMouseActive;
@@ -43,6 +44,10 @@ const VERT = /* glsl */ `
     // so the stars read as a distant background layer
     pos.y += uScroll * (90.0 + 70.0 * fract(aRand * 2.3));
 
+    // velocity lag: under a hard scroll fling, each star trails the motion
+    // by its own amount — the sky shears with inertia
+    pos.y += uWarp * 26.0 * (fract(aRand * 3.3) - 0.5);
+
     // galaxy parallax: deeper stars shift more with the pointer, so moving
     // the mouse feels like drifting through the field
     pos.xy += uMouse * (pos.z * 0.00022) * uMouseActive;
@@ -64,20 +69,25 @@ const VERT = /* glsl */ `
     float alpha = (0.3 + 0.45 * twinkle) * thin + glow * 0.35;
     // the whole sky flares for a beat when the letters slam together
     alpha += uBurst * 0.35;
+    // streaking stars dim a touch, like motion blur
+    alpha *= 1.0 / (1.0 + abs(uWarp) * 0.5);
     // Ch.3: the sky disperses and dies away, revealing the backdrop
     alpha *= 1.0 - p2 * 0.88;
     vAlpha = min(alpha, 0.9);
 
     vec4 mv = modelViewMatrix * vec4(pos, 1.0);
     gl_Position = projectionMatrix * mv;
-    // orthographic camera: sizes are plain CSS pixels (times DPR)
-    gl_PointSize = (1.0 + fract(aRand * 5.3) * 2.6) * (1.0 + uBurst * 0.5) * uDpr * 0.8;
+    // orthographic camera: sizes are plain CSS pixels (times DPR).
+    // The sprite grows under warp so the streak has room to draw.
+    gl_PointSize = (1.0 + fract(aRand * 5.3) * 2.6)
+      * (1.0 + uBurst * 0.5 + abs(uWarp) * 2.4) * uDpr * 0.8;
   }
 `;
 
 const FRAG = /* glsl */ `
   precision mediump float;
   uniform float uAccent; // 0 = white dust, 1 = red-tinted ship state
+  uniform float uWarp;   // scroll velocity — dots stretch into streaks
   uniform vec2 uResolution;
   varying float vAlpha;
 
@@ -89,6 +99,8 @@ const FRAG = /* glsl */ `
 
   void main() {
     vec2 uv = gl_PointCoord - 0.5;
+    // under warp the enlarged sprite narrows on x — a vertical light streak
+    uv.x *= 1.0 + abs(uWarp) * 4.0;
     float d = length(uv);
     if (d > 0.5) discard;
     float alpha = smoothstep(0.5, 0.12, d) * vAlpha;
@@ -170,6 +182,7 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
         uMorph2: { value: 0 },
         uAccent: { value: 0 },
         uBurst: { value: 0 },
+        uWarp: { value: 0 },
         uScroll: { value: 0 },
         uTime: { value: 0 },
         uMouse: { value: new THREE.Vector2(9999, 9999) },
@@ -181,6 +194,100 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
 
     const points = new THREE.Points(geo, mat);
     scene.add(points);
+
+    // ---- Constellation: near the pointer, the ideas connect ------------
+    // Faint lines link stars around the cursor (and spoke back to it), so
+    // Ch.1 literally connects the dots. Star positions are re-derived on
+    // the CPU with the exact vertex-shader math, so every line lands on
+    // the dot it belongs to. Fades out as the build begins (uMorph1).
+    const LINK_N = 96;    // only the first N stars can constellate
+    const LINK_R = 230;   // stars this close to the pointer join the web
+    const LINK_D = 210;   // pairs this close to each other link up
+    const SPOKE_R = 150;  // stars this close spoke back to the cursor
+    const MAX_SEG = 220;
+    const linkGeo = new THREE.BufferGeometry();
+    const linkPos = new Float32Array(MAX_SEG * 2 * 3);
+    const linkCol = new Float32Array(MAX_SEG * 2 * 3);
+    linkGeo.setAttribute("position", new THREE.BufferAttribute(linkPos, 3));
+    linkGeo.setAttribute("color", new THREE.BufferAttribute(linkCol, 3));
+    linkGeo.setDrawRange(0, 0);
+    const linkMat = new THREE.LineBasicMaterial({
+      vertexColors: true,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const lines = new THREE.LineSegments(linkGeo, linkMat);
+    scene.add(lines);
+    const linkPts = new Float32Array(LINK_N * 2);
+
+    const updateLinks = () => {
+      const s = glState.current;
+      const act = mat.uniforms.uMouseActive.value;
+      const fade = (1 - (s.morph1 ?? 0)) * (1 - (s.morph2 ?? 0)) * act;
+      if (fade < 0.03) {
+        linkGeo.setDrawRange(0, 0);
+        return;
+      }
+      const t = mat.uniforms.uTime.value;
+      const scr = s.scroll ?? 0;
+      const mx = mat.uniforms.uMouse.value.x;
+      const my = mat.uniforms.uMouse.value.y;
+      const sc = geo.getAttribute("aScattered").array;
+      const near = [];
+      for (let i = 0; i < LINK_N; i++) {
+        const r = rands[i];
+        // same motion as the vertex shader: drift + parallax + cursor push
+        let x = sc[i * 3] + Math.sin(t * 0.22 + r * 6.2831) * 7;
+        let y = sc[i * 3 + 1] + Math.cos(t * 0.19 + r * 12.566) * 7;
+        y += scr * (90 + 70 * ((r * 2.3) % 1));
+        const z = sc[i * 3 + 2];
+        x += mx * z * 0.00022 * act;
+        y += my * z * 0.00022 * act;
+        const dx = x - mx;
+        const dy = y - my;
+        let dist = Math.hypot(dx, dy) + 0.0001;
+        const k = Math.min(Math.max((220 - dist) / 220, 0), 1);
+        const push = k * k * (3 - 2 * k) * 60 * act;
+        x += (dx / dist) * push;
+        y += (dy / dist) * push;
+        linkPts[i * 2] = x;
+        linkPts[i * 2 + 1] = y;
+        dist = Math.hypot(x - mx, y - my);
+        if (dist < LINK_R) near.push([i, dist]);
+      }
+      let seg = 0;
+      const put = (x1, y1, x2, y2, str) => {
+        if (seg >= MAX_SEG) return;
+        const o = seg * 6;
+        linkPos[o] = x1; linkPos[o + 1] = y1; linkPos[o + 2] = 0;
+        linkPos[o + 3] = x2; linkPos[o + 4] = y2; linkPos[o + 5] = 0;
+        linkCol[o] = str; linkCol[o + 1] = str; linkCol[o + 2] = str;
+        linkCol[o + 3] = str * 0.85; linkCol[o + 4] = str * 0.85; linkCol[o + 5] = str * 0.85;
+        seg++;
+      };
+      for (let a = 0; a < near.length; a++) {
+        const [i, di] = near[a];
+        const xi = linkPts[i * 2];
+        const yi = linkPts[i * 2 + 1];
+        // spokes: the cursor is the pen connecting the dots
+        if (di < SPOKE_R) put(xi, yi, mx, my, (1 - di / SPOKE_R) * 0.5 * fade);
+        for (let b = a + 1; b < near.length; b++) {
+          const [j, dj] = near[b];
+          const xj = linkPts[j * 2];
+          const yj = linkPts[j * 2 + 1];
+          const dp = Math.hypot(xi - xj, yi - yj);
+          if (dp < LINK_D)
+            put(
+              xi, yi, xj, yj,
+              (1 - dp / LINK_D) * (1 - Math.max(di, dj) / LINK_R) * 0.55 * fade
+            );
+        }
+      }
+      linkGeo.attributes.position.needsUpdate = true;
+      linkGeo.attributes.color.needsUpdate = true;
+      linkGeo.setDrawRange(0, seg * 2);
+    };
 
     // mouse -> world px (same mapping as pointTargets). The uniform eases
     // toward this target each frame so the field glides instead of snapping.
@@ -224,10 +331,16 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
       mat.uniforms.uBurst.value = s.burst ?? 0;
       mat.uniforms.uScroll.value = s.scroll ?? 0;
       mat.uniforms.uTime.value = clock.getElapsedTime();
+      // scroll-velocity warp: decays on its own, eases toward the fling
+      s.velo = (s.velo ?? 0) * 0.92;
+      const warpTarget = Math.max(-1.4, Math.min(1.4, s.velo / 2500));
+      s.warp = (s.warp ?? 0) + (warpTarget - s.warp) * 0.1;
+      mat.uniforms.uWarp.value = s.warp;
       // ease the pointer uniforms — glide, don't snap
       mat.uniforms.uMouse.value.lerp(mouseTarget, 0.08);
       mat.uniforms.uMouseActive.value +=
         (mouseActiveTarget - mat.uniforms.uMouseActive.value) * 0.06;
+      updateLinks();
       renderer.render(scene, camera);
     };
     loop();
@@ -253,6 +366,8 @@ export default function HeroParticles({ glState, stageRef, skyIn = true, onFail 
       parent.removeEventListener("pointerleave", onPointerLeave);
       geo.dispose();
       mat.dispose();
+      linkGeo.dispose();
+      linkMat.dispose();
       renderer.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

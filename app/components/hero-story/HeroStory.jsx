@@ -6,7 +6,7 @@
  * You are reading the component you are looking at. This hero pins
  * while you scroll and tells its own making in three chapters:
  *
- *   01 THE IDEA   a night sky of ideas — thin type, live spec labels
+ *   01 THE IDEA   a night sky of ideas — they constellate at your cursor
  *   02 THE BUILD  the sky recedes, the name pulls apart like an
  *                 exploded diagram, and this file walks you through it
  *   03 THE SHIP   the sky disperses, weight and color arrive, and
@@ -44,7 +44,15 @@ export default function HeroStory() {
   const buildRef = useRef(null);
   const shipRef = useRef(null);
   const cueRef = useRef(null);
-  const glState = useRef({ morph1: 0, morph2: 0, accent: 0, burst: 0, scroll: 0 });
+  const glState = useRef({
+    morph1: 0,
+    morph2: 0,
+    accent: 0,
+    burst: 0,
+    scroll: 0,
+    velo: 0, // raw scroll velocity (px/s) — the particles derive warp from it
+    warp: 0,
+  });
   const stRef = useRef(null);
   const [chapter, setChapter] = useState(0);
   const [particlesOn, setParticlesOn] = useState(false);
@@ -121,6 +129,28 @@ export default function HeroStory() {
             stagger: 0.4,
           });
 
+          // ----- Scroll-velocity energy: a hard fling shears the near
+          // planes with inertia (and streaks the stars via glState.velo);
+          // everything settles elastically the moment you stop
+          const skewMain = gsap.quickTo([stage, blueprintRef.current], "skewY", {
+            duration: 0.4,
+            ease: "power2.out",
+          });
+          const skewCards = gsap.quickTo(
+            [
+              ...buildRef.current.querySelectorAll(".build-pin"),
+              shipRef.current.querySelector(".ship-deploy"),
+            ],
+            "skewY",
+            { duration: 0.4, ease: "power2.out" }
+          );
+          const settleSkew = gsap
+            .delayedCall(0.25, () => {
+              skewMain(0);
+              skewCards(0);
+            })
+            .pause();
+
           // ----- Master scrubbed timeline -----
           const tl = gsap.timeline({
             defaults: { ease: "none" },
@@ -131,7 +161,14 @@ export default function HeroStory() {
               pin: true,
               scrub: 0.5,
               anticipatePin: 1,
-              onUpdate: (self) => setChapter(chapterAt(self.progress)),
+              onUpdate: (self) => {
+                setChapter(chapterAt(self.progress));
+                const v = gsap.utils.clamp(-1600, 1600, self.getVelocity());
+                glState.current.velo = v;
+                skewMain(v / 1100);
+                skewCards(v / 700);
+                settleSkew.restart(true);
+              },
               onRefresh: (self) => {
                 stRef.current = self;
               },
@@ -148,15 +185,16 @@ export default function HeroStory() {
           // and the blueprint frames share one tween so the frames never
           // slide off the text they annotate.
           tl.to([stage, blueprintRef.current], { y: -30, duration: 1 }, 0);
+          // the grids also dolly toward the viewer — parallax in Z, not just Y
           tl.to(
             blueprintRef.current.querySelector(".bp-grid"),
-            { y: -150, duration: 1 },
+            { y: -150, scale: 1.06, duration: 1 },
             0
           );
           tl.fromTo(
             buildRef.current.querySelector(".build-grid"),
-            { y: 100 },
-            { y: -140, duration: 1, ease: "none" },
+            { y: 100, scale: 0.97 },
+            { y: -140, scale: 1.08, duration: 1, ease: "none" },
             0
           );
           tl.fromTo(
@@ -201,6 +239,20 @@ export default function HeroStory() {
             cueRef.current,
             { opacity: 0, duration: bd(CHAPTERS.idea.hold) / 3 },
             CHAPTERS.idea.hold[0]
+          );
+
+          // crossing into the build knocks a pulse of light through the sky
+          // (time-based, fires in both scroll directions)
+          tl.call(
+            () => {
+              gsap.fromTo(
+                glState.current,
+                { burst: 0.45 },
+                { burst: 0, duration: 0.7, ease: "power2.out" }
+              );
+            },
+            [],
+            CHAPTERS.build.enter[0]
           );
 
           // --- Ch.2 enter: build layer in, hairlines draw, particles assemble

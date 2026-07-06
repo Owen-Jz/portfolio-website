@@ -8,7 +8,7 @@ export const heroSourceLines = [
   " * You are reading the component you are looking at. This hero pins",
   " * while you scroll and tells its own making in three chapters:",
   " *",
-  " *   01 THE IDEA   a night sky of ideas — thin type, live spec labels",
+  " *   01 THE IDEA   a night sky of ideas — they constellate at your cursor",
   " *   02 THE BUILD  the sky recedes, the name pulls apart like an",
   " *                 exploded diagram, and this file walks you through it",
   " *   03 THE SHIP   the sky disperses, weight and color arrive, and",
