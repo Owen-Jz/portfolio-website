@@ -87,7 +87,8 @@ const VERT = /* glsl */ `
 const FRAG = /* glsl */ `
   precision mediump float;
   uniform float uAccent; // 0 = white dust, 1 = red-tinted ship state
-  uniform float uWarp;   // scroll velocity — dots stretch into streaks
+  // highp to match the vertex stage — mediump here fails program validation
+  uniform highp float uWarp; // scroll velocity — dots stretch into streaks
   uniform vec2 uResolution;
   varying float vAlpha;
 

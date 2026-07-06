@@ -50,12 +50,14 @@ const IntroOverlay = ({ onComplete }) => {
                         className="absolute z-10 flex items-center justify-center w-full"
                     >
                         <div className="overflow-hidden">
+                            {/* Bricolage, entering thin and gaining weight —
+                                each word performs the hero's own arc */}
                             <motion.h1
-                                initial={{ y: "100%", opacity: 0, filter: "blur(10px)" }}
-                                animate={{ y: "0%", opacity: 1, filter: "blur(0px)" }}
+                                initial={{ y: "100%", opacity: 0, filter: "blur(10px)", "--wght": 250 }}
+                                animate={{ y: "0%", opacity: 1, filter: "blur(0px)", "--wght": 800 }}
                                 exit={{ y: "-100%", opacity: 0, filter: "blur(10px)" }}
-                                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
-                                className="text-6xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600 tracking-tighter uppercase"
+                                transition={{ duration: 1.0, ease: [0.22, 1, 0.36, 1], "--wght": { duration: 1.35, ease: "easeOut" } }}
+                                className="font-display text-6xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600 tracking-tight uppercase"
                             >
                                 {words[index]}
                             </motion.h1>
