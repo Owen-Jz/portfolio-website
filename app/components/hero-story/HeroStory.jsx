@@ -7,8 +7,8 @@
  * while you scroll and tells its own making in three chapters:
  *
  *   01 THE IDEA   a night sky of ideas — thin type, live spec labels
- *   02 THE BUILD  the stars condense into the interface wireframe
- *                 while this very file walks you through it
+ *   02 THE BUILD  the sky recedes, the name pulls apart like an
+ *                 exploded diagram, and this file walks you through it
  *   03 THE SHIP   the sky disperses, weight and color arrive, and
  *                 the buttons go live
  *

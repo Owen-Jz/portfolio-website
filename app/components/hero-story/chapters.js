@@ -11,8 +11,8 @@ export const CHAPTERS = {
 };
 
 export const EVENTS = {
-  // Deliberately wide: the stars condensing into the UI wireframe is the
-  // story's centerpiece — it should be watched, not blinked past.
+  // Deliberately wide: the sky thinning out as the build takes the stage —
+  // gradual, not blinked past.
   assemble: [0.36, 0.54],
   weightFill: [0.66, 0.74], // type wght -> 800, red floods in
   release: [0.92, 1.0], // stage eases up into the marquee handoff
