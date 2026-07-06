@@ -21,11 +21,25 @@ import { setLenis } from "./libs/lenis";
 import CustomCursor from "./components/gsap/CustomCursor";
 import MarqueeBand from "./components/gsap/MarqueeBand";
 import ScrollProgress from "./components/gsap/ScrollProgress";
+import { AnimatePresence } from "framer-motion";
+import IntroOverlay from "./components/IntroOverlay";
 
 const HomePage = () => {
   const [isLoaded, setIsLoaded] = React.useState(false);
+  const [showIntro, setShowIntro] = React.useState(true);
 
   useEffect(() => {
+    // Intro overlay plays once per session (skipped on mobile)
+    try {
+      const hasShown = sessionStorage.getItem("introShown");
+      const isMobileIntro = window.innerWidth < 768;
+      if (hasShown || isMobileIntro) {
+        setShowIntro(false);
+        if (isMobileIntro) sessionStorage.setItem("introShown", "true");
+      }
+    } catch (e) {
+      setShowIntro(false);
+    }
     setIsLoaded(true);
 
     // Only enable smooth scrolling on desktop for better mobile performance
@@ -52,6 +66,17 @@ const HomePage = () => {
     }
   }, []);
 
+  const handleIntroComplete = () => {
+    setShowIntro(false);
+    try {
+      sessionStorage.setItem("introShown", "true");
+    } catch (e) {
+      /* session storage unavailable — the hero's 8s failsafe covers this */
+    }
+    // the hero's Act 0 (starfield + blueprint fade-up) waits for this
+    window.dispatchEvent(new CustomEvent("hero-intro-complete"));
+  };
+
   // Testimonials renders outside AnimatedSection: GSAP pins it with
   // position:fixed, which breaks inside a transformed ancestor.
   const preSections = [
@@ -67,6 +92,10 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen text-white flex flex-col w-full max-w-full overflow-x-hidden">
+      <AnimatePresence>
+        {showIntro && <IntroOverlay onComplete={handleIntroComplete} />}
+      </AnimatePresence>
+
       <ScrollProgress />
       <CustomCursor />
 

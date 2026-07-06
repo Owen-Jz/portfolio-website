@@ -96,7 +96,7 @@ const FRAG = /* glsl */ `
   }
 `;
 
-export default function HeroParticles({ glState, stageRef, onFail }) {
+export default function HeroParticles({ glState, stageRef, skyIn = true, onFail }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -254,10 +254,13 @@ export default function HeroParticles({ glState, stageRef, onFail }) {
   }, []);
 
   return (
+    // the long opacity transition IS the starry fade-up after the intro
     <canvas
       ref={canvasRef}
       aria-hidden="true"
-      className="absolute inset-0 z-[3] pointer-events-none"
+      className={`absolute inset-0 z-[3] pointer-events-none transition-opacity duration-[2500ms] ease-out ${
+        skyIn ? "opacity-100" : "opacity-0"
+      }`}
     />
   );
 }

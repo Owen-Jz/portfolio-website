@@ -48,6 +48,7 @@ export default function HeroStory() {
   const stRef = useRef(null);
   const [chapter, setChapter] = useState(0);
   const [particlesOn, setParticlesOn] = useState(false);
+  const [skyIn, setSkyIn] = useState(false); // stars fade up after the intro
 
   useGSAP(
     () => {
@@ -67,27 +68,47 @@ export default function HeroStory() {
           const ctas = gsap.utils.toArray("[data-hero^='cta-']", stage);
           const primary = stage.querySelector("[data-hero='cta-primary']");
 
-          // ----- Act 0: entrance (time-based, once per session) -----
+          // ----- Act 0: entrance — hands off from the intro overlay -----
+          // The DESIGN/BUILD/DEPLOY overlay (page.js) plays once per session;
+          // when it lifts, the starfield and blueprint fade up out of the
+          // same black. Return visits skip straight to the settled state.
           const seen = sessionStorage.getItem("introShown");
-          const entrance = gsap.timeline({ paused: !!seen });
+          const entrance = gsap.timeline({ paused: true });
           entrance
             .from(blueprintRef.current.querySelector(".bp-grid"), {
               opacity: 0,
-              duration: 0.6,
+              duration: 0.9,
               ease: "power2.out",
             })
             .from(
               blueprintRef.current.querySelectorAll(".bp-frame"),
               { scale: 0.96, opacity: 0, stagger: 0.08, duration: 0.5, ease: "power3.out" },
-              "-=0.2"
+              "-=0.4"
             )
             .from(
               [headline, subline, kicker, ...ctas],
               { opacity: 0, y: 16, stagger: 0.06, duration: 0.5, ease: "power3.out" },
               "-=0.3"
-            )
-            .add(() => sessionStorage.setItem("introShown", "true"));
-          if (seen) entrance.progress(1);
+            );
+          let introCleanup = null;
+          if (seen) {
+            entrance.progress(1);
+            setSkyIn(true);
+          } else {
+            // force tween start states to render while the overlay covers us
+            entrance.progress(1).progress(0);
+            const begin = () => {
+              setSkyIn(true); // the stars fade in via the canvas transition
+              entrance.play();
+            };
+            window.addEventListener("hero-intro-complete", begin, { once: true });
+            // failsafe: never leave the hero hidden if the overlay misfires
+            const failsafe = setTimeout(begin, 8000);
+            introCleanup = () => {
+              window.removeEventListener("hero-intro-complete", begin);
+              clearTimeout(failsafe);
+            };
+          }
 
           // Idle-state life: one spec annotation gently pulses forever so a
           // paused hero is never a freeze-frame (time-based, not scrubbed).
@@ -369,6 +390,7 @@ export default function HeroStory() {
           );
 
           return () => {
+            introCleanup?.();
             setCursor("default");
             setParticlesOn(false);
           };
@@ -421,7 +443,12 @@ export default function HeroStory() {
     >
       <ShipLayer ref={shipRef} />
       {particlesOn && (
-        <HeroParticles glState={glState} stageRef={stageRef} onFail={() => setParticlesOn(false)} />
+        <HeroParticles
+          glState={glState}
+          stageRef={stageRef}
+          skyIn={skyIn}
+          onFail={() => setParticlesOn(false)}
+        />
       )}
       <BlueprintLayer ref={blueprintRef} stageRef={stageRef} />
       <BuildLayer ref={buildRef} />
