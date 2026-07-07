@@ -7,9 +7,8 @@ import Image from "next/image";
 import { NavbarDemo } from "../../../components/ui/RevampedNavbar";
 import FooterSection from "../../../components/FooterSection";
 import Link from "next/link";
-import Button from "../../../components/ui/Button";
-import GlassCard from "../../../components/ui/GlassCard";
 import BlogEngagement from "../../../components/ui/BlogEngagement";
+import PostOutro from "../../../components/ui/PostOutro";
 import ShareButton from "../../../components/ui/ShareButton";
 import ReadingProgress from "../../../components/ui/ReadingProgress";
 import StickyShareRail from "../../../components/ui/StickyShareRail";
@@ -29,9 +28,6 @@ const BlogPostPage = () => {
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [inlineEmail, setInlineEmail] = useState("");
-  const [inlineSubscribing, setInlineSubscribing] = useState(false);
-  const [inlineMessage, setInlineMessage] = useState(null);
 
   const [views, setViews] = useState(0);
   const [likes, setLikes] = useState(0);
@@ -126,32 +122,6 @@ const BlogPostPage = () => {
       const data = await res.json();
       if (data.success) setLikes(data.likes);
     } catch {}
-  };
-
-  const handleInlineSubscribe = async (e) => {
-    e.preventDefault();
-    setInlineSubscribing(true);
-
-    try {
-      const res = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: inlineEmail }),
-      });
-      const result = await res.json();
-
-      setInlineMessage({
-        success: result.success,
-        text: result.success
-          ? "Thanks for subscribing!"
-          : result.error || "Failed to subscribe",
-      });
-      if (result.success) setInlineEmail("");
-    } catch {
-      setInlineMessage({ success: false, text: "Failed to subscribe" });
-    } finally {
-      setInlineSubscribing(false);
-    }
   };
 
   if (loading) {
@@ -349,24 +319,10 @@ const BlogPostPage = () => {
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            {/* Engagement Bar */}
-            <motion.div
-              className="mt-12 py-6 border-t border-b border-white/10 flex flex-wrap items-center justify-between gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.6 }}
-            >
-              <BlogEngagement
-                views={views}
-                likes={likes}
-                isLiked={isLiked}
-                onLike={handleLike}
-                variant="full"
-              />
-            </motion.div>
+            {/* End-of-post prompt: like + subscribe */}
+            <PostOutro likes={likes} isLiked={isLiked} onLike={handleLike} />
 
-            {/* Social Sharing and Subscribe Section */}
+            {/* Social Sharing Section */}
             <motion.div
               className="mt-12 pt-8 border-t border-white/10"
               initial={{ opacity: 0, y: 20 }}
@@ -375,7 +331,7 @@ const BlogPostPage = () => {
               transition={{ duration: 0.6 }}
             >
               {/* Share Section */}
-              <div className="mb-8">
+              <div>
                 <h3 className="text-lg font-semibold text-white mb-4">Share this post</h3>
                 <div className="flex flex-wrap gap-3">
                   <ShareButton url={postUrl} title={post.title} />
@@ -404,36 +360,6 @@ const BlogPostPage = () => {
                 </div>
               </div>
 
-              {/* Subscribe CTA */}
-              <GlassCard hoverEffect={false} className="p-6 bg-gradient-to-r from-[#b02222]/10 to-transparent border-[#b02222]/20">
-                <h3 className="text-xl font-bold text-white mb-2">Enjoyed this post?</h3>
-                <p className="text-gray-400 mb-4">
-                  Subscribe to get notified when I publish new content.
-                </p>
-                <form onSubmit={handleInlineSubscribe} className="flex flex-col sm:flex-row gap-3">
-                  <input
-                    type="email"
-                    value={inlineEmail}
-                    onChange={(e) => setInlineEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="flex-1 px-4 py-2 bg-gray-800/50 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#b02222] text-sm"
-                  />
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={inlineSubscribing}
-                    withMotion={false}
-                    className="text-sm"
-                  >
-                    {inlineSubscribing ? "..." : "Subscribe"}
-                  </Button>
-                </form>
-                {inlineMessage && (
-                  <p className={`mt-3 text-sm ${inlineMessage.success ? "text-green-400" : "text-red-400"}`}>
-                    {inlineMessage.text}
-                  </p>
-                )}
-              </GlassCard>
             </motion.div>
 
             {/* Related posts */}
