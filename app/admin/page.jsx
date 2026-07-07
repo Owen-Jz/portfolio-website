@@ -22,6 +22,7 @@ import {
     BellRing,
     Users,
     ListOrdered,
+    Star,
 } from "lucide-react";
 import { cn } from "../libs/utils";
 
@@ -219,6 +220,28 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleToggleFeatured = async (post) => {
+    try {
+      const response = await fetch(`/api/admin/posts/${post._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isFeatured: !post.isFeatured }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // featuring is exclusive server-side; refresh so the old star clears
+        fetchPosts();
+      } else {
+        alert(result.error || "Failed to update featured post");
+      }
+    } catch (err) {
+      alert("Failed to update featured post");
+      console.error(err);
+    }
+  };
+
   const handleNotify = async (post) => {
     if (!confirm(`Send notification to all subscribers about "${post.title}"?`)) {
       return;
@@ -405,8 +428,14 @@ export default function AdminDashboard() {
                   >
                     <td className="px-6 py-4">
                       <div className="flex flex-col">
-                        <span className="text-white font-medium group-hover:text-[#c92e2e] transition-colors">
+                        <span className="flex items-center gap-2 text-white font-medium group-hover:text-[#c92e2e] transition-colors">
                           {post.title}
+                          {post.isFeatured && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-amber-400/30 bg-amber-400/10 text-amber-400 text-[10px] font-medium uppercase tracking-wide shrink-0">
+                              <Star className="w-2.5 h-2.5 fill-amber-400" />
+                              Featured
+                            </span>
+                          )}
                         </span>
                         <span className="text-white/30 text-xs font-mono mt-0.5 truncate max-w-[260px]">
                           /{post.slug}
@@ -433,6 +462,32 @@ export default function AdminDashboard() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => handleToggleFeatured(post)}
+                          title={
+                            post.isFeatured
+                              ? "Remove from featured"
+                              : "Feature on blog page"
+                          }
+                          aria-label={
+                            post.isFeatured
+                              ? "Remove from featured"
+                              : "Feature on blog page"
+                          }
+                          className={cn(
+                            "p-2 hover:bg-amber-400/10 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/40",
+                            post.isFeatured
+                              ? "text-amber-400"
+                              : "text-white/40 hover:text-amber-400"
+                          )}
+                        >
+                          <Star
+                            className={cn(
+                              "w-4 h-4",
+                              post.isFeatured && "fill-amber-400"
+                            )}
+                          />
+                        </button>
                         <button
                           onClick={() => handleTogglePublish(post._id, post.published)}
                           title={post.published ? "Unpublish" : "Publish"}

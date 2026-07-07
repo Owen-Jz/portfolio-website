@@ -141,6 +141,15 @@ export async function PATCH(request, { params }) {
     const { id } = await params;
     const body = await request.json();
 
+    // Featuring is exclusive — the blog page shows a single featured hero,
+    // so clear the flag on every other post first.
+    if (body.isFeatured === true) {
+      await BlogPost.updateMany(
+        { _id: { $ne: id } },
+        { $set: { isFeatured: false } }
+      );
+    }
+
     const post = await BlogPost.findByIdAndUpdate(
       id,
       { $set: body },
