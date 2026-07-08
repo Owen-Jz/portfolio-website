@@ -7,8 +7,10 @@ export async function POST(request, { params }) {
     await connectDB();
 
     const { slug } = await params;
-    const body = await request.json();
-    const action = body.action;
+    // tolerate empty/malformed bodies — reject them as 400 below instead
+    // of throwing a SyntaxError into the 500 handler
+    const body = await request.json().catch(() => ({}));
+    const action = body?.action;
 
     if (action !== "like" && action !== "unlike") {
       return NextResponse.json(
