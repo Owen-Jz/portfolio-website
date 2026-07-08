@@ -26,6 +26,7 @@ const STATIC_ROUTES = [
   { path: "/solutions/design-os", priority: 0.8 },
   { path: "/solutions/revenue-sprint", priority: 0.8 },
   { path: "/solutions/venture-partnership", priority: 0.8 },
+  { path: "/webpricing", priority: 0.8 },
   { path: "/pricing", priority: 0.8 },
   { path: "/brandpricing", priority: 0.7 },
   { path: "/process", priority: 0.6 },

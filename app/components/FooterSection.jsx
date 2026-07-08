@@ -69,7 +69,8 @@ const FooterSection = () => {
 
   const workLinks = [
     { name: "Templates", href: "/templates" },
-    { name: "Pricing", href: "/pricing" },
+    { name: "Website Pricing", href: "/webpricing" },
+    { name: "Brand Pricing", href: "/pricing" },
     { name: "Process", href: "/process" },
     { name: "Start a Brief", href: "/briefs" },
   ];
