@@ -88,6 +88,17 @@ const ProjectBriefSchema = new mongoose.Schema({
     default: "new",
     enum: ["new", "reviewed", "contacted", "completed"],
   },
+  // AI-generated brief analysis (produced on demand via MiniMax from the admin panel).
+  aiInsights: {
+    summary: { type: String },
+    keyPoints: { type: [String], default: undefined },
+    nextSteps: { type: [String], default: undefined },
+    followUpEmail: {
+      subject: { type: String },
+      body: { type: String },
+    },
+    generatedAt: { type: Date },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

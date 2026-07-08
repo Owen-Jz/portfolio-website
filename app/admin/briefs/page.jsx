@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Globe, Palette, Smartphone, X, ExternalLink, Mail, Calendar, DollarSign, Eye, Check, Clock, Copy, Trash2, Download, CheckCircle, Search } from "lucide-react";
+import { FileText, Globe, Palette, Smartphone, X, ExternalLink, Mail, Calendar, DollarSign, Eye, Check, Clock, Copy, Trash2, Download, CheckCircle, Search, Sparkles, Loader2, RefreshCw, ListChecks, ArrowRight, Send } from "lucide-react";
 
 const typeConfig = {
   website: { label: "Website", icon: Globe, color: "from-blue-500 to-cyan-500" },
@@ -79,10 +79,18 @@ export default function BriefsAdminPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedId, setCopiedId] = useState(null);
   const [showCopiedAll, setShowCopiedAll] = useState(false);
+  const [aiLoadingId, setAiLoadingId] = useState(null);
+  const [aiError, setAiError] = useState("");
+  const [copiedKey, setCopiedKey] = useState(null);
 
   useEffect(() => {
     fetchBriefs();
   }, []);
+
+  // Clear any stale AI error when the open brief changes.
+  useEffect(() => {
+    setAiError("");
+  }, [selectedBrief?._id]);
 
   const fetchBriefs = async () => {
     try {
@@ -127,6 +135,37 @@ export default function BriefsAdminPage() {
     } catch (error) {
       console.error("Error deleting brief:", error);
     }
+  };
+
+  const generateSummary = async (brief) => {
+    setAiError("");
+    setAiLoadingId(brief._id);
+    try {
+      const res = await fetch("/api/briefs/summarize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: brief._id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAiError(data.error || "Failed to generate summary.");
+        return;
+      }
+      const { insights } = data;
+      setBriefs((prev) => prev.map((b) => (b._id === brief._id ? { ...b, aiInsights: insights } : b)));
+      setSelectedBrief((prev) => (prev && prev._id === brief._id ? { ...prev, aiInsights: insights } : prev));
+    } catch (error) {
+      console.error("Error generating summary:", error);
+      setAiError("Something went wrong. Please try again.");
+    } finally {
+      setAiLoadingId(null);
+    }
+  };
+
+  const copyText = (text, key) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(key);
+    setTimeout(() => setCopiedKey(null), 2000);
   };
 
   const exportToCSV = () => {
@@ -400,6 +439,15 @@ Submitted: ${new Date(brief.createdAt).toLocaleString()}
                         {brief.companyName}
                       </span>
                     )}
+                    {brief.aiInsights?.summary && (
+                      <span
+                        className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20"
+                        title="AI summary generated"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        AI
+                      </span>
+                    )}
                     {status && (
                       <span className={`hidden sm:inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${status.bg} ${status.color}`}>
                         {status.label}
@@ -539,6 +587,149 @@ Submitted: ${new Date(brief.createdAt).toLocaleString()}
                     </span>
                   </div>
                 </div>
+
+                {/* AI Summary & Follow-up */}
+                {(() => {
+                  const insights = selectedBrief.aiInsights;
+                  const isLoading = aiLoadingId === selectedBrief._id;
+                  const hasInsights = insights && insights.summary;
+
+                  return (
+                    <div className="relative rounded-2xl p-[1px] bg-gradient-to-br from-[#b02222]/60 via-purple-500/30 to-blue-500/40">
+                      <div className="rounded-2xl bg-[#0d0d0f] p-5">
+                        <div className="flex items-center justify-between gap-3 mb-4">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="p-2 rounded-xl bg-gradient-to-br from-[#b02222] to-purple-600 shrink-0">
+                              <Sparkles className="w-4 h-4 text-white" />
+                            </div>
+                            <div className="min-w-0">
+                              <h3 className="text-white font-semibold text-sm leading-tight">AI Summary & Follow-up</h3>
+                              <p className="text-white/40 text-xs mt-0.5">
+                                {hasInsights && insights.generatedAt
+                                  ? `Generated ${new Date(insights.generatedAt).toLocaleString()}`
+                                  : "Let AI digest this brief and draft a reply"}
+                              </p>
+                            </div>
+                          </div>
+                          {hasInsights && (
+                            <button
+                              onClick={() => generateSummary(selectedBrief)}
+                              disabled={isLoading}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-xs font-medium hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b02222]/60 shrink-0"
+                              title="Regenerate"
+                            >
+                              {isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                              Regenerate
+                            </button>
+                          )}
+                        </div>
+
+                        {aiError && (
+                          <div role="alert" className="mb-4 text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-xl px-3.5 py-2.5">
+                            {aiError}
+                          </div>
+                        )}
+
+                        {!hasInsights && !isLoading && (
+                          <button
+                            onClick={() => generateSummary(selectedBrief)}
+                            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-r from-[#b02222] to-purple-600 text-white text-sm font-semibold hover:from-[#c92e2e] hover:to-purple-500 active:scale-[0.99] transition-all shadow-[0_0_24px_rgba(176,34,34,0.3)] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                          >
+                            <Sparkles className="w-4 h-4" />
+                            AI Summarize & Follow Up
+                          </button>
+                        )}
+
+                        {isLoading && (
+                          <div className="flex items-center gap-3 py-6 justify-center text-white/60 text-sm">
+                            <Loader2 className="w-4 h-4 animate-spin text-[#c92e2e]" />
+                            Analyzing brief & drafting follow-up…
+                          </div>
+                        )}
+
+                        {hasInsights && !isLoading && (
+                          <div className="space-y-5">
+                            {/* Summary */}
+                            {insights.summary && (
+                              <p className="text-white/90 text-sm leading-relaxed">{insights.summary}</p>
+                            )}
+
+                            {/* Key points */}
+                            {insights.keyPoints?.length > 0 && (
+                              <div>
+                                <h4 className="text-white/40 text-[11px] font-semibold uppercase tracking-[0.12em] mb-2.5 flex items-center gap-1.5">
+                                  <ListChecks className="w-3.5 h-3.5" /> What they want
+                                </h4>
+                                <ul className="space-y-1.5">
+                                  {insights.keyPoints.map((point, i) => (
+                                    <li key={i} className="flex gap-2.5 text-white/80 text-sm">
+                                      <span className="mt-[7px] w-1.5 h-1.5 rounded-full bg-[#c92e2e] shrink-0" />
+                                      <span className="leading-relaxed">{point}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+
+                            {/* Next steps */}
+                            {insights.nextSteps?.length > 0 && (
+                              <div>
+                                <h4 className="text-white/40 text-[11px] font-semibold uppercase tracking-[0.12em] mb-2.5 flex items-center gap-1.5">
+                                  <ArrowRight className="w-3.5 h-3.5" /> Recommended next steps
+                                </h4>
+                                <ol className="space-y-1.5">
+                                  {insights.nextSteps.map((step, i) => (
+                                    <li key={i} className="flex gap-2.5 text-white/80 text-sm">
+                                      <span className="text-[#c92e2e] font-mono text-xs mt-0.5 shrink-0">{i + 1}.</span>
+                                      <span className="leading-relaxed">{step}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            )}
+
+                            {/* Follow-up email */}
+                            {insights.followUpEmail?.body && (
+                              <div className="rounded-xl bg-black/40 border border-white/10 overflow-hidden">
+                                <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-b border-white/10 bg-white/[0.02]">
+                                  <span className="text-white/50 text-[11px] font-semibold uppercase tracking-[0.12em] flex items-center gap-1.5">
+                                    <Mail className="w-3.5 h-3.5" /> Follow-up email
+                                  </span>
+                                  <div className="flex items-center gap-1">
+                                    <button
+                                      onClick={() =>
+                                        copyText(
+                                          `Subject: ${insights.followUpEmail.subject}\n\n${insights.followUpEmail.body}`,
+                                          "email"
+                                        )
+                                      }
+                                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b02222]/60"
+                                    >
+                                      {copiedKey === "email" ? <CheckCircle className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+                                      {copiedKey === "email" ? "Copied" : "Copy"}
+                                    </button>
+                                    <a
+                                      href={`mailto:${selectedBrief.email}?subject=${encodeURIComponent(insights.followUpEmail.subject || "")}&body=${encodeURIComponent(insights.followUpEmail.body || "")}`}
+                                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-white/60 hover:text-white hover:bg-white/10 text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b02222]/60"
+                                    >
+                                      <Send className="w-3.5 h-3.5" /> Send
+                                    </a>
+                                  </div>
+                                </div>
+                                <div className="px-4 py-3.5 space-y-2">
+                                  {insights.followUpEmail.subject && (
+                                    <p className="text-white/90 text-sm font-semibold">{insights.followUpEmail.subject}</p>
+                                  )}
+                                  <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">{insights.followUpEmail.body}</p>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Grouped definition list */}
                 {detailSections.map((section) => {
