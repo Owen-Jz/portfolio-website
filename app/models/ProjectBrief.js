@@ -99,6 +99,25 @@ const ProjectBriefSchema = new mongoose.Schema({
     },
     generatedAt: { type: Date },
   },
+  // AI-drafted invoice, then editable in the admin before PDF export.
+  invoice: {
+    invoiceNumber: { type: String },
+    currency: { type: String, default: "USD" },
+    lineItems: {
+      type: [
+        {
+          description: { type: String },
+          details: { type: String },
+          quantity: { type: Number, default: 1 },
+          unitPrice: { type: Number, default: 0 },
+        },
+      ],
+      default: undefined,
+    },
+    taxRate: { type: Number, default: 0 },
+    notes: { type: String },
+    generatedAt: { type: Date },
+  },
   createdAt: {
     type: Date,
     default: Date.now,

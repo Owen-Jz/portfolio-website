@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FileText, Globe, Palette, Smartphone, X, ExternalLink, Mail, Calendar, DollarSign, Eye, Check, Clock, Copy, Trash2, Download, CheckCircle, Search, Sparkles, Loader2, RefreshCw, ListChecks, ArrowRight, Send } from "lucide-react";
+import { FileText, Globe, Palette, Smartphone, X, ExternalLink, Mail, Calendar, DollarSign, Eye, Check, Clock, Copy, Trash2, Download, CheckCircle, Search, Sparkles, Loader2, RefreshCw, ListChecks, ArrowRight, Send, Receipt } from "lucide-react";
+import InvoiceEditor from "../../components/admin/InvoiceEditor";
 
 const typeConfig = {
   website: { label: "Website", icon: Globe, color: "from-blue-500 to-cyan-500" },
@@ -82,14 +83,18 @@ export default function BriefsAdminPage() {
   const [aiLoadingId, setAiLoadingId] = useState(null);
   const [aiError, setAiError] = useState("");
   const [copiedKey, setCopiedKey] = useState(null);
+  const [invoiceBrief, setInvoiceBrief] = useState(null);
+  const [invoiceLoadingId, setInvoiceLoadingId] = useState(null);
+  const [invoiceError, setInvoiceError] = useState("");
 
   useEffect(() => {
     fetchBriefs();
   }, []);
 
-  // Clear any stale AI error when the open brief changes.
+  // Clear any stale AI/invoice error when the open brief changes.
   useEffect(() => {
     setAiError("");
+    setInvoiceError("");
   }, [selectedBrief?._id]);
 
   const fetchBriefs = async () => {
@@ -166,6 +171,45 @@ export default function BriefsAdminPage() {
     navigator.clipboard.writeText(text);
     setCopiedKey(key);
     setTimeout(() => setCopiedKey(null), 2000);
+  };
+
+  // Open the invoice editor. Generates an AI draft first if one doesn't exist yet.
+  const openInvoice = async (brief, { regenerate = false } = {}) => {
+    setInvoiceError("");
+    if (brief.invoice?.lineItems?.length && !regenerate) {
+      setInvoiceBrief(brief);
+      return;
+    }
+    setInvoiceLoadingId(brief._id);
+    try {
+      const res = await fetch("/api/briefs/invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: brief._id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setInvoiceError(data.error || "Failed to generate invoice.");
+        return;
+      }
+      const updated = { ...brief, invoice: data.invoice };
+      setBriefs((prev) => prev.map((b) => (b._id === brief._id ? updated : b)));
+      setSelectedBrief((prev) => (prev && prev._id === brief._id ? updated : prev));
+      setInvoiceBrief(updated);
+    } catch (error) {
+      console.error("Error generating invoice:", error);
+      setInvoiceError("Something went wrong. Please try again.");
+    } finally {
+      setInvoiceLoadingId(null);
+    }
+  };
+
+  const handleInvoiceSaved = (invoice) => {
+    if (!invoiceBrief) return;
+    const updated = { ...invoiceBrief, invoice };
+    setInvoiceBrief(updated);
+    setBriefs((prev) => prev.map((b) => (b._id === updated._id ? { ...b, invoice } : b)));
+    setSelectedBrief((prev) => (prev && prev._id === updated._id ? { ...prev, invoice } : prev));
   };
 
   const exportToCSV = () => {
@@ -448,6 +492,15 @@ Submitted: ${new Date(brief.createdAt).toLocaleString()}
                         AI
                       </span>
                     )}
+                    {brief.invoice?.lineItems?.length > 0 && (
+                      <span
+                        className="hidden sm:inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20"
+                        title="Invoice drafted"
+                      >
+                        <Receipt className="w-3 h-3" />
+                        Invoice
+                      </span>
+                    )}
                     {status && (
                       <span className={`hidden sm:inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${status.bg} ${status.color}`}>
                         {status.label}
@@ -726,6 +779,45 @@ Submitted: ${new Date(brief.createdAt).toLocaleString()}
                             )}
                           </div>
                         )}
+
+                        {/* Invoice action */}
+                        <div className="mt-5 pt-5 border-t border-white/10">
+                          {invoiceError && (
+                            <div role="alert" className="mb-3 text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-xl px-3.5 py-2.5">
+                              {invoiceError}
+                            </div>
+                          )}
+                          {(() => {
+                            const hasInvoice = selectedBrief.invoice?.lineItems?.length > 0;
+                            const invLoading = invoiceLoadingId === selectedBrief._id;
+                            return (
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                                <button
+                                  onClick={() => openInvoice(selectedBrief)}
+                                  disabled={invLoading}
+                                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-semibold hover:bg-white/10 active:scale-[0.99] transition-all disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b02222]/60"
+                                >
+                                  {invLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Receipt className="w-4 h-4" />}
+                                  {invLoading ? "Building invoice…" : hasInvoice ? "View / Edit Invoice" : "Generate Invoice"}
+                                </button>
+                                {hasInvoice && !invLoading && (
+                                  <button
+                                    onClick={() => openInvoice(selectedBrief, { regenerate: true })}
+                                    className="inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white/60 text-xs font-medium hover:bg-white/10 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#b02222]/60"
+                                    title="Regenerate invoice from brief"
+                                  >
+                                    <RefreshCw className="w-3.5 h-3.5" /> Regenerate
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })()}
+                          {selectedBrief.invoice?.lineItems?.length > 0 && (
+                            <p className="text-white/30 text-xs mt-2.5">
+                              {selectedBrief.invoice.lineItems.length} line item{selectedBrief.invoice.lineItems.length !== 1 ? "s" : ""} · {selectedBrief.invoice.currency} · ready to download
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   );
@@ -782,6 +874,19 @@ Submitted: ${new Date(brief.createdAt).toLocaleString()}
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Invoice editor */}
+      <AnimatePresence>
+        {invoiceBrief && (
+          <InvoiceEditor
+            key={invoiceBrief._id}
+            brief={invoiceBrief}
+            initialInvoice={invoiceBrief.invoice}
+            onClose={() => setInvoiceBrief(null)}
+            onSaved={handleInvoiceSaved}
+          />
         )}
       </AnimatePresence>
     </div>
