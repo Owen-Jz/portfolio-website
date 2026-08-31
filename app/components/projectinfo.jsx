@@ -53,6 +53,16 @@ export const projectsData = {
   ],
   webDevelopment: [
     {
+      id: 13,
+      title: "PaidUp: Autonomous Payment Reconciliation",
+      category: "Web Development",
+      image: "/projects/paidup-case-study/cover.webp",
+      color: "#106840",
+      description: "Giving every invoice its own bank account so Nigerian SME transfers reconcile themselves — HMAC-verified webhooks over a transactional ledger.",
+      tags: ["Fintech", "Payments Infrastructure", "Next.js"],
+      link: "/projects/paidup",
+    },
+    {
       id: 12,
       title: "Flux: Multi-Tenant Enterprise OS",
       category: "Web Development",

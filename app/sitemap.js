@@ -21,6 +21,7 @@ const STATIC_ROUTES = [
   { path: "/projects/web-kitchen", priority: 0.7 },
   { path: "/projects/naija-diaspora-hub", priority: 0.7 },
   { path: "/projects/nova-trade-case-study", priority: 0.7 },
+  { path: "/projects/paidup", priority: 0.7 },
   { path: "/templates", priority: 0.9 },
   { path: "/blog", priority: 0.9 },
   { path: "/solutions/design-os", priority: 0.8 },
