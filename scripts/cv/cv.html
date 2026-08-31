@@ -69,17 +69,16 @@
     pointer-events: none;
   }
 
-  .brand { position: relative; z-index: 2; margin-bottom: 11mm; }
+  .brand { position: relative; z-index: 2; margin-bottom: 10mm; }
   .monogram {
     width: 15mm; height: 15mm;
     border-radius: 11px;
-    background: linear-gradient(150deg, var(--red), #7c1616);
+    background: #fff;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 800; font-size: 19px; color: #fff;
-    box-shadow: 0 6px 22px rgba(176,34,34,0.42);
-    margin-bottom: 7mm;
-    letter-spacing: -0.5px;
+    box-shadow: 0 6px 22px rgba(176,34,34,0.35);
+    margin-bottom: 6.5mm;
   }
+  .monogram svg { width: 8.6mm; height: 8.4mm; display: block; }
   .name {
     font-size: 30px; font-weight: 800; color: #fff;
     line-height: 1.02; letter-spacing: -0.8px;
@@ -162,13 +161,13 @@
   .main-h .tail { flex: 1; height: 1px; background: var(--line); }
 
   /* Experience timeline */
-  .timeline { position: relative; padding-left: 7mm; margin-bottom: 7.5mm; }
+  .timeline { position: relative; padding-left: 7mm; margin-bottom: 7mm; }
   .timeline::before {
     content: ""; position: absolute;
     left: 3.5px; top: 5px; bottom: 6px;
     width: 1.5px; background: var(--line);
   }
-  .job { position: relative; margin-bottom: 6.4mm; }
+  .job { position: relative; margin-bottom: 4.4mm; }
   .job:last-child { margin-bottom: 0; }
   .job::before {
     content: ""; position: absolute;
@@ -188,10 +187,18 @@
     background: rgba(176,34,34,0.1); border: 1px solid rgba(176,34,34,0.25);
     border-radius: 5px; padding: 2px 6px;
   }
+  .job-meta { text-align: right; flex-shrink: 0; }
   .job-date {
     font-family: "JetBrains Mono", monospace;
-    font-size: 8.5px; color: var(--ink-faint); white-space: nowrap; flex-shrink: 0;
+    font-size: 8.5px; color: var(--ink-faint); white-space: nowrap;
   }
+  .job-loc {
+    display: flex; align-items: center; justify-content: flex-end; gap: 3px;
+    margin-top: 2px;
+    font-size: 8.2px; font-weight: 600; letter-spacing: 0.2px;
+    color: var(--ink-faint); white-space: nowrap;
+  }
+  .job-loc svg { width: 8px; height: 8px; flex-shrink: 0; color: var(--red-soft); }
   .job-role {
     font-size: 10.5px; font-weight: 600; color: var(--red);
     margin-top: 1px;
@@ -226,7 +233,13 @@
   <!-- ════════════ SIDEBAR ════════════ -->
   <aside class="side">
     <div class="brand">
-      <div class="monogram">O</div>
+      <div class="monogram">
+        <svg viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Owen Digitals">
+          <path d="M24.1299 12.0043C24.1299 8.25957 24.1299 4.51807 24.1107 0.776575C24.1107 0.136456 24.3188 -0.0203727 24.9205 0.00203151C29.0543 0.140814 33.0806 1.35422 36.6026 3.52269C39.2478 5.11428 41.5508 7.21496 43.3783 9.70304C47.3886 15.144 48.8833 21.2892 47.7823 27.9208C46.6237 34.9045 42.9814 40.4032 36.9803 44.2439C31.4081 47.7933 25.3269 48.8015 18.8553 47.3772C13.0527 46.097 8.40219 42.986 4.85273 38.2812C1.94674 34.4417 0.302948 29.7954 0.147859 24.9827C0.109452 24.0225 0.115853 24.0225 1.10804 24.0225H12.1245L12.1053 24.0033C12.1917 27.1303 13.1871 29.8892 15.3603 32.1872C18.0808 35.0678 21.4414 36.348 25.3493 35.9543C28.3961 35.6367 31.2067 34.168 33.2071 31.8482C35.2075 29.5283 36.2469 26.5323 36.113 23.472C35.8313 17.0964 30.4479 11.9403 24.1107 11.9755L24.1299 12.0043Z" fill="#B02222"/>
+          <path d="M12.0959 12.0203H24.1301L24.1109 12.0011C24.1109 15.7554 24.1109 22.4318 24.1109 23.2671C24.1109 24.1025 24.2357 24.0481 23.4292 24.0321C22.6226 24.0161 15.8694 24.0129 12.0927 24.0097V24.0289V11.9979L12.0959 12.0203Z" fill="#B02222"/>
+          <path d="M12.1181 11.9979H3.38049C5.51209 8.23716 8.39263 5.49105 12.0957 3.24743V12.0203L12.1181 11.9979Z" fill="#B02222"/>
+        </svg>
+      </div>
       <div class="name">Owen<br /><span>Digitals</span></div>
       <div class="role">Full Stack Design Engineer</div>
     </div>
@@ -240,7 +253,7 @@
         </div>
         <div class="c-row">
           <svg class="c-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <div class="c-txt"><span class="c-lab">Location</span>Lagos, Nigeria · Remote</div>
+          <div class="c-txt"><span class="c-lab">Location</span>Port Harcourt, Nigeria · Remote</div>
         </div>
         <div class="c-row">
           <svg class="c-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
@@ -314,7 +327,7 @@
       Full Stack Design Engineer who lives at the seam between <b>design and code</b> —
       shipping production-grade interfaces and the systems behind them. Five years turning
       ambiguous ideas into <b>polished, high-performance products</b> across AI, fintech,
-      edtech and community platforms. I own the work end-to-end: from <b>Figma to deployment</b>,
+      edtech, e-commerce and community platforms. I own the work end-to-end: from <b>Figma to deployment</b>,
       brand identity to scalable React architecture.
     </p>
 
@@ -323,7 +336,10 @@
       <div class="job now">
         <div class="job-top">
           <div class="job-co">Two Lions<span class="job-now">Current</span></div>
-          <div class="job-date">May 2026 — Present</div>
+          <div class="job-meta">
+            <div class="job-date">May 2026 — Present</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>USA · Nigeria</div>
+          </div>
         </div>
         <div class="job-role">Full Stack Design Engineer <span class="sep">· Startup Studio — AI / Deep Tech</span></div>
         <div class="job-desc">
@@ -333,10 +349,28 @@
         </div>
       </div>
 
+      <div class="job now">
+        <div class="job-top">
+          <div class="job-co">Closet Full of Coco<span class="job-now">Current</span></div>
+          <div class="job-meta">
+            <div class="job-date">Oct 2025 — Present</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>San Francisco, USA</div>
+          </div>
+        </div>
+        <div class="job-role">Product Designer &amp; Frontend Developer <span class="sep">· E-Commerce / Retail</span></div>
+        <div class="job-desc">
+          Design and build the storefront experience and an admin operations dashboard that turns complex
+          inventory and order data into clear, actionable views for a San Francisco fashion retail brand.
+        </div>
+      </div>
+
       <div class="job">
         <div class="job-top">
           <div class="job-co">Naija Diaspora Hub</div>
-          <div class="job-date">Sep 2025 — Present</div>
+          <div class="job-meta">
+            <div class="job-date">Sep 2025 — Present</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Ontario, Canada</div>
+          </div>
         </div>
         <div class="job-role">Lead Product Designer &amp; Frontend Developer <span class="sep">· Community Platform</span></div>
         <div class="job-desc">
@@ -348,7 +382,10 @@
       <div class="job">
         <div class="job-top">
           <div class="job-co">Silicon Delta</div>
-          <div class="job-date">Jul 2024 — Feb 2025</div>
+          <div class="job-meta">
+            <div class="job-date">Jul 2024 — Feb 2025</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Nigeria</div>
+          </div>
         </div>
         <div class="job-role">UI/UX Designer <span class="sep">· EdTech</span></div>
         <div class="job-desc">
@@ -360,7 +397,10 @@
       <div class="job">
         <div class="job-top">
           <div class="job-co">RainShield Global</div>
-          <div class="job-date">Jun 2024 — Dec 2024</div>
+          <div class="job-meta">
+            <div class="job-date">Jun 2024 — Dec 2024</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Nigeria</div>
+          </div>
         </div>
         <div class="job-role">UI/UX Designer &amp; Brand Identity Developer <span class="sep">· Fintech</span></div>
         <div class="job-desc">
@@ -372,7 +412,10 @@
       <div class="job">
         <div class="job-top">
           <div class="job-co">Carb</div>
-          <div class="job-date">2022 — 2023</div>
+          <div class="job-meta">
+            <div class="job-date">2022 — 2023</div>
+            <div class="job-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>Nigeria</div>
+          </div>
         </div>
         <div class="job-role">UI/UX Designer &amp; Brand Identity Developer <span class="sep">· Mobility</span></div>
         <div class="job-desc">
@@ -387,7 +430,7 @@
         <div class="main-h"><span class="dot"></span>Selected Impact<span class="tail"></span></div>
         <div class="hl">
           <span class="hl-n">+35%</span>
-          <span class="hl-t"><b>E-commerce redesign</b> lifting user engagement and conversion through a UI/UX overhaul.</span>
+          <span class="hl-t"><b>Closet Full of Coco redesign</b> lifting engagement and conversion through a UI/UX overhaul.</span>
         </div>
         <div class="hl">
           <span class="hl-n">OSS</span>
