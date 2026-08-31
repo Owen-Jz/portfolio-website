@@ -240,7 +240,7 @@ const FooterSection = () => {
             © {year} Owen Digitals. All rights reserved.
           </p>
           <p className="text-white/40 text-sm font-['Manrope'] text-center sm:text-right">
-            Designed &amp; built by Owen · Lagos, Nigeria
+            Designed &amp; built by Owen · Port Harcourt, Nigeria
           </p>
         </motion.div>
       </motion.div>
