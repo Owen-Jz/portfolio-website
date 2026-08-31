@@ -1,17 +1,10 @@
 import { NextResponse } from "next/server";
-import mongoose from "mongoose";
 import { Resend } from "resend";
 import ProjectBrief from "../../models/ProjectBrief";
 import { generateBriefNotificationEmail } from "../../libs/email-templates";
+import connectDB from "../../libs/db";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-async function connectDB() {
-  if (mongoose.connection.readyState === 1) {
-    return;
-  }
-  await mongoose.connect(process.env.MONGODB_URI);
-}
 
 export async function POST(request) {
   try {
