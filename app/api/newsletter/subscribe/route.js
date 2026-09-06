@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../../libs/db";
 import Subscriber from "../../../models/Subscriber";
-import { Resend } from "resend";
+import getResend from "../../../libs/resend";
 import { generateWelcomeEmail } from "../../../libs/email-templates";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
@@ -39,7 +38,7 @@ export async function POST(request) {
         await existing.save();
 
         // Send welcome back email
-        await resend.emails.send({
+        await getResend().emails.send({
           from: "Owen Digitals <official@owendigitals.work>",
           to: normalizedEmail,
           subject: "You're back! You're subscribed to Owen Digitals",
@@ -64,7 +63,7 @@ export async function POST(request) {
     });
 
     // Send welcome email
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "Owen Digitals <official@owendigitals.work>",
       to: normalizedEmail,
       subject: "You're subscribed to Owen Digitals",

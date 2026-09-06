@@ -1,11 +1,10 @@
-import { Resend } from "resend";
+import getResend from "./resend";
 import Subscriber from "../models/Subscriber";
 import {
   generateBlogNotificationHTML,
   generateBlogNotificationText,
 } from "./email-templates";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 const BATCH_SIZE = 10;
 const BATCH_DELAY_MS = 1000;
@@ -27,6 +26,8 @@ export async function notifySubscribers(post) {
   }
 
   const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
+
+  const resend = getResend();
 
   let notified = 0;
   let failed = 0;

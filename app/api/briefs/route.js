@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
+import getResend from "../../libs/resend";
 import ProjectBrief from "../../models/ProjectBrief";
 import { generateBriefNotificationEmail } from "../../libs/email-templates";
 import connectDB from "../../libs/db";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
@@ -86,7 +85,7 @@ export async function POST(request) {
 
     const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
     
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "Project Briefs <official@owendigitals.work>",
       to: adminEmail,
       reply_to: email,

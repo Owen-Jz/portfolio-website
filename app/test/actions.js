@@ -1,9 +1,8 @@
 "use server";
 
-import { Resend } from "resend";
+import getResend from "../libs/resend";
 import { generateContactNotificationEmail } from "../libs/email-templates";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendEmail(formData) {
   try {
@@ -18,7 +17,7 @@ export async function sendEmail(formData) {
     const adminEmail = process.env.ADMIN_EMAIL || "owendigitals@gmail.com";
     const message = `Subject: ${subject}\n\n${information}`;
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: "Contact Form <official@owendigitals.work>",
       to: adminEmail,
       subject: `New Contact Form Submission: ${subject}`,
