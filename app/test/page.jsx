@@ -5,15 +5,6 @@ import Image from "next/image";
 const testimonials = [
   {
     quote:
-      "The e-commerce platform redesign was a game-changer, delivering a modern and seamless shopping experience.",
-    name: "Torti Ama-Njoku",
-    role: "Founder, ShopTrend",
-    picture: "/profiles/torti.png",
-    nationality: "/flags/Canada.png",
-    rating: 5,
-  },
-  {
-    quote:
       "Owen is a very diverse creative who brings innovation to whatever he does. His personality and approach to problem solving is impeccable. I recommend him for his brilliant and innovative approach.",
     name: "IB Douglas",
     role: "CEO, Probitek",
